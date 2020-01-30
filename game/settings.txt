@@ -1,0 +1,35 @@
+# Windowed resolution
+resolution = 1280 x 720
+
+# Retro resolution if retro mode is enabled
+retroResolution = 480 x 272
+
+# Retro mode renders the game in a smaller resolution and fill the screen
+retroMode = false
+
+# Name of the game to be displayed in the window's title bar
+gameName = Global Game Jam 2020
+
+# If the window is resizable and can be maximized
+resizableWindow = true
+
+# Run the game in full screen. This is borderless fullscreen taking up your desktop resolution
+fullscreen = false
+
+# Fixed step update. Games where simulation or physic is important should use that
+fixedStep = false
+
+# The number of frames per second to update if fixed step is enabled
+updateFPS = 120
+
+# Braincloud app application ID
+appID = null
+
+# Braincloud app secret
+appSecret = null
+
+# Display FPS in the upper left corner
+showFPS = true
+
+# Displays debug log on screen
+onScreenLog = true
