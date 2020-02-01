@@ -5,7 +5,7 @@ function createEntity_controlPanel(entity)
     entity.angle = entity.mapObj.angle
     if (!entity.mapObj.model)
         entity.mapObj.model = "controlPanel.model"
-    if (!entity.mapObj.target)
+    if (entity.mapObj.target == undefined)
         entity.mapObj.target = ""
     if (!entity.mapObj.color)
         entity.mapObj.color = new Color(.8, 1, .9, 1)
@@ -20,7 +20,8 @@ function createEntity_controlPanel(entity)
     entity.model = getModel(entity.mapObj.model)
 }
 
-function controlPanel_interract(entity)
+function controlPanel_interract(entity, player)
 {
-
+    var target = findEntity(entity.mapObj.target)
+    if (target && target.trigger) target.trigger(target, entity, player)
 }

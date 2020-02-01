@@ -23,6 +23,8 @@ function createEntity_player(entity)
     entity.vel = new Vector3(0)
     entity.headOffset = new Vector3(0, 0, 0.5)
     entity.size = 0.2
+    entity.hoverObject = null
+    entity.postDraw = player_postDraw
 }
 
 function player_update(entity, dt)
@@ -63,4 +65,35 @@ function player_update(entity, dt)
     voxelCollision(entity, dt)
     entity.pos = entity.pos.add(entity.vel.mul(dt))
     entity.vel = entity.vel.mul(Math.max(0, 1 - dt * 10))
+
+    // Mouse pick
+    {
+        entity.hoverObject = null
+        var camFront = getEntityFront(entity)
+        var camPos = getEntityCamPos(entity)
+        var pick = map_rayPick(camPos, camFront, 1, 0.1)
+        if (pick && pick.interract)
+        {
+            entity.hoverObject = pick
+        }
+    }
+
+    if (entity.hoverObject && Input.isJustDown(Key.MOUSE_1))
+    {
+        entity.hoverObject.interract(entity.hoverObject, entity)
+    }
+}
+
+function player_postDraw(entity)
+{
+    if (entity.hoverObject)
+    {
+        Renderer.pushBlendMode(BlendMode.ALPHA)
+        if (entity.hoverObject.model)
+        {
+            shaders.entityPS.setVector4("entityColor", new Vector4(1, 1, 0, 0.5))
+            entity.hoverObject.model.render(getEntityTransform(entity.hoverObject));
+        }
+        Renderer.popBlendMode()
+    }
 }

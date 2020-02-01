@@ -49,9 +49,11 @@ function intersect(bmin, bmax, rayFrom, rayDir)
     return true;
 }
 
-function map_rayPick(rayFrom, rayDir)
+function map_rayPick(rayFrom, rayDir, maxDistance, extend)
 {
-    var prevDist = 1000 * 1000; // Squared
+    var d = maxDistance ? maxDistance : 1000
+    extend = extend ? extend : 0
+    var prevDist = d * d; // Squared
     var ret = null;
 
     for (var i = 0; i < entities.length; ++i)
@@ -60,8 +62,8 @@ function map_rayPick(rayFrom, rayDir)
         if (entity.mapObj && entity.mapObj.unpickable) continue
         var bmin = entity.model ? entity.model.getMin() : new Vector3(.05, .05, .05)
         var bmax = entity.model ? entity.model.getMax() : new Vector3(-.05, -.05, -.05)
-        bmin = bmin.add(entity.pos)
-        bmax = bmax.add(entity.pos)
+        bmin = bmin.add(entity.pos).sub(extend)
+        bmax = bmax.add(entity.pos).add(extend)
         if (intersect(bmin, bmax, rayFrom, rayDir))
         {
             var dist = Vector3.distanceSquared(rayFrom, entity.pos)
@@ -156,7 +158,7 @@ function updateEdit(dt)
         var from3 = new Vector3(from.x / from.w, from.y / from.w, from.z / from.w)
         var to3 = new Vector3(to.x / to.w, to.y / to.w, to.z / to.w)
 
-        hoverEntity = map_rayPick(from3, to3.sub(from3).normalize(), camPos.add(camFront.mul(1000)))
+        hoverEntity = map_rayPick(from3, to3.sub(from3).normalize())
     }
 
     if (hoverEntity && Input.isJustDown(Key.MOUSE_1))
@@ -190,7 +192,7 @@ function renderEdit()
     {
         var entity = editDrawables[i]
         var color = entity.color ? entity.color : Color.WHITE
-        shaders.entityPS.setVector3("entityColor", color.toVector3())
+        shaders.entityPS.setVector4("entityColor", color.toVector4())
         models.entity.render(getEntityTransform(entity))
     }
 
@@ -198,14 +200,14 @@ function renderEdit()
     if (hoverEntity)
     {
         Renderer.pushBlendMode(BlendMode.ALPHA)
-        shaders.entityPS.setVector3("entityColor", new Vector3(1, 1, 0, 0.5))
+        shaders.entityPS.setVector4("entityColor", new Vector4(1, 1, 0, 0.5))
         models.entity.render(getEntityTransform(hoverEntity))
         Renderer.popBlendMode()
     }
     if (selectedEntity)
     {
         Renderer.pushBlendMode(BlendMode.ALPHA)
-        shaders.entityPS.setVector3("entityColor", new Vector3(1, 0, 0, 0.5))
+        shaders.entityPS.setVector4("entityColor", new Vector4(1, 0, 0, 0.5))
         models.entity.render(getEntityTransform(selectedEntity))
         Renderer.popBlendMode()
     }
@@ -276,6 +278,8 @@ function renderEditUI()
             }
             if (selectedEntity.mapObj.radius != undefined)
                 selectedEntity.mapObj.radius = GUI.dragNumber("Radius", selectedEntity.mapObj.radius, 0.1)
+            if (selectedEntity.mapObj.intensity != undefined)
+                selectedEntity.mapObj.intensity = GUI.dragNumber("Intensity", selectedEntity.mapObj.intensity, 0.01)
             if (selectedEntity.mapObj.color)
                 selectedEntity.mapObj.color = GUI.colorPickerRGBA("Color", selectedEntity.mapObj.color)
             if (selectedEntity.mapObj.flicker != undefined)

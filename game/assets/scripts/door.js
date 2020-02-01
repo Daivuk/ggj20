@@ -6,9 +6,27 @@ function createEntity_door(entity)
     if (!entity.mapObj.model)
         entity.mapObj.model = "door.model"
     entity.model = getModel(entity.mapObj.model)
-    entity.update = door_update;
+    entity.update = door_update
+    entity.trigger = door_trigger
+    entity.isOpen = false
+    entity.openAnim = new Vector3Anim(entity.pos)
 }
 
 function door_update(entity, dt)
 {
+    entity.pos = entity.openAnim.get()
+}
+
+function door_trigger(entity, triggerer, player)
+{
+    if (entity.openAnim.isPlaying()) return
+    entity.isOpen = !entity.isOpen
+    if (entity.isOpen)
+    {
+        entity.openAnim.playSingle(entity.pos, entity.pos.add(new Vector3(0, 0, 0.8)), 1.5, Tween.LINEAR)
+    }
+    else
+    {
+        entity.openAnim.playSingle(entity.pos, entity.pos.add(new Vector3(0, 0, -0.8)), 1.5, Tween.LINEAR)
+    }
 }

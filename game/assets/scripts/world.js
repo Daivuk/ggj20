@@ -4,6 +4,7 @@ var outsideDrawables = []
 var insideDrawables = []
 var updatables = []
 var editDrawables = []
+var postDrawables = []
 var map = []
 var entities = []
 var player = null
@@ -27,6 +28,16 @@ function getEntityTransform(entity)
     var angleX = entity.angleX ? entity.angleX : 0
     var angle = entity.angle ? entity.angle : 0
     return Matrix.createRotationX(angleX).mul(Matrix.createRotationZ(angle)).mul(Matrix.createTranslation(entity.pos))
+}
+
+function findEntity(name)
+{
+    for (var i = 0; i < entities.length; ++i)
+    {
+        var entity = entities[i]
+        if (entity.mapObj && entity.mapObj.name == name) return entity
+    }
+    return null
 }
 
 function getEntityFront(entity)
@@ -66,6 +77,7 @@ function deleteEntity(entity)
     removeFromArray(insideDrawables, entity)
     removeFromArray(updatables, entity)
     removeFromArray(editDrawables, entity)
+    removeFromArray(postDrawables, entity)
     removeFromArray(omnis, entity)
     removeFromArray(projectors, entity)
     removeFromArray(map.entities, entity.mapObj)
@@ -106,6 +118,8 @@ function createEntity(mapObj, pos)
 
     if (entity.update) updatables.push(entity)
     if (entity.interract) interractables.push(entity)
+    if (entity.postDraw) postDrawables.push(entity)
+
     entities.push(entity)
     if (mapObj.model)
     {
@@ -166,6 +180,7 @@ function loadMap()
         }
         createEntity_player(entity)
         updatables.push(entity)
+        postDrawables.push(entity)
         player = entity
     }
 }
@@ -302,6 +317,20 @@ function renderWorld(cam)
         Renderer.setTexture(null, 2)
         Renderer.setTexture(null, 3)
         Renderer.setBlendMode(BlendMode.ALPHA)
+    }
+
+    // Post draw stuff
+    {
+        // Setup camera
+        Renderer.setupFor3D(camPos, camPos.add(camFront), Vector3.UNIT_Z, cam.fov)
+        Renderer.setDepthEnabled(false)
+        Renderer.setVertexShader(shaders.entityVS)
+        Renderer.setPixelShader(shaders.entityPS)
+        for (var i = 0; i < postDrawables.length; ++i)
+        {
+            var entity = postDrawables[i]
+            entity.postDraw(entity)
+        }
     }
 
     if (showGBuffer)
