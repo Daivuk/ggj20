@@ -13,6 +13,7 @@ var projectors = []
 var saveOverlay = new ColorAnim(Color.TRANSPARENT)
 var outsideStaticEntities = []
 var insideStaticEntities = []
+var interractables = []
 
 var cameraMenu = {
     pos: new Vector3(30.37, -18.681, 3.8761),
@@ -84,20 +85,27 @@ function createEntity(mapObj, pos)
     switch (mapObj.type)
     {
         case "spinner":
-            createEntity_spinner(entity);
+            createEntity_spinner(entity)
             break
         case "omni":
-            createEntity_omni(entity);
+            createEntity_omni(entity)
             break
         case "projector":
-            createEntity_projector(entity);
+            createEntity_projector(entity)
             break
         case "model":
-            createEntity_model(entity);
+            createEntity_model(entity)
+            break
+        case "door":
+            createEntity_door(entity)
+            break
+        case "controlPanel":
+            createEntity_controlPanel(entity)
             break
     }
 
     if (entity.update) updatables.push(entity)
+    if (entity.interract) interractables.push(entity)
     entities.push(entity)
     if (mapObj.model)
     {
@@ -194,6 +202,7 @@ function renderWorld(cam)
         for (var i = 0; i < outsideDrawables.length; ++i)
         {
             var entity = outsideDrawables[i]
+            if (!entity.model) continue
             entity.model.render(getEntityTransform(entity))
         }
     }
@@ -209,6 +218,7 @@ function renderWorld(cam)
         for (var i = 0; i < insideDrawables.length; ++i)
         {
             var entity = insideDrawables[i]
+            if (!entity.model) continue
             entity.model.render(getEntityTransform(entity))
         }
         Renderer.popRenderTarget()
@@ -223,6 +233,7 @@ function renderWorld(cam)
         for (var i = 0; i < insideDrawables.length; ++i)
         {
             var entity = insideDrawables[i]
+            if (!entity.model) continue
             entity.model.render(getEntityTransform(entity))
         }
         Renderer.popRenderTarget()
@@ -236,6 +247,7 @@ function renderWorld(cam)
         for (var i = 0; i < insideDrawables.length; ++i)
         {
             var entity = insideDrawables[i]
+            if (!entity.model) continue
             entity.model.render(getEntityTransform(entity))
         }
         Renderer.popRenderTarget()
@@ -259,7 +271,9 @@ function renderWorld(cam)
             Renderer.setBlendMode(BlendMode.ADD)
             var entity = omnis[i]
             shaders.omniPS.setVector3("lPos", entity.pos)
-            shaders.omniPS.setVector3("lColor", new Vector3(entity.mapObj.color.r, entity.mapObj.color.g, entity.mapObj.color.b).mul(flickers[entity.mapObj.flicker].get()))
+            shaders.omniPS.setVector4("lColor", new Vector4(
+                entity.mapObj.color.r, entity.mapObj.color.g, entity.mapObj.color.b,
+                entity.mapObj.intensity * flickers[entity.mapObj.flicker].get()))
             shaders.omniPS.setNumber("lRadius", entity.mapObj.radius)
             SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
             SpriteBatch.end()

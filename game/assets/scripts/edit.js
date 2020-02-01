@@ -9,6 +9,7 @@ var editIsPanning = false
 var hoverEntity = null
 var selectedEntity = null
 var transform = Matrix.IDENTITY
+var newType = ""
 
 function intersect(bmin, bmax, rayFrom, rayDir)
 {
@@ -141,6 +142,7 @@ function updateEdit(dt)
     }
 
     // Mouse picking (View picking...)
+    if (!GUI.wantCaptureMouse())
     {
         var camFront = getEntityFront(editCam)
         var camPos = getEntityCamPos(editCam)
@@ -232,8 +234,7 @@ function renderEditUI()
 
     if (GUI.begin("Inspector"))
     {
-        var newType = ""
-        GUI.inputText("new type", newType)
+        newType = GUI.inputText("new type", newType)
         GUI.sameLine()
         if (GUI.button("Create"))
         {
@@ -256,7 +257,7 @@ function renderEditUI()
         if (selectedEntity)
         {
             if (!selectedEntity.mapObj.name) selectedEntity.mapObj.name = ""
-            selectedEntity.name = GUI.inputText("Name", selectedEntity.mapObj.name)
+            selectedEntity.mapObj.name = GUI.inputText("Name", selectedEntity.mapObj.name)
             if (!selectedEntity.mapObj.type) selectedEntity.mapObj.type = ""
             selectedEntity.type = GUI.inputText("Type", selectedEntity.mapObj.type)
             selectedEntity.pos = GUI.dragVector3("Position", selectedEntity.pos, 0.01)
@@ -265,12 +266,12 @@ function renderEditUI()
             selectedEntity.mapObj.pos.z = selectedEntity.pos.z
             if (selectedEntity.angle != undefined)
             {
-                selectedEntity.angle = GUI.dragNumber("Angle", selectedEntity.angle, 0.1)
+                selectedEntity.angle = GUI.dragNumber("Angle", selectedEntity.angle, 1)
                 selectedEntity.mapObj.angle = selectedEntity.angle
             }
             if (selectedEntity.angleX != undefined)
             {
-                selectedEntity.angleX = GUI.dragNumber("AngleX", selectedEntity.angleX, 0.1)
+                selectedEntity.angleX = GUI.dragNumber("AngleX", selectedEntity.angleX, 1)
                 selectedEntity.mapObj.angleX = selectedEntity.angleX
             }
             if (selectedEntity.mapObj.radius != undefined)
@@ -288,6 +289,10 @@ function renderEditUI()
             {
                 selectedEntity.mapObj.texture = GUI.inputText("Texture", selectedEntity.mapObj.texture)
                 selectedEntity.texture = getTexture(selectedEntity.mapObj.texture)
+            }
+            if (selectedEntity.mapObj.target)
+            {
+                selectedEntity.mapObj.target = GUI.inputText("Target", selectedEntity.mapObj.target)
             }
         }
     }

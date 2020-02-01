@@ -10,6 +10,9 @@ var font = getFont("font.fnt")
 loadResources()
 loadMap()
 
+// playMusic("music.ogg")
+// playSound("sound.wav")
+
 function update(dt)
 {
     res = Renderer.getResolution()
