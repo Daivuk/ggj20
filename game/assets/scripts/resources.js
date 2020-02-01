@@ -1,11 +1,8 @@
-var models = {
-    outsideSolid: getModel("outsideSolid.model"),
-    spinner: getModel("spinner.model")
-}
-
 var shaders = {
     outsideSolidVS: getShader("outsideSolid.vs"),
-    outsideSolidPS: getShader("outsideSolid.ps")
+    outsideSolidPS: getShader("outsideSolid.ps"),
+    insideSolidVS: getShader("insideSolid.vs"),
+    insideSolidPS: getShader("insideSolid.ps")
 }
 
 function loadResources()

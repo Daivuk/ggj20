@@ -1,6 +1,6 @@
-function createEntity_spinner(obj)
+function createEntity_spinner(entity)
 {
-    obj.update = spinner_update;
+    entity.update = spinner_update;
 }
 
 function spinner_update(entity, dt)
