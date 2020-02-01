@@ -15,12 +15,50 @@ var saveOverlay = new ColorAnim(Color.TRANSPARENT)
 var outsideStaticEntities = []
 var insideStaticEntities = []
 var interractables = []
+var collisionEntities = []
 
 var cameraMenu = {
     pos: new Vector3(30.37, -18.681, 3.8761),
     angleX: 87.6 - 90,
     angleZ: 67.2 + 180 + 45,
     fov: 40
+}
+
+function getEntityBB(entity, out_bmin, out_bmax)
+{
+    if (!entity.model) return
+    var T = getEntityTransform(entity)
+    var bmin = entity.model.getMin()
+    var bmax = entity.model.getMax()
+
+    // Recalculate bounding box
+    var pts = [
+        new Vector4( bmin.x, bmin.y, bmin.z, 1.0),
+        new Vector4( bmax.x, bmin.y, bmin.z, 1.0),
+        new Vector4( bmin.x, bmax.y, bmin.z, 1.0),
+        new Vector4( bmax.x, bmax.y, bmin.z, 1.0),
+        new Vector4( bmin.x, bmin.y, bmax.z, 1.0),
+        new Vector4( bmax.x, bmin.y, bmax.z, 1.0),
+        new Vector4( bmin.x, bmax.y, bmax.z, 1.0),
+        new Vector4( bmax.x, bmax.y, bmax.z, 1.0)
+    ]
+    var pts2 = [null, null, null, null, null, null, null, null]
+    for (var i = 0; i < 8; ++i)
+    {
+        pts2[i] = pts[i].transform(T)
+    }
+    bmax.x = bmin.x = pts2[0].x;
+    bmax.y = bmin.y = pts2[0].y;
+    bmax.z = bmin.z = pts2[0].z;
+    for (var i = 1; i < 8; ++i)
+    {
+        out_bmin.x = Math.min(pts2[i].x, bmin.x);
+        out_bmin.y = Math.min(pts2[i].y, bmin.y);
+        out_bmin.z = Math.min(pts2[i].z, bmin.z);
+        out_bmax.x = Math.max(pts2[i].x, bmax.x);
+        out_bmax.y = Math.max(pts2[i].y, bmax.y);
+        out_bmax.z = Math.max(pts2[i].z, bmax.z);
+    }
 }
 
 function getEntityTransform(entity)
@@ -78,6 +116,7 @@ function deleteEntity(entity)
     removeFromArray(updatables, entity)
     removeFromArray(editDrawables, entity)
     removeFromArray(postDrawables, entity)
+    removeFromArray(collisionEntities, entity)
     removeFromArray(omnis, entity)
     removeFromArray(projectors, entity)
     removeFromArray(map.entities, entity.mapObj)
@@ -119,6 +158,7 @@ function createEntity(mapObj, pos)
     if (entity.update) updatables.push(entity)
     if (entity.interract) interractables.push(entity)
     if (entity.postDraw) postDrawables.push(entity)
+    if (entity.collision) collisionEntities.push(entity)
 
     entities.push(entity)
     if (mapObj.model)

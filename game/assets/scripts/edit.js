@@ -51,7 +51,7 @@ function intersect(bmin, bmax, rayFrom, rayDir)
 
 function map_rayPick(rayFrom, rayDir, maxDistance, extend)
 {
-    var d = maxDistance ? maxDistance : 1000
+    var d = maxDistance ? maxDistance : 1000 * 1000
     extend = extend ? extend : 0
     var prevDist = d * d; // Squared
     var ret = null;
@@ -60,10 +60,13 @@ function map_rayPick(rayFrom, rayDir, maxDistance, extend)
     {
         var entity = entities[i]
         if (entity.mapObj && entity.mapObj.unpickable) continue
-        var bmin = entity.model ? entity.model.getMin() : new Vector3(.05, .05, .05)
-        var bmax = entity.model ? entity.model.getMax() : new Vector3(-.05, -.05, -.05)
-        bmin = bmin.add(entity.pos).sub(extend)
-        bmax = bmax.add(entity.pos).add(extend)
+
+        var bmin = new Vector3(-.05, -.05, -.05).add(entity.pos)
+        var bmax = new Vector3(.05, .05, .05).add(entity.pos)
+        getEntityBB(entity, bmin, bmax)
+        bmin = bmin.sub(extend)
+        bmax = bmax.add(extend)
+        
         if (intersect(bmin, bmax, rayFrom, rayDir))
         {
             var dist = Vector3.distanceSquared(rayFrom, entity.pos)

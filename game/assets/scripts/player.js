@@ -22,6 +22,7 @@ function createEntity_player(entity)
     entity.fov = 70
     entity.vel = new Vector3(0)
     entity.headOffset = new Vector3(0, 0, 0.5)
+    entity.height = 0.73
     entity.size = 0.2
     entity.hoverObject = null
     entity.postDraw = player_postDraw

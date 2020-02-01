@@ -30,8 +30,24 @@ function getOrCreateVoxelAt(pos)
 function getSolidAt(pos)
 {
     var voxel = getVoxelAt(pos)
-    if (!voxel) return true
-    return voxel.solid
+    if (!voxel || voxel.solid) return true
+    for (var i = 0; i < collisionEntities.length; ++i)
+    {
+        var entity = collisionEntities[i]
+        if (entity.model)
+        {
+            var bmin = new Vector3(0)
+            var bmax = new Vector3(0)
+            getEntityBB(entity, bmin, bmax)
+
+            if (pos.x >= bmin.x && pos.y >= bmin.y && pos.z >= bmin.z &&
+                pos.x <= bmax.x && pos.y <= bmax.y && pos.z <= bmax.z)
+            {
+                return true
+            }
+        }
+    }
+    return false
 }
 
 function setSolidAt(pos, solid)
@@ -41,6 +57,8 @@ function setSolidAt(pos, solid)
 
 function voxelCollision(entity, dt)
 {
+    var height = entity.height ? entity.height : entity.size
+
     // X
     if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt - entity.size, entity.pos.y - entity.size, entity.pos.z)))
     {
@@ -55,6 +73,22 @@ function voxelCollision(entity, dt)
         entity.vel.x = 0
     }
     else if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt + entity.size, entity.pos.y - entity.size, entity.pos.z)))
+    {
+        entity.vel.x = 0
+    }
+    else if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt - entity.size, entity.pos.y - entity.size, entity.pos.z + height)))
+    {
+        entity.vel.x = 0
+    }
+    else if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt - entity.size, entity.pos.y + entity.size, entity.pos.z + height)))
+    {
+        entity.vel.x = 0
+    }
+    else if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt + entity.size, entity.pos.y + entity.size, entity.pos.z + height)))
+    {
+        entity.vel.x = 0
+    }
+    else if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt + entity.size, entity.pos.y - entity.size, entity.pos.z + height)))
     {
         entity.vel.x = 0
     }
@@ -73,6 +107,22 @@ function voxelCollision(entity, dt)
         entity.vel.y = 0
     }
     else if (getSolidAt(new Vector3(entity.pos.x + entity.size, entity.pos.y + entity.vel.y * dt - entity.size, entity.pos.z)))
+    {
+        entity.vel.y = 0
+    }
+    else if (getSolidAt(new Vector3(entity.pos.x - entity.size, entity.pos.y + entity.vel.y * dt - entity.size, entity.pos.z + height)))
+    {
+        entity.vel.y = 0
+    }
+    else if (getSolidAt(new Vector3(entity.pos.x - entity.size, entity.pos.y + entity.vel.y * dt + entity.size, entity.pos.z + height)))
+    {
+        entity.vel.y = 0
+    }
+    else if (getSolidAt(new Vector3(entity.pos.x + entity.size, entity.pos.y + entity.vel.y * dt + entity.size, entity.pos.z + height)))
+    {
+        entity.vel.y = 0
+    }
+    else if (getSolidAt(new Vector3(entity.pos.x + entity.size, entity.pos.y + entity.vel.y * dt - entity.size, entity.pos.z + height)))
     {
         entity.vel.y = 0
     }

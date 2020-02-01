@@ -10,6 +10,7 @@ function createEntity_door(entity)
     entity.trigger = door_trigger
     entity.isOpen = false
     entity.openAnim = new Vector3Anim(entity.pos)
+    entity.collision = true
 }
 
 function door_update(entity, dt)
