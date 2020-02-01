@@ -9,6 +9,7 @@ var entities = []
 var player = null
 var showGBuffer = false
 var omnis = []
+var projectors = []
 var saveOverlay = new ColorAnim(Color.TRANSPARENT)
 var outsideStaticEntities = []
 var insideStaticEntities = []
@@ -22,8 +23,9 @@ var cameraMenu = {
 
 function getEntityTransform(entity)
 {
+    var angleX = entity.angleX ? entity.angleX : 0
     var angle = entity.angle ? entity.angle : 0
-    return Matrix.createRotationZ(angle).mul(Matrix.createTranslation(entity.pos))
+    return Matrix.createRotationX(angleX).mul(Matrix.createRotationZ(angle)).mul(Matrix.createTranslation(entity.pos))
 }
 
 function getEntityFront(entity)
@@ -64,6 +66,7 @@ function deleteEntity(entity)
     removeFromArray(updatables, entity)
     removeFromArray(editDrawables, entity)
     removeFromArray(omnis, entity)
+    removeFromArray(projectors, entity)
     removeFromArray(map.entities, entity.mapObj)
 }
 
@@ -85,6 +88,9 @@ function createEntity(mapObj, pos)
             break
         case "omni":
             createEntity_omni(entity);
+            break
+        case "projector":
+            createEntity_projector(entity);
             break
         case "model":
             createEntity_model(entity);
@@ -245,21 +251,42 @@ function renderWorld(cam)
 
     // Draw omni lights (This is extremely ineficient, but if it runs for the jam, gg?)
     {
-        SpriteBatch.begin(Matrix.IDENTITY, shaders.omniPS)
-        Renderer.setTexture(gbuffer.normal, 1)
-        Renderer.setTexture(gbuffer.depth, 2)
-        Renderer.setBlendMode(BlendMode.ADD)
         for (var i = 0; i < omnis.length; ++i)
         {
+            SpriteBatch.begin(Matrix.IDENTITY, shaders.omniPS)
+            Renderer.setTexture(gbuffer.normal, 1)
+            Renderer.setTexture(gbuffer.depth, 2)
+            Renderer.setBlendMode(BlendMode.ADD)
             var entity = omnis[i]
             shaders.omniPS.setVector3("lPos", entity.pos)
-            shaders.omniPS.setVector3("lColor", new Vector3(entity.mapObj.color.r, entity.mapObj.color.g, entity.mapObj.color.b))
+            shaders.omniPS.setVector3("lColor", new Vector3(entity.mapObj.color.r, entity.mapObj.color.g, entity.mapObj.color.b).mul(flickers[entity.mapObj.flicker].get()))
             shaders.omniPS.setNumber("lRadius", entity.mapObj.radius)
             SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
+            SpriteBatch.end()
         }
-        SpriteBatch.end()
-        Renderer.setTexture(null, 1) // This fixes a bug in Onut...
+        Renderer.setBlendMode(BlendMode.ALPHA)
+    }
+
+    // Projector lights
+    {
+        for (var i = 0; i < projectors.length; ++i)
+        {
+            var entity = projectors[i]
+            SpriteBatch.begin(Matrix.IDENTITY, shaders.projectorPS)
+            Renderer.setTexture(gbuffer.normal, 1)
+            Renderer.setTexture(gbuffer.depth, 2)
+            Renderer.setTexture(entity.texture, 3)
+            Renderer.setBlendMode(BlendMode.ADD)
+            shaders.projectorPS.setVector3("lPos", entity.pos)
+            shaders.projectorPS.setVector3("lColor", new Vector3(entity.mapObj.color.r, entity.mapObj.color.g, entity.mapObj.color.b).mul(flickers[entity.mapObj.flicker].get()))
+            shaders.projectorPS.setNumber("lRadius", entity.mapObj.radius)
+            shaders.projectorPS.setMatrix("transform", getEntityTransform(entity))
+            SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
+            SpriteBatch.end()
+        }
+        Renderer.setTexture(null, 1)
         Renderer.setTexture(null, 2)
+        Renderer.setTexture(null, 3)
         Renderer.setBlendMode(BlendMode.ALPHA)
     }
 

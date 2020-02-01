@@ -4,5 +4,7 @@ function createEntity_omni(entity)
         entity.mapObj.color = new Color(1, 1, 1, 1)
     if (!entity.mapObj.radius)
         entity.mapObj.radius = 4
+    if (!entity.mapObj.flicker)
+        entity.mapObj.flicker = 0
     omnis.push(entity)
 }

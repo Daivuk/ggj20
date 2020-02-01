@@ -13,6 +13,7 @@ var shaders = {
     // Lighting pass
     ambiantPS: getShader("ambiant.ps"),
     omniPS: getShader("omni.ps"),
+    projectorPS: getShader("projector.ps"),
 
     // Edit
     entityVS: getShader("entity.vs"),

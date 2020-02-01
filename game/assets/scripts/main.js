@@ -24,11 +24,11 @@ function update(dt)
                 state = "pause"
                 Input.setFpsMouse(false)
             }
-            if (Input.isJustDown(Key.F2))
+            if (DEBUG && Input.isJustDown(Key.F2))
             {
                 state = "edit"
                 Input.setFpsMouse(false)
-                editCam.pos = new Vector3(player.pos)
+                editCam.pos = getEntityCamPos(player)
                 editCam.angle = player.angle
                 editCam.angleX = player.angleX
             }

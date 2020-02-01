@@ -154,8 +154,6 @@ function updateEdit(dt)
         var from3 = new Vector3(from.x / from.w, from.y / from.w, from.z / from.w)
         var to3 = new Vector3(to.x / to.w, to.y / to.w, to.z / to.w)
 
-        print(JSON.stringify(from3) + ", " + JSON.stringify(to3))
-
         hoverEntity = map_rayPick(from3, to3.sub(from3).normalize(), camPos.add(camFront.mul(1000)))
     }
 
@@ -279,10 +277,17 @@ function renderEditUI()
                 selectedEntity.mapObj.radius = GUI.dragNumber("Radius", selectedEntity.mapObj.radius, 0.1)
             if (selectedEntity.mapObj.color)
                 selectedEntity.mapObj.color = GUI.colorPickerRGBA("Color", selectedEntity.mapObj.color)
+            if (selectedEntity.mapObj.flicker != undefined)
+                selectedEntity.mapObj.flicker = Math.round(GUI.dragInt("Flickering", selectedEntity.mapObj.flicker, 1, 0, flickers.length - 1))
             if (selectedEntity.mapObj.model)
             {
                 selectedEntity.mapObj.model = GUI.inputText("Model", selectedEntity.mapObj.model)
                 selectedEntity.model = getModel(selectedEntity.mapObj.model)
+            }
+            if (selectedEntity.mapObj.texture)
+            {
+                selectedEntity.mapObj.texture = GUI.inputText("Texture", selectedEntity.mapObj.texture)
+                selectedEntity.texture = getTexture(selectedEntity.mapObj.texture)
             }
         }
     }

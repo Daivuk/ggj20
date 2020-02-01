@@ -19,9 +19,16 @@ Texture2 texDepth
     repeatY = clamp;
 }
 
+Texture3 texProjector
+{
+    filter = linear;
+    repeatY = clamp;
+}
+
 extern float3 lPos;
 extern float3 lColor;
 extern float lRadius;
+extern matrix transform;
 
 float3 LightPass(float3 pos, float3 normal, float3 lpos, float lradius, float3 lcolor)
 {
@@ -42,6 +49,7 @@ void main()
     float4 tdiffuse = texDiffuse(inUV);
     float4 tnormal = texNormal(inUV);
     float4 tdepth = texDepth(inUV);
+    float4 tprojector = texProjector(inUV);
 
     oColor = tdiffuse;
 
