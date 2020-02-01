@@ -1,0 +1,25 @@
+Texture0 texDiffuse;
+
+extern float alphaTestBias;
+
+input float3 inNormal;
+input float4 inColor;
+input float2 inTexCoord;
+input float2 inDepth;
+
+extern float3 skyColor;
+
+const float3 sunColor = float3(1, 1, 1);
+const float3 sunDir = normalize(float3(-0.4, -0.4, 1.0));
+
+void main()
+{
+    float4 diffuse = texDiffuse(inTexCoord);
+    if (diffuse.a < alphaTestBias) discard;
+    oColor = diffuse * inColor;
+
+    oColor.rgb = oColor.rgb * sunColor * (dot(sunDir, inNormal) * 0.5 + 0.5);
+    
+    float d = clamp(inDepth.x / 50, 0, 1);
+    oColor.rgb = lerp(oColor.rgb, skyColor, d);
+}

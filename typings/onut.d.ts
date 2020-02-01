@@ -1006,7 +1006,7 @@ declare class Model {
     render(transform: Matrix);
 }
 /** Same as Model.createFromFile */
-declare function getModel(filename: string): ParticleSystem;
+declare function getModel(filename: string): Model;
 
 // VertexBuffer
 declare class VertexBuffer {

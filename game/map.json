@@ -1,0 +1,21 @@
+[
+    {
+        "id": 0,
+        "model": "outsideSolid.model",
+        "solid": true,
+        "outside": true,
+        "static": true,
+        "pos": { "x": 0, "y": 0, "z": 0},
+        "angle": 0
+    },
+    {
+        "id": 0,
+        "type": "spinner",
+        "model": "spinner.model",
+        "solid": true,
+        "outside": true,
+        "static": false,
+        "pos": { "x": -14.7556, "y": -14.6189, "z": 12.9405},
+        "angle": 0
+    }
+]
