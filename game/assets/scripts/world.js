@@ -389,7 +389,6 @@ function renderWorld(cam)
         Renderer.setVertexShader(shaders.entityVS)
         Renderer.setPixelShader(shaders.entityPS)
         Renderer.setBlendMode(BlendMode.ALPHA)
-        models.windows.render()
         for (var i = 0; i < postDrawables.length; ++i)
         {
             var entity = postDrawables[i]
