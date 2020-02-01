@@ -1,6 +1,10 @@
 var PLAYER_WALK_SPEED = 2
 var PLAYER_RUN_SPEED = 4
 
+var walkSnd = createSoundInstance("FootStep.wav")
+walkSnd.setVolume(1.0)
+walkSnd.setLoop(true)
+
 function wrapAngle(n)
 {
     return ((n % 360) + 360) % 360;
@@ -59,7 +63,18 @@ function player_update(entity, dt)
     }
     if (entity.vel.length() > maxSpeed)
     {
+        if (!walkSnd.isPlaying())
+            walkSnd.play()
+        if (maxSpeed == PLAYER_WALK_SPEED)
+            walkSnd.setPitch(1.0)
+        else
+            walkSnd.setPitch(1.20)
         entity.vel = entity.vel.normalize().mul(maxSpeed)
+    }
+    else
+    {
+        if (walkSnd.isPlaying())
+            walkSnd.stop()
     }
 
     // Collisions
