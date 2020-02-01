@@ -1,0 +1,17 @@
+input float2 inUV;
+input float4 inColor;
+
+Texture0 texDiffuse
+{
+    filter = nearest;
+    repeat = clamp;
+}
+
+void main()
+{
+    float4 tdiffuse = texDiffuse(inUV);
+
+    tdiffuse.rgb *= float3(0.06, 0.07, 0.15);
+
+    oColor = tdiffuse;
+}

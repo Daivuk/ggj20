@@ -5,6 +5,8 @@ var insideDrawables = []
 var updatables = []
 var map = []
 var player = null
+var showGBuffer = false
+var omnis = []
 
 var cameraMenu = {
     pos: new Vector3(30.37, -18.681, 3.8761),
@@ -27,9 +29,9 @@ function loadMap()
     var outsideStaticEntities = []
     var insideStaticEntities = []
 
-    for (var i = 0; i < map.length; ++i)
+    for (var i = 0; i < map.entities.length; ++i)
     {
-        var mapObj = map[i]
+        var mapObj = map.entities[i]
         var entity = {
             mapObj: mapObj,
             pos: new Vector3(mapObj.pos.x, mapObj.pos.y, mapObj.pos.z),
@@ -41,30 +43,35 @@ function loadMap()
         switch (mapObj.type)
         {
             case "spinner": createEntity_spinner(entity); break;
+            case "omni": omnis.push(entity); break;
         }
 
         if (entity.update) updatables.push(entity)
-        if (mapObj.outside)
+
+        if (mapObj.model)
         {
-            if (mapObj.static)
+            if (mapObj.outside)
             {
-                outsideStaticEntities.push({
-                    model: entity.model,
-                    transform: getEntityTransform(entity)
-                })
+                if (mapObj.static)
+                {
+                    outsideStaticEntities.push({
+                        model: entity.model,
+                        transform: getEntityTransform(entity)
+                    })
+                }
+                else outsideDrawables.push(entity)
             }
-            else outsideDrawables.push(entity)
-        }
-        else
-        {
-            if (mapObj.static)
+            else
             {
-                insideStaticEntities.push({
-                    model: entity.model,
-                    transform: getEntityTransform(entity)
-                })
+                if (mapObj.static)
+                {
+                    insideStaticEntities.push({
+                        model: entity.model,
+                        transform: getEntityTransform(entity)
+                    })
+                }
+                else insideDrawables.push(entity)
             }
-            else insideDrawables.push(entity)
         }
     }
 
@@ -90,6 +97,8 @@ function updateWorld(dt)
         var entity = updatables[i]
         entity.update(entity, dt)
     }
+
+    if (Input.isJustDown(Key.F1)) showGBuffer = !showGBuffer
 }
 
 function renderWorld()
@@ -108,6 +117,7 @@ function renderWorld()
     Renderer.setupFor3D(cam.pos, cam.target, Vector3.UNIT_Z, cam.fov)
 
     // Draw outside solids
+    Renderer.setBlendMode(BlendMode.OPAQUE)
     Renderer.setVertexShader(shaders.outsideSolidVS)
     Renderer.setPixelShader(shaders.outsideSolidPS)
     shaders.outsideSolidPS.setVector3("skyColor", clearColor.toVector3())
@@ -118,13 +128,75 @@ function renderWorld()
         entity.model.render(getEntityTransform(entity))
     }
 
-    // Draw inside solids
-    Renderer.setVertexShader(shaders.insideSolidVS)
-    Renderer.setPixelShader(shaders.insideSolidPS)
+    // Draw inside solids into the gbuffer
+    Renderer.pushRenderTarget(gbuffer.depth)
+    Renderer.clear(Color.TRANSPARENT)
+    Renderer.setVertexShader(shaders.depthVS)
+    Renderer.setPixelShader(shaders.depthPS)
     staticInsideModel.render();
     for (var i = 0; i < insideDrawables.length; ++i)
     {
         var entity = insideDrawables[i]
         entity.model.render(getEntityTransform(entity))
+    }
+    Renderer.popRenderTarget()
+
+    Renderer.pushRenderTarget(gbuffer.diffuse)
+    Renderer.clear(Color.TRANSPARENT)
+    Renderer.setVertexShader(shaders.diffuseVS)
+    Renderer.setPixelShader(shaders.diffusePS)
+    staticInsideModel.render();
+    for (var i = 0; i < insideDrawables.length; ++i)
+    {
+        var entity = insideDrawables[i]
+        entity.model.render(getEntityTransform(entity))
+    }
+    Renderer.popRenderTarget()
+    
+    Renderer.pushRenderTarget(gbuffer.normal)
+    Renderer.clear(Color.TRANSPARENT)
+    Renderer.setVertexShader(shaders.normalVS)
+    Renderer.setPixelShader(shaders.normalPS)
+    staticInsideModel.render();
+    for (var i = 0; i < insideDrawables.length; ++i)
+    {
+        var entity = insideDrawables[i]
+        entity.model.render(getEntityTransform(entity))
+    }
+    Renderer.popRenderTarget()
+
+    // First, draw the ambiant
+    var screenRect = new Rect(0, 0, res.x, res.y)
+    SpriteBatch.begin(Matrix.IDENTITY, shaders.ambiantPS)
+    Renderer.setBlendMode(BlendMode.ALPHA)
+    SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
+    SpriteBatch.end()
+
+    // Draw omni lights (This is extremely ineficient, but if it runs for the jam, gg?)
+    Renderer.setTexture(null, 1) // This fixes a bug in Onut...
+    Renderer.setTexture(null, 2)
+    SpriteBatch.begin(Matrix.IDENTITY, shaders.omniPS)
+    Renderer.setTexture(gbuffer.normal, 1)
+    Renderer.setTexture(gbuffer.depth, 2)
+    Renderer.setBlendMode(BlendMode.ADD)
+    Renderer.setFilterMode(FilterMode.LINEAR)
+    for (var i = 0; i < omnis.length; ++i)
+    {
+        var entity = omnis[i]
+        shaders.omniPS.setVector3("lPos", entity.pos)
+        shaders.omniPS.setVector3("lColor", new Vector3(entity.mapObj.color.r, entity.mapObj.color.g, entity.mapObj.color.b))
+        shaders.omniPS.setNumber("lRadius", entity.mapObj.radius)
+        SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
+    }
+    SpriteBatch.end()
+
+    if (showGBuffer)
+    {
+        Renderer.setBlendMode(BlendMode.OPAQUE)
+        SpriteBatch.begin()
+        SpriteBatch.drawRect(gbuffer.diffuse, new Rect(0, 0, res.x / 2, res.y / 2))
+        SpriteBatch.drawRect(gbuffer.normal, new Rect(res.x / 2, 0, res.x / 2, res.y / 2))
+        SpriteBatch.drawRect(gbuffer.depth, new Rect(0, res.y / 2, res.x / 2, res.y / 2))
+        SpriteBatch.end()
     }
 }

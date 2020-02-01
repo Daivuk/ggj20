@@ -1,0 +1,8 @@
+Texture0 texDiffuse;
+
+input float3 outWorldPos;
+
+void main()
+{
+    oColor = float4(outWorldPos / 20.0, 1.0);
+}

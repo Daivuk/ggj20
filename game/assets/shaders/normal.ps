@@ -1,0 +1,6 @@
+input float3 inNormal;
+
+void main()
+{
+    oColor = float4(inNormal.rgb * 0.5 + 0.5, 1.0);
+}
