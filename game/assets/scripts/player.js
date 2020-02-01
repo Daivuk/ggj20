@@ -16,11 +16,13 @@ function createEntity_player(entity)
     entity.update = player_update
     entity.pos.x = 2
     entity.pos.y = 4.5
-    entity.pos.z = 1.6
+    entity.pos.z = 1
     entity.angle = 180
     entity.angleX = 0
     entity.fov = 70
-    entity.vel = new Vector3(0, 0)
+    entity.vel = new Vector3(0)
+    entity.headOffset = new Vector3(0, 0, 0.6)
+    entity.size = 0.2
 }
 
 function player_update(entity, dt)
@@ -57,6 +59,8 @@ function player_update(entity, dt)
         entity.vel = entity.vel.normalize().mul(maxSpeed)
     }
 
+    // Collisions
+    voxelCollision(entity, dt)
     entity.pos = entity.pos.add(entity.vel.mul(dt))
     entity.vel = entity.vel.mul(Math.max(0, 1 - dt * 10))
 }

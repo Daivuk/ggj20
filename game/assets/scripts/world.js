@@ -32,6 +32,12 @@ function getEntityFront(entity)
     )
 }
 
+function getEntityCamPos(entity)
+{
+    var headOffset = entity.headOffset ? entity.headOffset : Vector3.ZERO
+    return entity.pos.add(headOffset)
+}
+
 function saveMap()
 {
     var writer = new BinaryFileWriter("map.json")
@@ -133,7 +139,8 @@ function renderWorld(cam)
 
     // Setup camera
     var camFront = getEntityFront(cam)
-    Renderer.setupFor3D(cam.pos, cam.pos.add(camFront), Vector3.UNIT_Z, cam.fov)
+    var camPos = getEntityCamPos(cam)
+    Renderer.setupFor3D(camPos, camPos.add(camFront), Vector3.UNIT_Z, cam.fov)
 
     // Draw outside solids
     {

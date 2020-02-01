@@ -38,3 +38,47 @@ function setSolidAt(pos, solid)
 {
     getOrCreateVoxelAt(pos).solid = solid
 }
+
+function voxelCollision(entity, dt)
+{
+    // X
+    if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt - entity.size, entity.pos.y - entity.size, entity.pos.z)))
+    {
+        entity.vel.x = 0
+    }
+    else if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt - entity.size, entity.pos.y + entity.size, entity.pos.z)))
+    {
+        entity.vel.x = 0
+    }
+    else if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt + entity.size, entity.pos.y + entity.size, entity.pos.z)))
+    {
+        entity.vel.x = 0
+    }
+    else if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt + entity.size, entity.pos.y - entity.size, entity.pos.z)))
+    {
+        entity.vel.x = 0
+    }
+
+    // Y
+    if (getSolidAt(new Vector3(entity.pos.x - entity.size, entity.pos.y + entity.vel.y * dt - entity.size, entity.pos.z)))
+    {
+        entity.vel.y = 0
+    }
+    else if (getSolidAt(new Vector3(entity.pos.x - entity.size, entity.pos.y + entity.vel.y * dt + entity.size, entity.pos.z)))
+    {
+        entity.vel.y = 0
+    }
+    else if (getSolidAt(new Vector3(entity.pos.x + entity.size, entity.pos.y + entity.vel.y * dt + entity.size, entity.pos.z)))
+    {
+        entity.vel.y = 0
+    }
+    else if (getSolidAt(new Vector3(entity.pos.x + entity.size, entity.pos.y + entity.vel.y * dt - entity.size, entity.pos.z)))
+    {
+        entity.vel.y = 0
+    }
+
+    // if (getSolidAt(new Vector3(vel.x * dt, 0, 0)))
+    // {
+    //     vel.x = 0
+    // }
+}
