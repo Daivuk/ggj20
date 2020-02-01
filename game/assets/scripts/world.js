@@ -5,10 +5,13 @@ var insideDrawables = []
 var updatables = []
 var editDrawables = []
 var map = []
+var entities = []
 var player = null
 var showGBuffer = false
 var omnis = []
 var saveOverlay = new ColorAnim(Color.TRANSPARENT)
+var outsideStaticEntities = []
+var insideStaticEntities = []
 
 var cameraMenu = {
     pos: new Vector3(30.37, -18.681, 3.8761),
@@ -19,7 +22,8 @@ var cameraMenu = {
 
 function getEntityTransform(entity)
 {
-    return Matrix.createRotationZ(entity.angle).mul(Matrix.createTranslation(entity.pos))
+    var angle = entity.angle ? entity.angle : 0
+    return Matrix.createRotationZ(angle).mul(Matrix.createTranslation(entity.pos))
 }
 
 function getEntityFront(entity)
@@ -46,63 +50,95 @@ function saveMap()
     saveOverlay.playSingle(Color.WHITE, Color.TRANSPARENT, 0.2)
 }
 
+function removeFromArray(arr, item)
+{
+    var i = arr.indexOf(item)
+    if (i != -1) arr.splice(i, 1)
+}
+
+function deleteEntity(entity)
+{
+    removeFromArray(entities, entity)
+    removeFromArray(outsideDrawables, entity)
+    removeFromArray(insideDrawables, entity)
+    removeFromArray(updatables, entity)
+    removeFromArray(editDrawables, entity)
+    removeFromArray(omnis, entity)
+    removeFromArray(map.entities, entity.mapObj)
+}
+
+function createEntity(mapObj, pos)
+{
+    var entity = {
+        mapObj: mapObj,
+        pos: new Vector3(pos)
+    }
+
+    mapObj.pos = {x: pos.x, y: pos.y, z: pos.z}
+    if (mapObj.angle) entity.angle = mapObj.angle
+    if (mapObj.angleX) entity.angleX = mapObj.angleX
+
+    switch (mapObj.type)
+    {
+        case "spinner":
+            createEntity_spinner(entity);
+            break
+        case "omni":
+            createEntity_omni(entity);
+            break
+        case "model":
+            createEntity_model(entity);
+            break
+    }
+
+    if (entity.update) updatables.push(entity)
+    entities.push(entity)
+    if (mapObj.model)
+    {
+        if (mapObj.outside)
+        {
+            if (mapObj.static)
+            {
+                outsideStaticEntities.push({
+                    model: entity.model,
+                    transform: getEntityTransform(entity)
+                })
+            }
+            else outsideDrawables.push(entity)
+        }
+        else
+        {
+            if (mapObj.static)
+            {
+                insideStaticEntities.push({
+                    model: entity.model,
+                    transform: getEntityTransform(entity)
+                })
+            }
+            else insideDrawables.push(entity)
+        }
+    }
+    else
+    {
+        editDrawables.push(entity)
+    }
+
+    if (map.entities.indexOf(mapObj) == -1)
+        map.entities.push(mapObj)
+
+    return entity
+}
+
 function loadMap()
 {
     var reader = new BinaryFileReader("map.json")
     map = JSON.parse(reader.readString())
     reader = null
 
-    var outsideStaticEntities = []
-    var insideStaticEntities = []
-
     for (var i = 0; i < map.entities.length; ++i)
     {
         var mapObj = map.entities[i]
-        var entity = {
-            mapObj: mapObj,
-            pos: new Vector3(mapObj.pos.x, mapObj.pos.y, mapObj.pos.z),
-            angle: mapObj.angle
-        }
-
-        if (mapObj.model) entity.model = getModel(mapObj.model)
-
-        switch (mapObj.type)
-        {
-            case "spinner": createEntity_spinner(entity); break;
-            case "omni": omnis.push(entity); break;
-        }
-
-        if (entity.update) updatables.push(entity)
-
-        if (mapObj.model)
-        {
-            if (mapObj.outside)
-            {
-                if (mapObj.static)
-                {
-                    outsideStaticEntities.push({
-                        model: entity.model,
-                        transform: getEntityTransform(entity)
-                    })
-                }
-                else outsideDrawables.push(entity)
-            }
-            else
-            {
-                if (mapObj.static)
-                {
-                    insideStaticEntities.push({
-                        model: entity.model,
-                        transform: getEntityTransform(entity)
-                    })
-                }
-                else insideDrawables.push(entity)
-            }
-        }
-        else
-        {
-            editDrawables.push(entity)
-        }
+        createEntity(mapObj, new Vector3(mapObj.pos.x, mapObj.pos.y, mapObj.pos.z))
     }
 
     staticOutsideModel = Model.createFromBatch(outsideStaticEntities)

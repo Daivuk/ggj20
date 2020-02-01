@@ -1,9 +1,15 @@
 function createEntity_spinner(entity)
 {
+    if (!entity.mapObj.angle)
+        entity.mapObj.angle = 0
+    entity.angle = 0
+    if (!entity.mapObj.model)
+        entity.mapObj.model = "entity.model"
+    entity.model = getModel(entity.mapObj.model)
     entity.update = spinner_update;
 }
 
 function spinner_update(entity, dt)
 {
-    entity.angle += dt * 360 * 3 % 360
+    entity.angle = wrapAngle(entity.angle + dt * 360 * 3)
 }
