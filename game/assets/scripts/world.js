@@ -195,6 +195,8 @@ function renderWorld(cam)
     // Draw inside solids into the gbuffer
     {
         Renderer.pushRenderTarget(gbuffer.depth)
+        Renderer.clear(Color.BLACK)
+        Renderer.clearDepth()
         Renderer.setVertexShader(shaders.depthVS)
         Renderer.setPixelShader(shaders.depthPS)
         staticInsideModel.render();
@@ -243,13 +245,10 @@ function renderWorld(cam)
 
     // Draw omni lights (This is extremely ineficient, but if it runs for the jam, gg?)
     {
-        Renderer.setTexture(null, 1) // This fixes a bug in Onut...
-        Renderer.setTexture(null, 2)
         SpriteBatch.begin(Matrix.IDENTITY, shaders.omniPS)
         Renderer.setTexture(gbuffer.normal, 1)
         Renderer.setTexture(gbuffer.depth, 2)
         Renderer.setBlendMode(BlendMode.ADD)
-        Renderer.setFilterMode(FilterMode.LINEAR)
         for (var i = 0; i < omnis.length; ++i)
         {
             var entity = omnis[i]
@@ -259,7 +258,7 @@ function renderWorld(cam)
             SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
         }
         SpriteBatch.end()
-        Renderer.setTexture(null, 1)
+        Renderer.setTexture(null, 1) // This fixes a bug in Onut...
         Renderer.setTexture(null, 2)
         Renderer.setBlendMode(BlendMode.ALPHA)
     }

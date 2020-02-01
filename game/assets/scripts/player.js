@@ -21,7 +21,7 @@ function createEntity_player(entity)
     entity.angleX = 0
     entity.fov = 70
     entity.vel = new Vector3(0)
-    entity.headOffset = new Vector3(0, 0, 0.6)
+    entity.headOffset = new Vector3(0, 0, 0.5)
     entity.size = 0.2
 }
 

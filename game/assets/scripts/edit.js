@@ -8,6 +8,7 @@ var editCam = {
 var editIsPanning = false
 var hoverEntity = null
 var selectedEntity = null
+var transform = Matrix.IDENTITY
 
 function intersect(bmin, bmax, rayFrom, rayDir)
 {
@@ -140,9 +141,23 @@ function updateEdit(dt)
     }
 
     // Mouse picking (View picking...)
-    var camFront = getEntityFront(editCam)
-    var camPos = getEntityCamPos(editCam)
-    hoverEntity = map_rayPick(camPos, camPos.add(camFront.mul(1000)))
+    {
+        var camFront = getEntityFront(editCam)
+        var camPos = getEntityCamPos(editCam)
+
+        var mousePos = Input.getMousePos()
+        var invTransform = transform.invert()
+        var mouseScreenFrom = new Vector4(mousePos.x / res.x * 2 - 1, -(mousePos.y / res.y * 2 - 1), 0, 1)
+        var mouseScreenTo = new Vector4(mouseScreenFrom.x, mouseScreenFrom.y, 1, 1)
+        var from = mouseScreenFrom.transform(invTransform)
+        var to = mouseScreenTo.transform(invTransform)
+        var from3 = new Vector3(from.x / from.w, from.y / from.w, from.z / from.w)
+        var to3 = new Vector3(to.x / to.w, to.y / to.w, to.z / to.w)
+
+        print(JSON.stringify(from3) + ", " + JSON.stringify(to3))
+
+        hoverEntity = map_rayPick(from3, to3.sub(from3).normalize(), camPos.add(camFront.mul(1000)))
+    }
 
     if (hoverEntity && Input.isJustDown(Key.MOUSE_1))
     {
@@ -165,6 +180,7 @@ function renderEdit()
     // Setup camera
     var camFront = getEntityFront(editCam)
     Renderer.setupFor3D(editCam.pos, editCam.pos.add(camFront), Vector3.UNIT_Z, editCam.fov)
+    transform = Renderer.getView().mul(Renderer.getProjection())
     Renderer.setDepthEnabled(false)
 
     // Draw entities that don't have mesh
@@ -226,10 +242,18 @@ function renderEditUI()
             selectedEntity = createEntity({type:newType}, editCam.pos.add(getEntityFront(editCam)))
         }
         GUI.separator()
-        if (selectedEntity && GUI.button("Delete"))
+        if (selectedEntity)
         {
-            deleteEntity(selectedEntity)
-            selectedEntity = null
+            if (GUI.button("Delete"))
+            {
+                deleteEntity(selectedEntity)
+                selectedEntity = null
+            }
+            GUI.sameLine()
+            if (GUI.button("Duplicate"))
+            {
+                selectedEntity = createEntity(JSON.parse(JSON.stringify(selectedEntity.mapObj)), selectedEntity.pos)
+            }
         }
         if (selectedEntity)
         {
