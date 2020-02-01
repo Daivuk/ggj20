@@ -1,8 +1,6 @@
 var shaders = {
     outsideSolidVS: getShader("outsideSolid.vs"),
     outsideSolidPS: getShader("outsideSolid.ps"),
-    insideSolidVS: getShader("insideSolid.vs"),
-    insideSolidPS: getShader("insideSolid.ps"),
 
     // gbuffer
     diffuseVS: getShader("diffuse.vs"),
@@ -15,6 +13,14 @@ var shaders = {
     // Lighting pass
     ambiantPS: getShader("ambiant.ps"),
     omniPS: getShader("omni.ps"),
+
+    // Edit
+    entityVS: getShader("entity.vs"),
+    entityPS: getShader("entity.ps"),
+}
+
+var models = {
+    entity: getModel("entity.model"),
 }
 
 function loadResources()

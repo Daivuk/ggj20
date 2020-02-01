@@ -3,10 +3,12 @@ var staticInsideModel = null
 var outsideDrawables = []
 var insideDrawables = []
 var updatables = []
+var editDrawables = []
 var map = []
 var player = null
 var showGBuffer = false
 var omnis = []
+var saveOverlay = new ColorAnim(Color.TRANSPARENT)
 
 var cameraMenu = {
     pos: new Vector3(30.37, -18.681, 3.8761),
@@ -28,6 +30,14 @@ function getEntityFront(entity)
         Math.cos(entity.angle * Math.PI / 180) * Math.cos(angleX * Math.PI / 180),
         Math.sin(angleX * Math.PI / 180)
     )
+}
+
+function saveMap()
+{
+    var writer = new BinaryFileWriter("map.json")
+    writer.writeString(JSON.stringify(map, null, 2))
+    writer = null
+    saveOverlay.playSingle(Color.WHITE, Color.TRANSPARENT, 0.2)
 }
 
 function loadMap()
@@ -83,6 +93,10 @@ function loadMap()
                 else insideDrawables.push(entity)
             }
         }
+        else
+        {
+            editDrawables.push(entity)
+        }
     }
 
     staticOutsideModel = Model.createFromBatch(outsideStaticEntities)
@@ -136,6 +150,9 @@ function renderWorld(cam)
     // Draw inside solids into the gbuffer
     Renderer.pushRenderTarget(gbuffer.depth)
     Renderer.clear(Color.TRANSPARENT)
+    Renderer.clearDepth()
+    Renderer.setDepthEnabled(true)
+    Renderer.setDepthWrite(true)
     Renderer.setVertexShader(shaders.depthVS)
     Renderer.setPixelShader(shaders.depthPS)
     staticInsideModel.render();
@@ -148,6 +165,9 @@ function renderWorld(cam)
 
     Renderer.pushRenderTarget(gbuffer.diffuse)
     Renderer.clear(Color.TRANSPARENT)
+    Renderer.clearDepth()
+    Renderer.setDepthEnabled(true)
+    Renderer.setDepthWrite(true)
     Renderer.setVertexShader(shaders.diffuseVS)
     Renderer.setPixelShader(shaders.diffusePS)
     staticInsideModel.render();
@@ -160,6 +180,9 @@ function renderWorld(cam)
     
     Renderer.pushRenderTarget(gbuffer.normal)
     Renderer.clear(Color.TRANSPARENT)
+    Renderer.clearDepth()
+    Renderer.setDepthEnabled(true)
+    Renderer.setDepthWrite(true)
     Renderer.setVertexShader(shaders.normalVS)
     Renderer.setPixelShader(shaders.normalPS)
     staticInsideModel.render();

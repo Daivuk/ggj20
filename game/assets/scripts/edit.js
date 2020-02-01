@@ -55,7 +55,7 @@ function updateEdit(dt)
         {
             entity.vel = entity.vel.add(Vector3.UNIT_Z.mul(dt * maxSpeed * 50))
         }
-        if (Input.isDown(Key.LEFT_CONTROL))
+        if (Input.isDown(Key.C))
         {
             entity.vel = entity.vel.sub(Vector3.UNIT_Z.mul(dt * maxSpeed * 50))
         }
@@ -67,9 +67,49 @@ function updateEdit(dt)
         entity.pos = entity.pos.add(entity.vel.mul(dt))
         entity.vel = entity.vel.mul(Math.max(0, 1 - dt * 10))
     }
+    else if (Input.isDown(Key.LEFT_CONTROL) && Input.isJustDown(Key.S))
+    {
+        saveMap()
+    }
+
+    // Voxel edit
+    if (Input.isDown(Key.E))
+    {
+        setSolidAt(editCam.pos, false)
+    }
+    else if (Input.isDown(Key.Q))
+    {
+        setSolidAt(editCam.pos, true)
+    }
+}
+
+function renderEdit()
+{
+    // Setup camera
+    var camFront = getEntityFront(editCam)
+    Renderer.setupFor3D(editCam.pos, editCam.pos.add(camFront), Vector3.UNIT_Z, editCam.fov)
+    Renderer.clearDepth()
+    Renderer.setDepthEnabled(true)
+    Renderer.setDepthWrite(true)
+
+    // Draw entities that don't have mesh
+    Renderer.setVertexShader(shaders.entityVS)
+    Renderer.setPixelShader(shaders.entityPS)
+    for (var i = 0; i < editDrawables.length; ++i)
+    {
+        var entity = editDrawables[i]
+        var color = entity.color ? entity.color : Color.WHITE
+        shaders.entityPS.setVector3("entityColor", color.toVector3())
+        models.entity.render(getEntityTransform(entity))
+    }
 }
 
 function renderEditUI()
 {
-
+    if (getSolidAt(editCam.pos))
+    {
+        SpriteBatch.begin()
+        SpriteBatch.drawRect(null, new Rect(0, 0, res.x, 10), new Color(1, 0, 0))
+        SpriteBatch.end()
+    }
 }

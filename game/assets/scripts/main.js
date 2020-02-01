@@ -5,6 +5,7 @@ Input.setFpsMouse(true)
 
 var res = Renderer.getResolution()
 var screenRect = new Rect(0, 0, res.x, res.y)
+var font = getFont("font.fnt")
 
 loadResources()
 loadMap()
@@ -59,15 +60,38 @@ function render()
     {
         case "game":
             renderWorld(player)
+            if (DEBUG)
+            {
+                SpriteBatch.begin()
+                SpriteBatch.drawRect(null, new Rect(0, 0, 300, 20), new Color(0, 0, 0, .75))
+                SpriteBatch.drawText(font, "Press F2 for edit mode", new Vector2(0, 10), Vector2.TOP_LEFT)
+                SpriteBatch.end()
+            }
             break
         case "pause":
             renderWorld(player)
             SpriteBatch.begin()
-            SpriteBatch.drawRect(null, screenRect, new Color(0, 0, 0, .5))
+            SpriteBatch.drawRect(null, screenRect, new Color(0, 0, 0, .75))
+            SpriteBatch.drawText(font, "PAUSED", res.div(2), Vector2.CENTER)
             SpriteBatch.end()
             break
         case "edit":
             renderWorld(editCam)
+            renderEdit()
+            if (DEBUG)
+            {
+                SpriteBatch.begin()
+                SpriteBatch.drawRect(null, new Rect(0, 0, 300, 50), new Color(0, 0, 0, .75))
+                SpriteBatch.drawText(font, "Middle mouse to move", new Vector2(0, 10), Vector2.TOP_LEFT)
+                SpriteBatch.drawText(font, "Q to add solid", new Vector2(0, 20), Vector2.TOP_LEFT)
+                SpriteBatch.drawText(font, "E to remove solid", new Vector2(0, 30), Vector2.TOP_LEFT)
+                SpriteBatch.drawText(font, "Ctrl+S to save", new Vector2(0, 40), Vector2.TOP_LEFT)
+                if (saveOverlay.isPlaying())
+                {
+                    SpriteBatch.drawRect(null, screenRect, saveOverlay.get())
+                }
+                SpriteBatch.end()
+            }
             break
     }
 }

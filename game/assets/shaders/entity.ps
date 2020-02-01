@@ -1,0 +1,14 @@
+Texture0 texDiffuse;
+
+input float3 inNormal;
+input float4 inColor;
+input float2 inTexCoord;
+
+extern float3 entityColor;
+
+void main()
+{
+    float4 diffuse = texDiffuse(inTexCoord);
+    oColor = diffuse * inColor;
+    oColor.rgb *= entityColor;
+}
