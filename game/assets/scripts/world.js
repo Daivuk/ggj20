@@ -247,20 +247,8 @@ function renderWorld(cam)
     var camPos = getEntityCamPos(cam)
     Renderer.setupFor3D(camPos, camPos.add(camFront), Vector3.UNIT_Z, cam.fov)
 
-    // Draw outside solids
-    {
-        Renderer.setBlendMode(BlendMode.OPAQUE)
-        Renderer.setVertexShader(shaders.outsideSolidVS)
-        Renderer.setPixelShader(shaders.outsideSolidPS)
-        shaders.outsideSolidPS.setVector3("skyColor", clearColor.toVector3())
-        staticOutsideModel.render();
-        for (var i = 0; i < outsideDrawables.length; ++i)
-        {
-            var entity = outsideDrawables[i]
-            if (!entity.model) continue
-            entity.model.render(getEntityTransform(entity))
-        }
-    }
+    // Draw deferred crap first
+
 
     // Draw inside solids into the gbuffer
     {
@@ -306,6 +294,35 @@ function renderWorld(cam)
             entity.model.render(getEntityTransform(entity))
         }
         Renderer.popRenderTarget()
+    }
+
+    // Draw outside solids
+    {
+        Renderer.setBlendMode(BlendMode.OPAQUE)
+        Renderer.setVertexShader(shaders.outsideSolidVS)
+        Renderer.setPixelShader(shaders.outsideSolidPS)
+        shaders.outsideSolidPS.setVector3("skyColor", clearColor.toVector3())
+        staticOutsideModel.render();
+        for (var i = 0; i < outsideDrawables.length; ++i)
+        {
+            var entity = outsideDrawables[i]
+            if (!entity.model) continue
+            entity.model.render(getEntityTransform(entity))
+        }
+    }
+
+    // Draw the interior meshes into buffer only
+    {
+        Renderer.setVertexShader(shaders.depthOnlyVS)
+        Renderer.setPixelShader(shaders.depthOnlyPS)
+        Renderer.setBlendMode(BlendMode.ALPHA)
+        staticInsideModel.render();
+        for (var i = 0; i < insideDrawables.length; ++i)
+        {
+            var entity = insideDrawables[i]
+            if (!entity.model) continue
+            entity.model.render(getEntityTransform(entity))
+        }
     }
 
     // First, draw the ambiant
@@ -363,9 +380,16 @@ function renderWorld(cam)
     {
         // Setup camera
         Renderer.setupFor3D(camPos, camPos.add(camFront), Vector3.UNIT_Z, cam.fov)
+        Renderer.setVertexShader(shaders.windowsVS)
+        Renderer.setPixelShader(shaders.windowsPS)
+        Renderer.setBlendMode(BlendMode.ALPHA)
+        models.windows.render()
+
         Renderer.setDepthEnabled(false)
         Renderer.setVertexShader(shaders.entityVS)
         Renderer.setPixelShader(shaders.entityPS)
+        Renderer.setBlendMode(BlendMode.ALPHA)
+        models.windows.render()
         for (var i = 0; i < postDrawables.length; ++i)
         {
             var entity = postDrawables[i]

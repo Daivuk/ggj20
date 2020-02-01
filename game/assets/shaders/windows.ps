@@ -1,0 +1,12 @@
+Texture0 texDiffuse;
+
+input float3 inNormal;
+input float4 inColor;
+input float2 inTexCoord;
+
+void main()
+{
+    float4 diffuse = texDiffuse(inTexCoord);
+    diffuse.a = pow(diffuse.a, .5);
+    oColor = diffuse * inColor;
+}
