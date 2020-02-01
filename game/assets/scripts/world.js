@@ -136,89 +136,90 @@ function renderWorld(cam)
     Renderer.setupFor3D(cam.pos, cam.pos.add(camFront), Vector3.UNIT_Z, cam.fov)
 
     // Draw outside solids
-    Renderer.setBlendMode(BlendMode.OPAQUE)
-    Renderer.setVertexShader(shaders.outsideSolidVS)
-    Renderer.setPixelShader(shaders.outsideSolidPS)
-    shaders.outsideSolidPS.setVector3("skyColor", clearColor.toVector3())
-    staticOutsideModel.render();
-    for (var i = 0; i < outsideDrawables.length; ++i)
     {
-        var entity = outsideDrawables[i]
-        entity.model.render(getEntityTransform(entity))
+        Renderer.setBlendMode(BlendMode.OPAQUE)
+        Renderer.setVertexShader(shaders.outsideSolidVS)
+        Renderer.setPixelShader(shaders.outsideSolidPS)
+        shaders.outsideSolidPS.setVector3("skyColor", clearColor.toVector3())
+        staticOutsideModel.render();
+        for (var i = 0; i < outsideDrawables.length; ++i)
+        {
+            var entity = outsideDrawables[i]
+            entity.model.render(getEntityTransform(entity))
+        }
     }
 
     // Draw inside solids into the gbuffer
-    Renderer.pushRenderTarget(gbuffer.depth)
-    Renderer.clear(Color.TRANSPARENT)
-    Renderer.clearDepth()
-    Renderer.setDepthEnabled(true)
-    Renderer.setDepthWrite(true)
-    Renderer.setVertexShader(shaders.depthVS)
-    Renderer.setPixelShader(shaders.depthPS)
-    staticInsideModel.render();
-    for (var i = 0; i < insideDrawables.length; ++i)
     {
-        var entity = insideDrawables[i]
-        entity.model.render(getEntityTransform(entity))
+        Renderer.pushRenderTarget(gbuffer.depth)
+        Renderer.setVertexShader(shaders.depthVS)
+        Renderer.setPixelShader(shaders.depthPS)
+        staticInsideModel.render();
+        for (var i = 0; i < insideDrawables.length; ++i)
+        {
+            var entity = insideDrawables[i]
+            entity.model.render(getEntityTransform(entity))
+        }
+        Renderer.popRenderTarget()
     }
-    Renderer.popRenderTarget()
-
-    Renderer.pushRenderTarget(gbuffer.diffuse)
-    Renderer.clear(Color.TRANSPARENT)
-    Renderer.clearDepth()
-    Renderer.setDepthEnabled(true)
-    Renderer.setDepthWrite(true)
-    Renderer.setVertexShader(shaders.diffuseVS)
-    Renderer.setPixelShader(shaders.diffusePS)
-    staticInsideModel.render();
-    for (var i = 0; i < insideDrawables.length; ++i)
     {
-        var entity = insideDrawables[i]
-        entity.model.render(getEntityTransform(entity))
+        Renderer.pushRenderTarget(gbuffer.diffuse)
+        Renderer.clear(Color.TRANSPARENT)
+        Renderer.clearDepth()
+        Renderer.setVertexShader(shaders.diffuseVS)
+        Renderer.setPixelShader(shaders.diffusePS)
+        staticInsideModel.render();
+        for (var i = 0; i < insideDrawables.length; ++i)
+        {
+            var entity = insideDrawables[i]
+            entity.model.render(getEntityTransform(entity))
+        }
+        Renderer.popRenderTarget()
     }
-    Renderer.popRenderTarget()
-    
-    Renderer.pushRenderTarget(gbuffer.normal)
-    Renderer.clear(Color.TRANSPARENT)
-    Renderer.clearDepth()
-    Renderer.setDepthEnabled(true)
-    Renderer.setDepthWrite(true)
-    Renderer.setVertexShader(shaders.normalVS)
-    Renderer.setPixelShader(shaders.normalPS)
-    staticInsideModel.render();
-    for (var i = 0; i < insideDrawables.length; ++i)
     {
-        var entity = insideDrawables[i]
-        entity.model.render(getEntityTransform(entity))
+        Renderer.pushRenderTarget(gbuffer.normal)
+        Renderer.clearDepth()
+        Renderer.setVertexShader(shaders.normalVS)
+        Renderer.setPixelShader(shaders.normalPS)
+        staticInsideModel.render();
+        for (var i = 0; i < insideDrawables.length; ++i)
+        {
+            var entity = insideDrawables[i]
+            entity.model.render(getEntityTransform(entity))
+        }
+        Renderer.popRenderTarget()
     }
-    Renderer.popRenderTarget()
 
     // First, draw the ambiant
-    SpriteBatch.begin(Matrix.IDENTITY, shaders.ambiantPS)
-    Renderer.setBlendMode(BlendMode.ALPHA)
-    SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
-    SpriteBatch.end()
+    {
+        SpriteBatch.begin(Matrix.IDENTITY, shaders.ambiantPS)
+        Renderer.setBlendMode(BlendMode.ALPHA)
+        SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
+        SpriteBatch.end()
+    }
 
     // Draw omni lights (This is extremely ineficient, but if it runs for the jam, gg?)
-    Renderer.setTexture(null, 1) // This fixes a bug in Onut...
-    Renderer.setTexture(null, 2)
-    SpriteBatch.begin(Matrix.IDENTITY, shaders.omniPS)
-    Renderer.setTexture(gbuffer.normal, 1)
-    Renderer.setTexture(gbuffer.depth, 2)
-    Renderer.setBlendMode(BlendMode.ADD)
-    Renderer.setFilterMode(FilterMode.LINEAR)
-    for (var i = 0; i < omnis.length; ++i)
     {
-        var entity = omnis[i]
-        shaders.omniPS.setVector3("lPos", entity.pos)
-        shaders.omniPS.setVector3("lColor", new Vector3(entity.mapObj.color.r, entity.mapObj.color.g, entity.mapObj.color.b))
-        shaders.omniPS.setNumber("lRadius", entity.mapObj.radius)
-        SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
+        Renderer.setTexture(null, 1) // This fixes a bug in Onut...
+        Renderer.setTexture(null, 2)
+        SpriteBatch.begin(Matrix.IDENTITY, shaders.omniPS)
+        Renderer.setTexture(gbuffer.normal, 1)
+        Renderer.setTexture(gbuffer.depth, 2)
+        Renderer.setBlendMode(BlendMode.ADD)
+        Renderer.setFilterMode(FilterMode.LINEAR)
+        for (var i = 0; i < omnis.length; ++i)
+        {
+            var entity = omnis[i]
+            shaders.omniPS.setVector3("lPos", entity.pos)
+            shaders.omniPS.setVector3("lColor", new Vector3(entity.mapObj.color.r, entity.mapObj.color.g, entity.mapObj.color.b))
+            shaders.omniPS.setNumber("lRadius", entity.mapObj.radius)
+            SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
+        }
+        SpriteBatch.end()
+        Renderer.setTexture(null, 1)
+        Renderer.setTexture(null, 2)
+        Renderer.setBlendMode(BlendMode.ALPHA)
     }
-    SpriteBatch.end()
-    Renderer.setTexture(null, 1)
-    Renderer.setTexture(null, 2)
-    Renderer.setBlendMode(BlendMode.ALPHA)
 
     if (showGBuffer)
     {
