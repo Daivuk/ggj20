@@ -20,6 +20,16 @@ function getEntityTransform(entity)
     return Matrix.createRotationZ(entity.angle).mul(Matrix.createTranslation(entity.pos))
 }
 
+function getEntityFront(entity)
+{
+    var angleX = entity.angleX ? entity.angleX : 0
+    return new Vector3(
+        Math.sin(entity.angle * Math.PI / 180) * Math.cos(angleX * Math.PI / 180),
+        Math.cos(entity.angle * Math.PI / 180) * Math.cos(angleX * Math.PI / 180),
+        Math.sin(angleX * Math.PI / 180)
+    )
+}
+
 function loadMap()
 {
     var reader = new BinaryFileReader("map.json")
@@ -101,20 +111,15 @@ function updateWorld(dt)
     if (Input.isJustDown(Key.F1)) showGBuffer = !showGBuffer
 }
 
-function renderWorld()
+function renderWorld(cam)
 {
     var clearColor = Color.fromHexRGB(0xadbccd)
     Renderer.clear(clearColor)
     Renderer.clearDepth()
 
     // Setup camera
-    var cam = player
-    cam.target = new Vector3(
-        cam.pos.x + Math.sin(cam.angle * Math.PI / 180) * Math.cos(cam.angleX * Math.PI / 180),
-        cam.pos.y + Math.cos(cam.angle * Math.PI / 180) * Math.cos(cam.angleX * Math.PI / 180),
-        cam.pos.z + Math.sin(cam.angleX * Math.PI / 180)
-    )
-    Renderer.setupFor3D(cam.pos, cam.target, Vector3.UNIT_Z, cam.fov)
+    var camFront = getEntityFront(cam)
+    Renderer.setupFor3D(cam.pos, cam.pos.add(camFront), Vector3.UNIT_Z, cam.fov)
 
     // Draw outside solids
     Renderer.setBlendMode(BlendMode.OPAQUE)
@@ -166,7 +171,6 @@ function renderWorld()
     Renderer.popRenderTarget()
 
     // First, draw the ambiant
-    var screenRect = new Rect(0, 0, res.x, res.y)
     SpriteBatch.begin(Matrix.IDENTITY, shaders.ambiantPS)
     Renderer.setBlendMode(BlendMode.ALPHA)
     SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
@@ -189,10 +193,12 @@ function renderWorld()
         SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
     }
     SpriteBatch.end()
+    Renderer.setTexture(null, 1)
+    Renderer.setTexture(null, 2)
+    Renderer.setBlendMode(BlendMode.ALPHA)
 
     if (showGBuffer)
     {
-        Renderer.setBlendMode(BlendMode.OPAQUE)
         SpriteBatch.begin()
         SpriteBatch.drawRect(gbuffer.diffuse, new Rect(0, 0, res.x / 2, res.y / 2))
         SpriteBatch.drawRect(gbuffer.normal, new Rect(res.x / 2, 0, res.x / 2, res.y / 2))

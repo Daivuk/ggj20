@@ -1,6 +1,6 @@
 {
-    "collisions": [
-    ],
+    "voxels": {
+    },
     "entities": [
         {
             "model": "outsideSolid.model",
