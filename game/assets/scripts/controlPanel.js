@@ -22,6 +22,17 @@ function createEntity_controlPanel(entity)
 
 function controlPanel_interract(entity, player)
 {
+    if (entity.mapObj.target == "hangar")
+    {
+        entity.mapObj.target = ""
+        hangarMat.queue(Matrix.IDENTITY, 4, Tween.LINEAR, function()
+        {
+            hangarOpen = false
+            // stop sound
+        })
+        hangarMat.play()
+        return
+    }
     var target = findEntity(entity.mapObj.target)
     if (target && target.trigger) target.trigger(target, entity, player)
 }

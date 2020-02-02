@@ -33,6 +33,7 @@ var models = {
     windows: getModel("windows.model"),
     blow: getModel("blow.model"),
     flags: getModel("flags.model"),
+    hangar: getModel("hangar.model"),
 }
 
 function loadResources()

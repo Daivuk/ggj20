@@ -273,9 +273,15 @@ function loadMap()
         player = entity
     }
 
+    nextComputer()
+}
+
+function nextComputer()
+{
     setTimeout(function()
     {
         playComputerSound()
+        nextComputer()
     }, 10000)
 }
 
@@ -294,15 +300,42 @@ function allComputersOk()
     return allComputersOk
 }
 
+var hangarOpen = true
+var hangarMat = new MatrixAnim(Matrix.createTranslation(new Vector3(0, 0, 1)))
+var radioactif = true
+
 function playComputerSound()
 {
     if (allComputersOk())
     {
-        // play computer ok
+        if (hangarOpen)
+        {
+            // play computer ok
+            switch (Random.randInt(2))
+            {
+                case 1: playSound("AIRadioactivity.wav"); break
+                case 2: playSound("AISecurityBreach.wav"); break
+            }
+        }
+        else if (radioactif)
+        {
+            // play computer ok
+            switch (Random.randInt(2))
+            {
+                case 1: playSound("AIRadioactivity.wav"); break
+            }
+        }
     }
     else
     {
         // play computer fucked
+        switch (Random.randInt(4))
+        {
+            case 0: playSound("AIDecontaminationDam.wav"); break
+            // case 1: playSound("AIDetonationDam.wav"); break
+            case 1: playSound("AIRadioactivityDam.wav"); break
+            case 2: playSound("AISecurityBreachDam.wav"); break
+        }
     }
 }
 
@@ -363,6 +396,7 @@ function renderWorld(cam)
             if (!entity.model) continue
             entity.model.render(getEntityTransform(entity))
         }
+        models.hangar.render(hangarMat.get())
         player_drawItem(player)
         Renderer.popRenderTarget()
     }
@@ -379,6 +413,7 @@ function renderWorld(cam)
             if (!entity.model) continue
             entity.model.render(getEntityTransform(entity))
         }
+        models.hangar.render(hangarMat.get())
         player_drawItem(player)
         Renderer.popRenderTarget()
     }
@@ -394,6 +429,7 @@ function renderWorld(cam)
             if (!entity.model) continue
             entity.model.render(getEntityTransform(entity))
         }
+        models.hangar.render(hangarMat.get())
         player_drawItem(player)
         Renderer.popRenderTarget()
     }
@@ -445,6 +481,7 @@ function renderWorld(cam)
             if (!entity.model) continue
             entity.model.render(getEntityTransform(entity))
         }
+        models.hangar.render(hangarMat.get())
         player_drawItem(player)
     }
 
