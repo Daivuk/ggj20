@@ -329,9 +329,12 @@ function renderEditUI()
             {
                 selectedEntity.mapObj.sound = GUI.inputText("Sound", selectedEntity.mapObj.sound)
                 selectedEntity.sound = createSoundInstance(selectedEntity.mapObj.sound)
-                selectedEntity.sound.setVolume(0)
-                selectedEntity.sound.setLoop(true)
-                selectedEntity.sound.play();
+                if (selectedEntity.sound)
+                {
+                    selectedEntity.sound.setVolume(0)
+                    selectedEntity.sound.setLoop(true)
+                    selectedEntity.sound.play();
+                }
             }
             if (selectedEntity.mapObj.texture)
             {

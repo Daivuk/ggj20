@@ -9,15 +9,19 @@ function createEntity_sound(entity)
     if (!entity.mapObj.pitch)
         entity.mapObj.pitch = 1
     entity.sound = createSoundInstance(entity.mapObj.sound)
-    entity.sound.setVolume(0)
-    entity.sound.setLoop(true)
-    entity.sound.play();
+    if (entity.sound)
+    {
+        entity.sound.setVolume(0)
+        entity.sound.setLoop(true)
+        entity.sound.play();
+    }
     entity.update = sound_update
     sounds.push(entity)
 }
 
 function sound_update(entity, dt)
 {
+    if (!entity.sound) return
     var listener = player
     if (state == "edit") listener = editCam
     var lpos = getEntityCamPos(listener)
