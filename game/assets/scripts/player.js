@@ -203,7 +203,8 @@ function player_update(entity, dt)
         entity.hoverObject = null
         var camFront = getEntityFront(entity)
         var camPos = getEntityCamPos(entity)
-        var pick = map_rayPick(camPos, camFront, 1, 0.1)
+        var pick = map_rayPick(camPos, camFront, 1, 0.1, null)
+        if (!pick) pick = map_rayPick(camPos, camFront, 2, 0.2, "ladder")
         if (pick && pick.interract)
         {
             entity.hoverObject = pick

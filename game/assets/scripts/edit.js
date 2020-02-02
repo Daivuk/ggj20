@@ -49,7 +49,7 @@ function intersect(bmin, bmax, rayFrom, rayDir)
     return true;
 }
 
-function map_rayPick(rayFrom, rayDir, maxDistance, extend)
+function map_rayPick(rayFrom, rayDir, maxDistance, extend, typeFilter)
 {
     var d = maxDistance ? maxDistance : 1000 * 1000
     extend = extend ? extend : 0
@@ -60,6 +60,7 @@ function map_rayPick(rayFrom, rayDir, maxDistance, extend)
     {
         var entity = entities[i]
         if (entity.mapObj && entity.mapObj.unpickable) continue
+        if (typeFilter && typeFilter != entity.mapObj.type) continue
 
         var bmin = new Vector3(-.05, -.05, -.05).add(entity.pos)
         var bmax = new Vector3(.05, .05, .05).add(entity.pos)
@@ -292,6 +293,8 @@ function renderEditUI()
             selectedEntity = createEntity({type:"door"}, editCam.pos.add(getEntityFront(editCam)))
         if (GUI.button("Create controlPanel"))
             selectedEntity = createEntity({type:"controlPanel"}, editCam.pos.add(getEntityFront(editCam)))
+        if (GUI.button("Create ladder"))
+            selectedEntity = createEntity({type:"ladder"}, editCam.pos.add(getEntityFront(editCam)))
         if (GUI.button("Create emiter"))
             selectedEntity = createEntity({type:"emiter"}, editCam.pos.add(getEntityFront(editCam)))
         if (GUI.button("Create sound"))

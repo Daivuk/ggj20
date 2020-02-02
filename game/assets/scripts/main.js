@@ -71,6 +71,12 @@ function render()
                 SpriteBatch.drawText(font, "Press F2 for edit mode", new Vector2(0, 10), Vector2.TOP_LEFT)
                 SpriteBatch.end()
             }
+            SpriteBatch.begin()
+            if (saveOverlay.isPlaying())
+            {
+                SpriteBatch.drawRect(null, screenRect, saveOverlay.get())
+            }
+            SpriteBatch.end()
             break
         case "pause":
             renderWorld(player)
