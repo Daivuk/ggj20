@@ -30,6 +30,7 @@ function createEntity_player(entity)
     entity.size = 0.2
     entity.hoverObject = null
     entity.postDraw = player_postDraw
+    entity.headBob = 0
 }
 
 function player_update(entity, dt)
@@ -61,7 +62,8 @@ function player_update(entity, dt)
     {
         entity.vel = entity.vel.sub(right.mul(dt * maxSpeed * 50))
     }
-    if (entity.vel.length() > maxSpeed)
+    var velLen = entity.vel.length()
+    if (velLen > maxSpeed)
     {
         if (!walkSnd.isPlaying())
             walkSnd.play()
@@ -75,6 +77,13 @@ function player_update(entity, dt)
     {
         if (walkSnd.isPlaying())
             walkSnd.stop()
+    }
+
+    if (velLen > 0.1)
+    {
+        entity.headBob -= dt * 3
+        while (entity.headBob < 0) entity.headBob += 1
+        entity.headOffset = new Vector3(0, 0, 0.5 + Math.sin(toRad(entity.headBob * 180)) * 0.025)
     }
 
     // Collisions
