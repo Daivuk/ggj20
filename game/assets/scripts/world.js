@@ -337,7 +337,7 @@ function renderWorld(cam)
         Renderer.setDepthEnabled(true)
     }
 
-    // Draw the interior meshes into buffer only
+    // Draw the interior meshes into depth buffer only
     {
         Renderer.setVertexShader(shaders.depthOnlyVS)
         Renderer.setPixelShader(shaders.depthOnlyPS)
@@ -352,6 +352,7 @@ function renderWorld(cam)
     }
 
     // First, draw the ambiant
+    Renderer.setDepthWrite(false)
     {
         SpriteBatch.begin(Matrix.IDENTITY, shaders.ambiantPS)
         Renderer.setBlendMode(BlendMode.ALPHA)
@@ -406,6 +407,7 @@ function renderWorld(cam)
     {
         // Setup camera
         Renderer.setupFor3D(camPos, camPos.add(camFront), Vector3.UNIT_Z, cam.fov)
+        Renderer.setDepthWrite(false)
         Renderer.setVertexShader(shaders.windowsVS)
         Renderer.setPixelShader(shaders.windowsPS)
         Renderer.setBlendMode(BlendMode.ALPHA)

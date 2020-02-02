@@ -246,12 +246,22 @@ function renderEditUI()
 
     Renderer.setBackFaceCull(false)
 
-    if (GUI.begin("voxel"))
+    if (GUI.begin("Voxel"))
     {
         var voxel = getVoxelAt(editCam.pos)
         if (voxel)
         {
             voxel.solid = GUI.checkbox("Solid", voxel.solid)
+        }
+    }
+    GUI.end()
+
+    if (GUI.begin("Settings"))
+    {
+        if (GUI.button("Mute Music"))
+        {
+            music.pause()
+            wind.pause()
         }
     }
     GUI.end()
@@ -327,13 +337,17 @@ function renderEditUI()
             }
             if (selectedEntity.mapObj.sound)
             {
+                var prevSound = selectedEntity.mapObj.sound
                 selectedEntity.mapObj.sound = GUI.inputText("Sound", selectedEntity.mapObj.sound)
-                selectedEntity.sound = createSoundInstance(selectedEntity.mapObj.sound)
-                if (selectedEntity.sound)
+                if (prevSound != selectedEntity.mapObj.sound)
                 {
-                    selectedEntity.sound.setVolume(0)
-                    selectedEntity.sound.setLoop(true)
-                    selectedEntity.sound.play();
+                    selectedEntity.sound = createSoundInstance(selectedEntity.mapObj.sound)
+                    if (selectedEntity.sound)
+                    {
+                        selectedEntity.sound.setVolume(0)
+                        selectedEntity.sound.setLoop(true)
+                        selectedEntity.sound.play();
+                    }
                 }
             }
             if (selectedEntity.mapObj.texture)

@@ -10,8 +10,7 @@ var font = getFont("font.fnt")
 loadResources()
 loadMap()
 
-playMusic("Theme1.ogg")
-
+var music = playMusic("Theme1.ogg")
 var wind = playMusic("WindLoop.ogg", true)
 wind.setVolume(0.15)
 

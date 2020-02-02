@@ -102,7 +102,7 @@ function smokes_render()
             alpha = 1 - alpha
         }
         alpha *= 2
-        SMOKE_PS.setVector4("color", smoke.color.toVector4().mul(alpha))
+        SMOKE_PS.setVector4("color", new Vector4(smoke.color.r, smoke.color.g, smoke.color.b, smoke.color.a * alpha))
         Renderer.setWorld(smoke.world)
         Renderer.setVertexBuffer(shotsVB)
         Renderer.draw(shotsVertCount)
