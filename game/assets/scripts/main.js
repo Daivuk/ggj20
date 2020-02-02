@@ -23,7 +23,7 @@ function update(dt)
     switch (state)
     {
         case "game":
-            updateWorld(dt)
+            updateWorld(player, dt)
             if (Input.isJustDown(Key.ESCAPE))
             {
                 state = "pause"

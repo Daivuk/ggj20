@@ -227,7 +227,7 @@ function loadMap()
     }
 }
 
-function updateWorld(dt)
+function updateWorld(cam, dt)
 {
     for (var i = 0; i < updatables.length; ++i)
     {
@@ -235,7 +235,13 @@ function updateWorld(dt)
         entity.update(entity, dt)
     }
 
-    if (Input.isJustDown(Key.F1)) showGBuffer = !showGBuffer
+    if (DEBUG && Input.isJustDown(Key.F1)) showGBuffer = !showGBuffer
+
+    var camFront = getEntityFront(cam)
+    smokes_update(camFront, dt)
+
+    // Create a test particle each frame
+    // smoke_create(new Vector3(2.5, 2.5, 2), new Vector3(0, 0, -0.5), 1, 2, 5, Color.WHITE)
 }
 
 function renderWorld(cam)
@@ -398,7 +404,9 @@ function renderWorld(cam)
         Renderer.setBlendMode(BlendMode.ALPHA)
         models.windows.render()
 
-        Renderer.setDepthEnabled(false)
+        // Particles
+        smokes_render()
+
         Renderer.setVertexShader(shaders.entityVS)
         Renderer.setPixelShader(shaders.entityPS)
         Renderer.setBlendMode(BlendMode.ALPHA)

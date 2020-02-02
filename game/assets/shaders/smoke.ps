@@ -1,0 +1,15 @@
+input float2 inTexCoord;
+
+Texture0 diffuseTexture
+{
+    filter = linear;
+    repeat = wrap;
+}
+
+extern float4 color;
+
+void main()
+{
+    float4 diffuse = diffuseTexture(inTexCoord);
+    oColor = float4(color.rgb, color.a * diffuse.r);
+}
