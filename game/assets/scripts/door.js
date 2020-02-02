@@ -37,5 +37,5 @@ function door_trigger(entity, triggerer, player)
     {
         entity.openAnim.playSingle(entity.pos, entity.pos.add(new Vector3(0, 0, -0.8)), 1.5, Tween.LINEAR)
     }
-    playSound("sounds/ElectricDoorSlam.wav", 1.0, 0, 0.8)
+    playSound("ElectricDoorSlam.wav", 1.0, 0, 0.8)
 }

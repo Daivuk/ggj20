@@ -29,4 +29,5 @@ function ladder_interract(entity, player)
     }
     player.vel = new Vector3(0, 0, 0)
     saveOverlay.playSingle(Color.BLACK, Color.TRANSPARENT, 0.5)
+    playSound("ClimbLadder.wav", 1.0, 0, 1.0)
 }
