@@ -1826,7 +1826,7 @@
         "z": 1.3217363357543945
       },
       "sound": "ComputerRoom.wav",
-      "radius": 4,
+      "radius": 3,
       "volume": 1,
       "pitch": 1,
       "name": "",
@@ -2167,6 +2167,34 @@
       "pitch": 0.8170000314712524,
       "name": "",
       "damage": 0
+    },
+    {
+      "type": "sound",
+      "pos": {
+        "x": 16.119001388549805,
+        "y": 13.986001014709473,
+        "z": 0.3513239622116089
+      },
+      "damage": 0,
+      "sound": "WindWindow.wav",
+      "radius": 5,
+      "volume": 1,
+      "pitch": 1,
+      "name": ""
+    },
+    {
+      "type": "sound",
+      "pos": {
+        "x": 16.07900047302246,
+        "y": 13.736001014709473,
+        "z": 0.3513239622116089
+      },
+      "damage": 0,
+      "sound": "WindDebris.wav",
+      "radius": 3,
+      "volume": 1,
+      "pitch": 1,
+      "name": ""
     }
   ]
 } 
