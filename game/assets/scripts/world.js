@@ -279,7 +279,7 @@ function loadMap()
     }, 10000)
 }
 
-function playComputerSound()
+function allComputersOk()
 {
     var allComputersOk = true
     for (var i = 0; i < computers.length; ++i)
@@ -291,7 +291,12 @@ function playComputerSound()
             break
         }
     }
-    if (allComputersOk)
+    return allComputersOk
+}
+
+function playComputerSound()
+{
+    if (allComputersOk())
     {
         // play computer ok
     }
@@ -300,6 +305,8 @@ function playComputerSound()
         // play computer fucked
     }
 }
+
+var prevCompOk = false
 
 function updateWorld(cam, dt)
 {
@@ -315,6 +322,14 @@ function updateWorld(cam, dt)
     smokes_update(camFront, dt)
 
     showDamaged(dt)
+    
+    var compOk = allComputersOk()
+    if (prevCompOk != compOk)
+    {
+        var door = findEntity("door5")
+        door.trigger(door, null, player)
+    }
+    prevCompOk = compOk
 }
 
 var flagAnim = new NumberAnim()

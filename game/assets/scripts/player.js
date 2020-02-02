@@ -216,8 +216,7 @@ function player_update(entity, dt)
         {
             if (pick.damage)
             {
-                if (entity.item && entity.item.mapObj.target == "welder")
-                    entity.hoverObject = pick
+                entity.hoverObject = pick
             }
             else if (pick.interract)
             {
@@ -279,9 +278,19 @@ function player_postDraw(entity)
         Renderer.pushBlendMode(BlendMode.ALPHA)
         if (entity.hoverObject.model)
         {
-            shaders.entityPS.setVector4("entityColor", new Vector4(1, 1, 0, 0.5))
+            shaders.entityPS.setVector4("entityColor", new Vector4(1, 1, 0, 0.25))
             entity.hoverObject.model.render(getEntityTransform(entity.hoverObject));
         }
         Renderer.popBlendMode()
+    }
+
+    if (entity.hoverObject && entity.hoverObject.damage)
+    {
+        SpriteBatch.begin()
+        SpriteBatch.drawRect(null, new Rect(res.x / 2 - 203, res.y - 103, 406, 36), new Color(0, 1, 1))
+        SpriteBatch.drawRect(null, new Rect(res.x / 2 - 201, res.y - 101, 402, 32), new Color(0, 0, 0))
+        SpriteBatch.drawRect(null, new Rect(res.x / 2 - 200, res.y - 88, (1 - entity.hoverObject.damage) * 400, 18), new Color(.5, 1, .3))
+        SpriteBatch.drawText(font, entity.hoverObject.mapObj.type + " damaged", new Vector2(res.x / 2 - 198, res.y - 95), Vector2.LEFT)
+        SpriteBatch.end()
     }
 }
