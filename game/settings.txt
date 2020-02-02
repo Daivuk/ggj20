@@ -8,13 +8,13 @@ retroResolution = 480 x 272
 retroMode = false
 
 # Name of the game to be displayed in the window's title bar
-gameName = Global Game Jam 2020
+gameName = Arctic Distress
 
 # If the window is resizable and can be maximized
 resizableWindow = true
 
 # Run the game in full screen. This is borderless fullscreen taking up your desktop resolution
-fullscreen = false
+fullscreen = true
 
 # Fixed step update. Games where simulation or physic is important should use that
 fixedStep = false

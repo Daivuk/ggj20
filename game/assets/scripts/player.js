@@ -52,7 +52,7 @@ function player_update(entity, dt)
         Math.sin(toRad(entity.angle)),
         Math.cos(toRad(entity.angle)), 0)
     var right = new Vector3(dir.y, -dir.x, 0)
-    var maxSpeed = Input.isDown(Key.LEFT_SHIFT) ? PLAYER_RUN_SPEED : PLAYER_WALK_SPEED
+    var maxSpeed = (Input.isDown(Key.LEFT_SHIFT) && DEBUG) ? PLAYER_RUN_SPEED : PLAYER_WALK_SPEED
 
     if (Input.isDown(Key.W))
     {
