@@ -706,7 +706,7 @@
       "angle": 90,
       "model": "door.model",
       "name": "door1",
-      "damage": 0
+      "damage": 1
     },
     {
       "type": "controlPanel",
@@ -2386,6 +2386,20 @@
       "intensity": 0.7100000381469727,
       "name": "",
       "damage": 0
+    },
+    {
+      "type": "item",
+      "pos": {
+        "x": 2.133000135421753,
+        "y": 2.2710001468658447,
+        "z": 1.3060001134872437
+      },
+      "damage": 0,
+      "angle": -23.000001907348633,
+      "angleX": 90.00000762939453,
+      "model": "welder.model",
+      "target": "",
+      "name": ""
     }
   ]
 } 

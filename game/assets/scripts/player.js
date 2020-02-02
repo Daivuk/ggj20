@@ -31,6 +31,7 @@ function createEntity_player(entity)
     entity.hoverObject = null
     entity.postDraw = player_postDraw
     entity.headBob = 0
+    entity.items = []
 }
 
 function player_update(entity, dt)

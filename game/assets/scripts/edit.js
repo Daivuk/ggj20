@@ -301,6 +301,8 @@ function renderEditUI()
             selectedEntity = createEntity({type:"emiter"}, editCam.pos.add(getEntityFront(editCam)))
         if (GUI.button("Create sound"))
             selectedEntity = createEntity({type:"sound"}, editCam.pos.add(getEntityFront(editCam)))
+        if (GUI.button("Create item"))
+            selectedEntity = createEntity({type:"item"}, editCam.pos.add(getEntityFront(editCam)))
         GUI.separator()
         if (selectedEntity)
         {
