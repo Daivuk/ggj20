@@ -381,44 +381,52 @@ function renderWorld(cam)
     {
         for (var i = 0; i < omnis.length; ++i)
         {
-            SpriteBatch.begin(Matrix.IDENTITY, shaders.omniPS)
-            Renderer.setTexture(gbuffer.normal, 1)
-            Renderer.setTexture(gbuffer.depth, 2)
-            Renderer.setBlendMode(BlendMode.ADD)
             var entity = omnis[i]
-            shaders.omniPS.setVector3("lPos", entity.pos)
-            shaders.omniPS.setVector4("lColor", new Vector4(
-                entity.mapObj.color.r, entity.mapObj.color.g, entity.mapObj.color.b,
-                entity.mapObj.intensity * flickers[entity.mapObj.flicker].get()))
-            shaders.omniPS.setNumber("lRadius", entity.mapObj.radius)
-            SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
-            SpriteBatch.end()
+            var fffdist = Vector3.distance(entity.pos, camPos)
+            var fadeDist = entity.mapObj.radius + 2
+            var fffade = fffdist < fadeDist ? 1 : (1 - (fffdist - fadeDist))
+            if (fffade > 0)
+            {
+                SpriteBatch.begin(Matrix.IDENTITY, shaders.omniPS)
+                Renderer.setTexture(gbuffer.normal, 1)
+                Renderer.setTexture(gbuffer.depth, 2)
+                Renderer.setBlendMode(BlendMode.ADD)
+                shaders.omniPS.setVector3("lPos", entity.pos)
+                shaders.omniPS.setVector4("lColor", new Vector4(
+                    entity.mapObj.color.r * fffade, 
+                    entity.mapObj.color.g * fffade, 
+                    entity.mapObj.color.b * fffade,
+                    entity.mapObj.intensity * flickers[entity.mapObj.flicker].get()))
+                shaders.omniPS.setNumber("lRadius", entity.mapObj.radius)
+                SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
+                SpriteBatch.end()
+            }
         }
         Renderer.setBlendMode(BlendMode.ALPHA)
     }
 
     // Projector lights
-    {
-        for (var i = 0; i < projectors.length; ++i)
-        {
-            var entity = projectors[i]
-            SpriteBatch.begin(Matrix.IDENTITY, shaders.projectorPS)
-            Renderer.setTexture(gbuffer.normal, 1)
-            Renderer.setTexture(gbuffer.depth, 2)
-            Renderer.setTexture(entity.texture, 3)
-            Renderer.setBlendMode(BlendMode.ADD)
-            shaders.projectorPS.setVector3("lPos", entity.pos)
-            shaders.projectorPS.setVector3("lColor", new Vector3(entity.mapObj.color.r, entity.mapObj.color.g, entity.mapObj.color.b).mul(flickers[entity.mapObj.flicker].get()))
-            shaders.projectorPS.setNumber("lRadius", entity.mapObj.radius)
-            shaders.projectorPS.setMatrix("transform", getEntityTransform(entity))
-            SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
-            SpriteBatch.end()
-        }
-        Renderer.setTexture(null, 1)
-        Renderer.setTexture(null, 2)
-        Renderer.setTexture(null, 3)
-        Renderer.setBlendMode(BlendMode.ALPHA)
-    }
+    // {
+    //     for (var i = 0; i < projectors.length; ++i)
+    //     {
+    //         var entity = projectors[i]
+    //         SpriteBatch.begin(Matrix.IDENTITY, shaders.projectorPS)
+    //         Renderer.setTexture(gbuffer.normal, 1)
+    //         Renderer.setTexture(gbuffer.depth, 2)
+    //         Renderer.setTexture(entity.texture, 3)
+    //         Renderer.setBlendMode(BlendMode.ADD)
+    //         shaders.projectorPS.setVector3("lPos", entity.pos)
+    //         shaders.projectorPS.setVector3("lColor", new Vector3(entity.mapObj.color.r, entity.mapObj.color.g, entity.mapObj.color.b).mul(flickers[entity.mapObj.flicker].get()))
+    //         shaders.projectorPS.setNumber("lRadius", entity.mapObj.radius)
+    //         shaders.projectorPS.setMatrix("transform", getEntityTransform(entity))
+    //         SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
+    //         SpriteBatch.end()
+    //     }
+    //     Renderer.setTexture(null, 1)
+    //     Renderer.setTexture(null, 2)
+    //     Renderer.setTexture(null, 3)
+    //     Renderer.setBlendMode(BlendMode.ALPHA)
+    // }
 
     // Post draw stuff
     {

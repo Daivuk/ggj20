@@ -2,3 +2,4 @@ build/
 ExecutableOSX
 ExecutableWin32.exe
 imgui.ini
+.DS_Store
