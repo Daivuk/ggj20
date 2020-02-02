@@ -1,8 +1,11 @@
 Texture0 texDiffuse;
 
-input float3 outWorldPos;
+input float2 inTexCoord;
+input float3 inWorldPos;
 
 void main()
 {
-    oColor = float4(outWorldPos / 20.0, 1.0);
+    float4 diffuse = texDiffuse(inTexCoord);
+    if (diffuse.a < 0.8) discard;
+    oColor = float4(inWorldPos / 20.0, 1.0);
 }

@@ -7,5 +7,6 @@ input float2 inTexCoord;
 void main()
 {
     float4 diffuse = texDiffuse(inTexCoord);
+    if (diffuse.a < 0.8) discard;
     oColor = diffuse;
 }
