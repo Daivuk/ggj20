@@ -13,7 +13,7 @@ loadMap()
 playMusic("Theme1.ogg")
 
 var wind = playMusic("WindLoop.ogg", true)
-wind.setVolume(0.2)
+wind.setVolume(0.15)
 
 function update(dt)
 {
