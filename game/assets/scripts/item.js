@@ -16,7 +16,12 @@ function createEntity_item(entity)
 
 function item_interract(entity, player)
 {
+    entity.inHandModel = entity.model
     entity.model = null
     entity.interract = null
-    player.items.push(entity.target)
+
+    player.items.push(entity)
+    player.item = entity
+    player.itemAnim = new Vector3Anim()
+    player.itemAnim.playSingle(new Vector3(0, 0, -.1), Vector3.ZERO, 0.6, Tween.EASE_OUT)
 }

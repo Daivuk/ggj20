@@ -2398,7 +2398,7 @@
       "angle": -23.000001907348633,
       "angleX": 90.00000762939453,
       "model": "welder.model",
-      "target": "",
+      "target": "welder",
       "name": ""
     }
   ]

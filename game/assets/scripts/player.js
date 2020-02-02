@@ -32,6 +32,12 @@ function createEntity_player(entity)
     entity.postDraw = player_postDraw
     entity.headBob = 0
     entity.items = []
+    entity.mapObj = {}
+    entity.mapObj.color = new Color(.5, 1, 1, 1);
+    entity.mapObj.radius = 1
+    entity.mapObj.flicker = 0
+    entity.mapObj.intensity = 0
+    omnis.push(entity)
 }
 
 function player_update(entity, dt)
@@ -206,15 +212,63 @@ function player_update(entity, dt)
         var camPos = getEntityCamPos(entity)
         var pick = map_rayPick(camPos, camFront, 1, 0.1, null)
         if (!pick) pick = map_rayPick(camPos, camFront, 2, 0.2, "ladder")
-        if (pick && pick.interract)
+        if (pick)
         {
-            entity.hoverObject = pick
+            if (pick.damage)
+            {
+                if (entity.item && entity.item.mapObj.target == "welder")
+                    entity.hoverObject = pick
+            }
+            else if (pick.interract)
+            {
+                entity.hoverObject = pick
+            }
         }
     }
 
+    entity.mapObj.intensity = 0
     if (entity.hoverObject && Input.isJustDown(Key.MOUSE_1))
     {
-        entity.hoverObject.interract(entity.hoverObject, entity)
+        if (entity.hoverObject.damage)
+        {
+        }
+        else if (entity.hoverObject.interract)
+            entity.hoverObject.interract(entity.hoverObject, entity)
+    }
+    if (entity.hoverObject && Input.isDown(Key.MOUSE_1))
+    {
+        if (entity.hoverObject.damage)
+        {
+            if (entity.item && entity.item.mapObj.target == "welder")
+            {
+                entity.mapObj.intensity = Random.randNumber(1, 10)
+                entity.weldSound = createSoundInstance("Welder.wav")
+                entity.weldSound.setLoop(true)
+                entity.weldSound.play()
+                entity.hoverObject.damage = Math.max(0, entity.hoverObject.damage - dt / 4)
+            }
+        }
+    }
+    if (Input.isJustUp(Key.MOUSE_1))
+    {
+        if (entity.weldSound) entity.weldSound = null
+    }
+}
+
+function player_drawItem(entity)
+{
+    if (entity.item)
+    {
+        // var mat = getEntityTransform(entity)
+        var front = getEntityFront(entity)
+        var right = front.cross(Vector3.UNIT_Z).normalize()
+        var up = right.cross(front)
+        var pos = getEntityCamPos(entity).add(front.mul(0.2)).add(right.mul(0.1)).add(up.mul(-0.15))
+        // mat._41 += front.x
+        // mat._42 += front.y
+        // mat._43 += front.z
+        var mat = Matrix.createWorld(pos, front, up)
+        entity.item.inHandModel.render(mat)
     }
 }
 

@@ -376,7 +376,7 @@ function renderEditUI()
                 selectedEntity.mapObj.texture = GUI.inputText("Texture", selectedEntity.mapObj.texture)
                 selectedEntity.texture = getTexture(selectedEntity.mapObj.texture)
             }
-            if (selectedEntity.mapObj.target)
+            if (selectedEntity.mapObj.target != undefined)
             {
                 selectedEntity.mapObj.target = GUI.inputText("Target", selectedEntity.mapObj.target)
             }

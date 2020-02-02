@@ -293,6 +293,7 @@ function renderWorld(cam)
             if (!entity.model) continue
             entity.model.render(getEntityTransform(entity))
         }
+        player_drawItem(player)
         Renderer.popRenderTarget()
     }
     {
@@ -308,6 +309,7 @@ function renderWorld(cam)
             if (!entity.model) continue
             entity.model.render(getEntityTransform(entity))
         }
+        player_drawItem(player)
         Renderer.popRenderTarget()
     }
     {
@@ -322,6 +324,7 @@ function renderWorld(cam)
             if (!entity.model) continue
             entity.model.render(getEntityTransform(entity))
         }
+        player_drawItem(player)
         Renderer.popRenderTarget()
     }
 
@@ -372,6 +375,7 @@ function renderWorld(cam)
             if (!entity.model) continue
             entity.model.render(getEntityTransform(entity))
         }
+        player_drawItem(player)
     }
 
     // First, draw the ambiant
@@ -397,7 +401,7 @@ function renderWorld(cam)
                 Renderer.setTexture(gbuffer.normal, 1)
                 Renderer.setTexture(gbuffer.depth, 2)
                 Renderer.setBlendMode(BlendMode.ADD)
-                shaders.omniPS.setVector3("lPos", entity.pos)
+                shaders.omniPS.setVector3("lPos", getEntityCamPos(entity))
                 shaders.omniPS.setVector4("lColor", new Vector4(
                     entity.mapObj.color.r * fffade, 
                     entity.mapObj.color.g * fffade, 
