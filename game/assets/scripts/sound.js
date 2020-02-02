@@ -39,7 +39,7 @@ function sound_update(entity, dt)
     dir = dir.div(dis)
     var dotR = lright.dot(dir)
 
-    entity.sound.setVolume(1 - dis / entity.mapObj.radius)
+    entity.sound.setVolume(Math.max(0, entity.mapObj.volume - entity.mapObj.volume * (dis / entity.mapObj.radius)))
     entity.sound.setBalance(dotR)
     entity.sound.setPitch(entity.mapObj.pitch)
 }
