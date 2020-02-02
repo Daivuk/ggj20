@@ -520,6 +520,9 @@ function renderWorld(cam)
             }
         }
         Renderer.setBlendMode(BlendMode.ALPHA)
+        Renderer.setTexture(null, 1)
+        Renderer.setTexture(null, 2)
+        Renderer.setTexture(null, 3)
     }
 
     // Projector lights
