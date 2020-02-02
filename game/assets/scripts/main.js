@@ -15,6 +15,11 @@ playMusic("Theme1.ogg")
 var wind = playMusic("WindLoop.ogg", true)
 wind.setVolume(0.2)
 
+// Replace this by a 3D sound when its available.
+var lightBuzzSnd = createSoundInstance("LightBuzzAndFlicker.wav")
+lightBuzzSnd.setLoop(true)
+lightBuzzSnd.play()
+
 function update(dt)
 {
     res = Renderer.getResolution()
