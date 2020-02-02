@@ -8,6 +8,7 @@ function createEntity_computer(entity)
     entity.model = getModel(entity.mapObj.model)
     entity.update = computer_update
     entity.collision = true
+    computers.push(entity)
 }
 
 function computer_update(entity, dt)

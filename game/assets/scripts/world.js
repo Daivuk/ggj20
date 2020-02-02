@@ -18,14 +18,39 @@ var outsideStaticEntities = []
 var insideStaticEntities = []
 var interractables = []
 var collisionEntities = []
+var computers = []
 var blowAnim = new NumberAnim()
 blowAnim.playSingle(0, 1, 1, Tween.LINEAR, Loop.LOOP)
+var blackSmokeDelay = 0
 
 var cameraMenu = {
     pos: new Vector3(30.37, -18.681, 3.8761),
     angleX: 87.6 - 90,
     angleZ: 67.2 + 180 + 45,
     fov: 40
+}
+
+function showDamaged(dt)
+{
+    for (var i = 0; i < entities.length; ++i)
+    {
+        var entity = entities[i]
+        if (entity.damage)
+        {
+            blackSmokeDelay -= dt
+            if (blackSmokeDelay <= 0)
+            {
+                blackSmokeDelay = 0.1
+        
+                // Do spawning
+                var vel = Vector3.UNIT_Z.mul(Random.randNumber(.2, .3))
+                var pos = getEntityCamPos(entity)
+                pos = Random.randVector3(pos.sub(.2), pos.add(.2))
+        
+                smoke_create(pos, vel, 4.1, 5, 10, new Color(0, 0, 0, 1))
+            }
+        }
+    }
 }
 
 function getEntityBB(entity, out_bmin, out_bmax)
@@ -121,6 +146,7 @@ function deleteEntity(entity)
     removeFromArray(editDrawables, entity)
     removeFromArray(postDrawables, entity)
     removeFromArray(collisionEntities, entity)
+    removeFromArray(computers, entity)
     removeFromArray(omnis, entity)
     removeFromArray(projectors, entity)
     removeFromArray(emiters, entity)
@@ -246,6 +272,33 @@ function loadMap()
         postDrawables.push(entity)
         player = entity
     }
+
+    setTimeout(function()
+    {
+        playComputerSound()
+    }, 10000)
+}
+
+function playComputerSound()
+{
+    var allComputersOk = true
+    for (var i = 0; i < computers.length; ++i)
+    {
+        var computer = computers[i]
+        if (computer.damage)
+        {
+            allComputersOk = false
+            break
+        }
+    }
+    if (allComputersOk)
+    {
+        // play computer ok
+    }
+    else
+    {
+        // play computer fucked
+    }
 }
 
 function updateWorld(cam, dt)
@@ -260,6 +313,8 @@ function updateWorld(cam, dt)
 
     var camFront = getEntityFront(cam)
     smokes_update(camFront, dt)
+
+    showDamaged(dt)
 }
 
 var flagAnim = new NumberAnim()
