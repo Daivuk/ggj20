@@ -238,13 +238,13 @@
       "solid": false
     },
     "11.9.1": {
-      "solid": true
+      "solid": false
     },
     "12.9.1": {
       "solid": false
     },
     "13.9.1": {
-      "solid": true
+      "solid": false
     },
     "13.8.1": {
       "solid": false
@@ -268,7 +268,7 @@
       "solid": false
     },
     "10.7.1": {
-      "solid": true
+      "solid": false
     },
     "10.8.1": {
       "solid": false
@@ -280,7 +280,7 @@
       "solid": false
     },
     "12.7.1": {
-      "solid": true
+      "solid": false
     },
     "12.8.1": {
       "solid": false
@@ -2194,6 +2194,54 @@
       "radius": 3,
       "volume": 1,
       "pitch": 1,
+      "name": ""
+    },
+    {
+      "type": "computer",
+      "pos": {
+        "x": 11.210000991821289,
+        "y": 8.791000366210938,
+        "z": 1.5660001039505005
+      },
+      "damage": 0,
+      "angle": 0,
+      "model": "computer.model",
+      "name": ""
+    },
+    {
+      "type": "computer",
+      "pos": {
+        "x": 12.790000915527344,
+        "y": 8.821000099182129,
+        "z": 1.5660001039505005
+      },
+      "damage": 0,
+      "angle": 0,
+      "model": "computer.model",
+      "name": ""
+    },
+    {
+      "type": "computer",
+      "pos": {
+        "x": 12.790000915527344,
+        "y": 7.1610002517700195,
+        "z": 1.5660001039505005
+      },
+      "damage": 0,
+      "angle": 0,
+      "model": "computer.model",
+      "name": ""
+    },
+    {
+      "type": "computer",
+      "pos": {
+        "x": 11.210000991821289,
+        "y": 7.201000213623047,
+        "z": 1.5660001039505005
+      },
+      "damage": 0,
+      "angle": 0,
+      "model": "computer.model",
       "name": ""
     }
   ]

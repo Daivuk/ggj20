@@ -161,6 +161,9 @@ function createEntity(mapObj, pos)
         case "controlPanel":
             createEntity_controlPanel(entity)
             break
+        case "computer":
+            createEntity_computer(entity)
+            break
         case "ladder":
             createEntity_ladder(entity)
             break
