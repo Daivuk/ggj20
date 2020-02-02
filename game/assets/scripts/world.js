@@ -251,6 +251,9 @@ function updateWorld(cam, dt)
     smokes_update(camFront, dt)
 }
 
+var flagAnim = new NumberAnim()
+flagAnim.playSingle(0, Math.PI * 2, 0.15, Tween.LINEAR, Loop.LOOP)
+
 function renderWorld(cam)
 {
     var clearColor = Color.fromHexRGB(0xadbccd)
@@ -317,6 +320,7 @@ function renderWorld(cam)
         Renderer.setVertexShader(shaders.outsideSolidVS)
         Renderer.setPixelShader(shaders.outsideSolidPS)
         shaders.outsideSolidPS.setVector3("skyColor", clearColor.toVector3())
+        shaders.outsideSolidVS.setVector3("camPos", camPos)
         staticOutsideModel.render();
         for (var i = 0; i < outsideDrawables.length; ++i)
         {
@@ -324,6 +328,14 @@ function renderWorld(cam)
             if (!entity.model) continue
             entity.model.render(getEntityTransform(entity))
         }
+
+        // Flags
+        Renderer.setVertexShader(shaders.flagsVS)
+        Renderer.setPixelShader(shaders.flagsPS)
+        shaders.flagsPS.setVector3("skyColor", clearColor.toVector3())
+        shaders.flagsPS.setVector3("anim", flagAnim.get())  
+        shaders.flagsVS.setVector3("camPos", camPos)
+        models.flags.render();
     }
 
     // Blow

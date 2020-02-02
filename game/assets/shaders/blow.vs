@@ -11,5 +11,5 @@ void main()
 {
     oPosition = mul(float4(inPosition, 1.0), oViewProjection);
     outTexCoord = inTexCoord;
-    outTexCoord.x -= offset;
+    outTexCoord.x += offset;
 }

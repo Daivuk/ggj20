@@ -1,19 +1,25 @@
 Texture0 texDiffuse;
 
 input float3 inNormal;
-input float4 inColor;
 input float2 inTexCoord;
 input float inDistance;
 
 extern float3 skyColor;
+extern float anim;
 
 const float3 sunColor = float3(1, 1, 1);
 const float3 sunDir = normalize(float3(-0.4, -0.4, 1.0));
 
 void main()
 {
+    float4 inColor = float4(2, 0, 0, 1);
+
     float4 diffuse = texDiffuse(inTexCoord);
-    oColor = diffuse * inColor;
+    oColor = inColor;
+
+    float yOffset = diffuse.r * sin(inTexCoord.x * 8 + anim) * 0.2;
+    if (inTexCoord.y - 0.5 < -0.25 + yOffset) discard;
+    if (inTexCoord.y - 0.5 > 0.25 + yOffset) discard;
 
     oColor.rgb = oColor.rgb * sunColor * (dot(sunDir, inNormal) * 0.5 + 0.5);
     

@@ -1,6 +1,8 @@
 var shaders = {
     outsideSolidVS: getShader("outsideSolid.vs"),
     outsideSolidPS: getShader("outsideSolid.ps"),
+    flagsVS: getShader("flags.vs"),
+    flagsPS: getShader("flags.ps"),
     windowsVS: getShader("windows.vs"),
     windowsPS: getShader("windows.ps"),
     blowVS: getShader("blow.vs"),
@@ -30,6 +32,7 @@ var models = {
     entity: getModel("entity.model"),
     windows: getModel("windows.model"),
     blow: getModel("blow.model"),
+    flags: getModel("flags.model"),
 }
 
 function loadResources()
