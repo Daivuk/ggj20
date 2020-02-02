@@ -1727,6 +1727,45 @@
       "angle": 0,
       "model": "ladder.model",
       "name": ""
+    },
+    {
+      "type": "sound",
+      "pos": {
+        "x": 3.761000156402588,
+        "y": 7.1010003089904785,
+        "z": 1.368453860282898
+      },
+      "sound": "ColdRoom.wav",
+      "radius": 3.5,
+      "volume": 1,
+      "pitch": 1,
+      "name": ""
+    },
+    {
+      "type": "sound",
+      "pos": {
+        "x": 11.672359466552734,
+        "y": 7.254162788391113,
+        "z": 1.3217363357543945
+      },
+      "sound": "ComputerRoom.wav",
+      "radius": 4,
+      "volume": 1,
+      "pitch": 1,
+      "name": ""
+    },
+    {
+      "type": "sound",
+      "pos": {
+        "x": 10.98900032043457,
+        "y": 5.935000419616699,
+        "z": 3.5480167865753174
+      },
+      "sound": "WindWindow.wav",
+      "radius": 2,
+      "volume": 1,
+      "pitch": 1,
+      "name": ""
     }
   ]
 } 
