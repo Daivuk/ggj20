@@ -156,16 +156,20 @@ function updateEdit(dt)
             var entity = emiters[i]
             entity.update(entity, dt)
         }
+        for (var i = 0; i < sounds.length; ++i)
+        {
+            var entity = sounds[i]
+            entity.update(entity, dt)
+        }
 
         var camFront = getEntityFront(editCam)
         smokes_update(camFront, dt)
     }
 
     // Mouse picking (View picking...)
-    if (!GUI.wantCaptureMouse())
+    if (!GUI.wantCaptureMouse() && !GUI.wantCaptureKeyboard())
     {
         var camFront = getEntityFront(editCam)
-        var camPos = getEntityCamPos(editCam)
 
         var mousePos = Input.getMousePos()
         var invTransform = transform.invert()
@@ -177,11 +181,11 @@ function updateEdit(dt)
         var to3 = new Vector3(to.x / to.w, to.y / to.w, to.z / to.w)
 
         hoverEntity = map_rayPick(from3, to3.sub(from3).normalize())
-    }
 
-    if (hoverEntity && Input.isJustDown(Key.MOUSE_1))
-    {
-        selectedEntity = hoverEntity
+        if (hoverEntity && Input.isJustDown(Key.MOUSE_1))
+        {
+            selectedEntity = hoverEntity
+        }
     }
 
     // Voxel edit
@@ -268,6 +272,8 @@ function renderEditUI()
             selectedEntity = createEntity({type:"controlPanel"}, editCam.pos.add(getEntityFront(editCam)))
         if (GUI.button("Create emiter"))
             selectedEntity = createEntity({type:"emiter"}, editCam.pos.add(getEntityFront(editCam)))
+        if (GUI.button("Create sound"))
+            selectedEntity = createEntity({type:"sound"}, editCam.pos.add(getEntityFront(editCam)))
         GUI.separator()
         if (selectedEntity)
         {
@@ -304,6 +310,10 @@ function renderEditUI()
             }
             if (selectedEntity.mapObj.radius != undefined)
                 selectedEntity.mapObj.radius = GUI.dragNumber("Radius", selectedEntity.mapObj.radius, 0.1)
+            if (selectedEntity.mapObj.volume != undefined)
+                selectedEntity.mapObj.volume = GUI.sliderNumber("Volume", selectedEntity.mapObj.volume, 0, 1)
+            if (selectedEntity.mapObj.pitch != undefined)
+                selectedEntity.mapObj.pitch = GUI.sliderNumber("Pitch", selectedEntity.mapObj.pitch, 0, 5)
             if (selectedEntity.mapObj.intensity != undefined)
                 selectedEntity.mapObj.intensity = GUI.dragNumber("Intensity", selectedEntity.mapObj.intensity, 0.01)
             if (selectedEntity.mapObj.color)
@@ -314,6 +324,14 @@ function renderEditUI()
             {
                 selectedEntity.mapObj.model = GUI.inputText("Model", selectedEntity.mapObj.model)
                 selectedEntity.model = getModel(selectedEntity.mapObj.model)
+            }
+            if (selectedEntity.mapObj.sound)
+            {
+                selectedEntity.mapObj.sound = GUI.inputText("Sound", selectedEntity.mapObj.sound)
+                selectedEntity.sound = createSoundInstance(selectedEntity.mapObj.sound)
+                selectedEntity.sound.setVolume(0)
+                selectedEntity.sound.setLoop(true)
+                selectedEntity.sound.play();
             }
             if (selectedEntity.mapObj.texture)
             {

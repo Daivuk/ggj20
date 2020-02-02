@@ -4,23 +4,23 @@ function createEntity_emiter(entity)
         entity.mapObj.color = new Color(1, 1, 1, 1)
     if (!entity.mapObj.duration)
         entity.mapObj.duration = 1
-    if (!entity.mapObj.speedF)
+    if (entity.mapObj.speedF == undefined)
         entity.mapObj.speedF = 1
-    if (!entity.mapObj.speedT)
+    if (entity.mapObj.speedT == undefined)
         entity.mapObj.speedT = 1
-    if (!entity.mapObj.sizeF)
+    if (entity.mapObj.sizeF == undefined)
         entity.mapObj.sizeF = 0.5
-    if (!entity.mapObj.sizeT)
+    if (entity.mapObj.sizeT == undefined)
         entity.mapObj.sizeT = 1
-    if (!entity.mapObj.spawnAreaSize)
+    if (entity.mapObj.spawnAreaSize == undefined)
         entity.mapObj.spawnAreaSize = 0
-    if (!entity.mapObj.spread)
+    if (entity.mapObj.spread == undefined)
         entity.mapObj.spread = 45
     if (!entity.mapObj.freq)
         entity.mapObj.freq = 0.1
-    if (!entity.mapObj.angle)
+    if (entity.mapObj.angle == undefined)
         entity.mapObj.angle = 0
-    if (!entity.mapObj.angleX)
+    if (entity.mapObj.angleX == undefined)
         entity.mapObj.angleX = 0
     entity.angle = entity.mapObj.angle
     entity.angleX = entity.mapObj.angleX

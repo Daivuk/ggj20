@@ -7,6 +7,7 @@ var editDrawables = []
 var postDrawables = []
 var map = []
 var emiters = []
+var sounds = []
 var entities = []
 var player = null
 var showGBuffer = false
@@ -123,6 +124,7 @@ function deleteEntity(entity)
     removeFromArray(omnis, entity)
     removeFromArray(projectors, entity)
     removeFromArray(emiters, entity)
+    removeFromArray(sounds, entity)
     removeFromArray(map.entities, entity.mapObj)
 }
 
@@ -159,6 +161,9 @@ function createEntity(mapObj, pos)
             break
         case "emiter":
             createEntity_emiter(entity)
+            break
+        case "sound":
+            createEntity_sound(entity)
             break
     }
 
