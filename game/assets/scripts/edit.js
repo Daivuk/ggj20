@@ -252,6 +252,18 @@ function renderEditUI()
         if (voxel)
         {
             voxel.solid = GUI.checkbox("Solid", voxel.solid)
+
+            voxel.stairsLowY = GUI.checkbox("Stairs Low +Y", voxel.stairsLowY)
+            if (!voxel.stairsLowY) delete voxel.stairsLowY
+
+            voxel.stairsHiY = GUI.checkbox("Stairs High +Y", voxel.stairsHiY)
+            if (!voxel.stairsHiY) delete voxel.stairsHiY
+
+            voxel.stairsLowNegY = GUI.checkbox("Stairs Low -Y", voxel.stairsLowNegY)
+            if (!voxel.stairsLowNegY) delete voxel.stairsLowNegY
+
+            voxel.stairsHiNegY = GUI.checkbox("Stairs High -Y", voxel.stairsHiNegY)
+            if (!voxel.stairsHiNegY) delete voxel.stairsHiNegY
         }
     }
     GUI.end()

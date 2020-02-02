@@ -58,25 +58,26 @@ function setSolidAt(pos, solid)
 function voxelCollision(entity, dt)
 {
     var height = entity.height ? entity.height : entity.size
+    //var feet = 0.3
 
     // X
-    if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt - entity.size, entity.pos.y - entity.size, entity.pos.z)))
+   /* if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt - entity.size, entity.pos.y - entity.size, entity.pos.z + feet)))
     {
         entity.vel.x = 0
     }
-    else if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt - entity.size, entity.pos.y + entity.size, entity.pos.z)))
+    else if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt - entity.size, entity.pos.y + entity.size, entity.pos.z + feet)))
     {
         entity.vel.x = 0
     }
-    else if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt + entity.size, entity.pos.y + entity.size, entity.pos.z)))
+    else if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt + entity.size, entity.pos.y + entity.size, entity.pos.z + feet)))
     {
         entity.vel.x = 0
     }
-    else if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt + entity.size, entity.pos.y - entity.size, entity.pos.z)))
+    else if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt + entity.size, entity.pos.y - entity.size, entity.pos.z + feet)))
     {
         entity.vel.x = 0
     }
-    else if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt - entity.size, entity.pos.y - entity.size, entity.pos.z + height)))
+    else*/ if (getSolidAt(new Vector3(entity.pos.x + entity.vel.x * dt - entity.size, entity.pos.y - entity.size, entity.pos.z + height)))
     {
         entity.vel.x = 0
     }
@@ -94,23 +95,23 @@ function voxelCollision(entity, dt)
     }
 
     // Y
-    if (getSolidAt(new Vector3(entity.pos.x - entity.size, entity.pos.y + entity.vel.y * dt - entity.size, entity.pos.z)))
+  /*  if (getSolidAt(new Vector3(entity.pos.x - entity.size, entity.pos.y + entity.vel.y * dt - entity.size, entity.pos.z + feet)))
     {
         entity.vel.y = 0
     }
-    else if (getSolidAt(new Vector3(entity.pos.x - entity.size, entity.pos.y + entity.vel.y * dt + entity.size, entity.pos.z)))
+    else if (getSolidAt(new Vector3(entity.pos.x - entity.size, entity.pos.y + entity.vel.y * dt + entity.size, entity.pos.z + feet)))
     {
         entity.vel.y = 0
     }
-    else if (getSolidAt(new Vector3(entity.pos.x + entity.size, entity.pos.y + entity.vel.y * dt + entity.size, entity.pos.z)))
+    else if (getSolidAt(new Vector3(entity.pos.x + entity.size, entity.pos.y + entity.vel.y * dt + entity.size, entity.pos.z + feet)))
     {
         entity.vel.y = 0
     }
-    else if (getSolidAt(new Vector3(entity.pos.x + entity.size, entity.pos.y + entity.vel.y * dt - entity.size, entity.pos.z)))
+    else if (getSolidAt(new Vector3(entity.pos.x + entity.size, entity.pos.y + entity.vel.y * dt - entity.size, entity.pos.z + feet)))
     {
         entity.vel.y = 0
     }
-    else if (getSolidAt(new Vector3(entity.pos.x - entity.size, entity.pos.y + entity.vel.y * dt - entity.size, entity.pos.z + height)))
+    else*/ if (getSolidAt(new Vector3(entity.pos.x - entity.size, entity.pos.y + entity.vel.y * dt - entity.size, entity.pos.z + height)))
     {
         entity.vel.y = 0
     }

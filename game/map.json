@@ -284,6 +284,243 @@
     },
     "12.8.1": {
       "solid": false
+    },
+    "14.3.1": {
+      "solid": false,
+      "stairsLowY": true
+    },
+    "14.4.1": {
+      "solid": false,
+      "stairsHiY": true
+    },
+    "14.5.2": {
+      "solid": false,
+      "stairsLowY": true
+    },
+    "14.6.2": {
+      "solid": false,
+      "stairsHiY": true
+    },
+    "14.6.3": {
+      "solid": false
+    },
+    "14.5.3": {
+      "solid": false
+    },
+    "14.4.2": {
+      "solid": false
+    },
+    "14.3.2": {
+      "solid": false
+    },
+    "14.7.3": {
+      "solid": false
+    },
+    "14.8.3": {
+      "solid": false
+    },
+    "13.8.3": {
+      "solid": false
+    },
+    "13.7.3": {
+      "solid": false
+    },
+    "12.7.3": {
+      "solid": false
+    },
+    "12.6.3": {
+      "solid": false
+    },
+    "11.6.3": {
+      "solid": false
+    },
+    "10.6.3": {
+      "solid": false
+    },
+    "9.6.3": {
+      "solid": false
+    },
+    "9.7.3": {
+      "solid": false
+    },
+    "9.8.3": {
+      "solid": false
+    },
+    "9.9.3": {
+      "solid": false
+    },
+    "10.9.3": {
+      "solid": false
+    },
+    "11.9.3": {
+      "solid": false
+    },
+    "11.8.3": {
+      "solid": false
+    },
+    "10.8.3": {
+      "solid": false
+    },
+    "10.7.3": {
+      "solid": false
+    },
+    "11.7.3": {
+      "solid": false
+    },
+    "8.8.3": {
+      "solid": false
+    },
+    "7.8.3": {
+      "solid": false
+    },
+    "7.7.3": {
+      "solid": false
+    },
+    "7.9.3": {
+      "solid": false
+    },
+    "6.9.3": {
+      "solid": false
+    },
+    "5.9.3": {
+      "solid": false
+    },
+    "5.10.3": {
+      "solid": false
+    },
+    "5.11.3": {
+      "solid": false
+    },
+    "5.12.3": {
+      "solid": false
+    },
+    "5.13.3": {
+      "solid": false
+    },
+    "5.14.3": {
+      "solid": true
+    },
+    "5.14.2": {
+      "solid": true
+    },
+    "9.12.0": {
+      "solid": false,
+      "stairsLowNegY": true
+    },
+    "9.11.0": {
+      "solid": false,
+      "stairsHiNegY": true
+    },
+    "9.11.1": {
+      "solid": false
+    },
+    "9.12.1": {
+      "solid": false
+    },
+    "9.13.0": {
+      "solid": false
+    },
+    "9.14.0": {
+      "solid": false
+    },
+    "9.15.0": {
+      "solid": false
+    },
+    "9.16.0": {
+      "solid": false
+    },
+    "10.16.0": {
+      "solid": false
+    },
+    "11.16.0": {
+      "solid": false
+    },
+    "12.16.0": {
+      "solid": false
+    },
+    "13.16.0": {
+      "solid": false
+    },
+    "14.16.0": {
+      "solid": false
+    },
+    "14.15.0": {
+      "solid": false
+    },
+    "14.14.0": {
+      "solid": false
+    },
+    "14.13.0": {
+      "solid": false
+    },
+    "14.12.0": {
+      "solid": false
+    },
+    "14.11.0": {
+      "solid": false
+    },
+    "13.11.0": {
+      "solid": false
+    },
+    "12.11.0": {
+      "solid": false
+    },
+    "11.11.0": {
+      "solid": false
+    },
+    "11.12.0": {
+      "solid": false
+    },
+    "11.13.0": {
+      "solid": false
+    },
+    "11.14.0": {
+      "solid": false
+    },
+    "11.15.0": {
+      "solid": false
+    },
+    "10.15.0": {
+      "solid": false
+    },
+    "10.14.0": {
+      "solid": false
+    },
+    "10.13.0": {
+      "solid": false
+    },
+    "10.12.0": {
+      "solid": true
+    },
+    "12.15.0": {
+      "solid": false
+    },
+    "12.14.0": {
+      "solid": false
+    },
+    "12.13.0": {
+      "solid": false
+    },
+    "12.12.0": {
+      "solid": false
+    },
+    "13.12.0": {
+      "solid": false
+    },
+    "13.13.0": {
+      "solid": false
+    },
+    "13.14.0": {
+      "solid": false
+    },
+    "12.8.3": {
+      "solid": false
+    },
+    "12.9.3": {
+      "solid": false
+    },
+    "8.7.3": {
+      "solid": false
     }
   },
   "entities": [

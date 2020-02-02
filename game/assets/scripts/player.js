@@ -88,6 +88,113 @@ function player_update(entity, dt)
 
     // Collisions
     voxelCollision(entity, dt)
+
+    // Put feet on floor (FREAKING HACKY, NO TIME TO FIX)
+    voxel = null
+    var voxel = getVoxelAt(entity.pos)
+    var voxelUnder = getVoxelAt(entity.pos.add(new Vector3(0, 0, -.5)))
+    var voxelAbove = getVoxelAt(entity.pos.add(new Vector3(0, 0, 1)))
+    var zAbs = Math.floor(entity.pos.z)
+    var zAbsUnder = Math.floor(entity.pos.z -.5)
+    var onStairs = false
+    if (voxelUnder)
+    {
+        if (voxelUnder.stairsLowY)
+        {
+            var yAbs = Math.floor(entity.pos.y)
+            var yRem = entity.pos.y - yAbs
+            entity.pos.z = zAbs - 1 + yRem / 2
+            onStairs = true
+        }
+        else if (voxelUnder.stairsHiY)
+        {
+            var yAbs = Math.floor(entity.pos.y)
+            var yRem = entity.pos.y - yAbs
+            entity.pos.z = zAbs - 1 + yRem / 2 + 0.5
+            onStairs = true
+        }
+        else if (voxelUnder.stairsLowNegY)
+        {
+            var yAbs = Math.floor(entity.pos.y)
+            var yRem = 1 - (entity.pos.y - yAbs)
+            entity.pos.z = zAbs - 1 + yRem / 2
+            onStairs = true
+        }
+        else if (voxelUnder.stairsHiNegY)
+        {
+            var yAbs = Math.floor(entity.pos.y)
+            var yRem = 1 - (entity.pos.y - yAbs)
+            entity.pos.z = zAbs - 1 + yRem / 2 + 0.5
+            onStairs = true
+        }
+    }
+    if (voxelAbove)
+    {
+        if (voxelAbove.stairsLowY)
+        {
+            var yAbs = Math.floor(entity.pos.y)
+            var yRem = entity.pos.y - yAbs
+            entity.pos.z = zAbs + 1 + yRem / 2
+            onStairs = true
+        }
+        else if (voxelAbove.stairsHiY)
+        {
+            var yAbs = Math.floor(entity.pos.y)
+            var yRem = entity.pos.y - yAbs
+            entity.pos.z = zAbs + 1 + yRem / 2 + 0.5
+            onStairs = true
+        }
+        else if (voxelAbove.stairsLowNegY)
+        {
+            var yAbs = Math.floor(entity.pos.y)
+            var yRem = 1 - (entity.pos.y - yAbs)
+            entity.pos.z = zAbs + 1 + yRem / 2
+            onStairs = true
+        }
+        else if (voxelAbove.stairsHiNegY)
+        {
+            var yAbs = Math.floor(entity.pos.y)
+            var yRem = 1 - (entity.pos.y - yAbs)
+            entity.pos.z = zAbs + 1 + yRem / 2 + 0.5
+            onStairs = true
+        }
+    }
+    if (voxel)
+    {
+        if (voxel.stairsLowY)
+        {
+            var yAbs = Math.floor(entity.pos.y)
+            var yRem = entity.pos.y - yAbs
+            entity.pos.z = zAbs + yRem / 2
+            onStairs = true
+        }
+        else if (voxel.stairsHiY)
+        {
+            var yAbs = Math.floor(entity.pos.y)
+            var yRem = entity.pos.y - yAbs
+            entity.pos.z = zAbs + yRem / 2 + 0.5
+            onStairs = true
+        }
+        else if (voxel.stairsLowNegY)
+        {
+            var yAbs = Math.floor(entity.pos.y)
+            var yRem = 1 - (entity.pos.y - yAbs)
+            entity.pos.z = zAbs + yRem / 2
+            onStairs = true
+        }
+        else if (voxel.stairsHiNegY)
+        {
+            var yAbs = Math.floor(entity.pos.y)
+            var yRem = 1 - (entity.pos.y - yAbs)
+            entity.pos.z = zAbs + yRem / 2 + 0.5
+            onStairs = true
+        }
+    }
+    if (!onStairs && (!voxelUnder || voxelUnder.solid))
+    {
+        entity.pos.z = zAbsUnder + 1
+    }
+
     entity.pos = entity.pos.add(entity.vel.mul(dt))
     entity.vel = entity.vel.mul(Math.max(0, 1 - dt * 10))
 
