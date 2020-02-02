@@ -37,6 +37,7 @@ function createEntity_player(entity)
     entity.mapObj.radius = 1
     entity.mapObj.flicker = 0
     entity.mapObj.intensity = 0
+    entity.itemHandOffset = -0.5
     omnis.push(entity)
 }
 
@@ -217,12 +218,35 @@ function player_update(entity, dt)
             if (pick.damage)
             {
                 entity.hoverObject = pick
+
+                var itemName = "welder"
+                if (entity.hoverObject.mapObj.type == "computer")
+                    itemName = "tablet"
+
+                var welder = getItem(entity, itemName)
+                if (welder)
+                {
+                    player.item = welder
+                    if (entity.itemHandOffset < 0)
+                        entity.itemHandOffset -= entity.itemHandOffset * dt * 17
+                    // if (!player.itemAnim) player.itemAnim = new Vector3Anim(0, 0, -.5)
+                    // if (!player.itemAnim.isPlaying())
+                    //     player.itemAnim.playSingle(player.itemAnim.get(), Vector3.ZERO, 0.2, Tween.EASE_OUT)
+                }
             }
             else if (pick.interract)
             {
                 entity.hoverObject = pick
             }
         }
+    }
+
+    if (player.item && (!entity.hoverObject || !entity.hoverObject.damage))
+    {
+        if (entity.itemHandOffset > -.5)
+        entity.itemHandOffset -= dt * .5
+        // if (!player.itemAnim.isPlaying())
+        //     player.itemAnim.playSingle(player.itemAnim.get(), new Vector3(0, 0, -.5), 0.6, Tween.EASE_IN)
     }
 
     entity.mapObj.intensity = 0
@@ -238,7 +262,7 @@ function player_update(entity, dt)
     {
         if (entity.hoverObject.damage)
         {
-            if (entity.item && entity.item.mapObj.target == "welder")
+            if (getItem(entity, entity.hoverObject.mapObj.type == "computer" ? "tablet" : "welder"))
             {
                 entity.mapObj.intensity = Random.randNumber(1, 10)
                 entity.weldSound = createSoundInstance("Welder.wav")
@@ -272,7 +296,7 @@ function player_drawItem(entity)
         var front = getEntityFront(entity)
         var right = front.cross(Vector3.UNIT_Z).normalize()
         var up = right.cross(front)
-        var pos = getEntityCamPos(entity).add(front.mul(0.2)).add(right.mul(0.1)).add(up.mul(-0.15))
+        var pos = getEntityCamPos(entity).add(front.mul(0.2)).add(right.mul(0.1)).add(up.mul(-0.15 + entity.itemHandOffset))
         var mat = Matrix.createWorld(pos, front, up)
         entity.item.inHandModel.render(mat)
     }

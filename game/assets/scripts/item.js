@@ -14,6 +14,22 @@ function createEntity_item(entity)
     entity.interract = item_interract
 }
 
+function getItem(entity, name)
+{
+    if (entity.items)
+    {
+        for (var i = 0; i<entity.items.length;++i)
+        {
+            var item = entity.items[i]
+            if (item.mapObj.target == name)
+            {
+                return item
+            }
+        }
+    }
+    return null
+}
+
 function item_interract(entity, player)
 {
     entity.inHandModel = entity.model
@@ -21,7 +37,4 @@ function item_interract(entity, player)
     entity.interract = null
 
     player.items.push(entity)
-    player.item = entity
-    player.itemAnim = new Vector3Anim()
-    player.itemAnim.playSingle(new Vector3(0, 0, -.1), Vector3.ZERO, 0.6, Tween.EASE_OUT)
 }
