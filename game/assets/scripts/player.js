@@ -245,6 +245,16 @@ function player_update(entity, dt)
                 entity.weldSound.setLoop(true)
                 entity.weldSound.play()
                 entity.hoverObject.damage = Math.max(0, entity.hoverObject.damage - dt / 4)
+
+                var front = getEntityFront(entity)
+                var right = front.cross(Vector3.UNIT_Z).normalize()
+                var up = right.cross(front)
+                var pos = getEntityCamPos(entity).add(front.mul(0.3)).add(right.mul(0.12)).add(up.mul(-0.03))
+        
+                for (var i = 0; i < 2; ++i)
+                    smoke_create(pos, 
+                        Random.randVector3(new Vector3(-2, -2, -2), new Vector3(2, 2, 2)).normalize().mul(.3), 
+                        .25, .1, .2, new Color(0, 100, 100, 1))
             }
         }
     }
@@ -263,9 +273,6 @@ function player_drawItem(entity)
         var right = front.cross(Vector3.UNIT_Z).normalize()
         var up = right.cross(front)
         var pos = getEntityCamPos(entity).add(front.mul(0.2)).add(right.mul(0.1)).add(up.mul(-0.15))
-        // mat._41 += front.x
-        // mat._42 += front.y
-        // mat._43 += front.z
         var mat = Matrix.createWorld(pos, front, up)
         entity.item.inHandModel.render(mat)
     }
@@ -278,8 +285,11 @@ function player_postDraw(entity)
         Renderer.pushBlendMode(BlendMode.ALPHA)
         if (entity.hoverObject.model)
         {
-            shaders.entityPS.setVector4("entityColor", new Vector4(1, 1, 0, 0.25))
-            entity.hoverObject.model.render(getEntityTransform(entity.hoverObject));
+            if (!entity.hoverObject.damage)
+            {
+                shaders.entityPS.setVector4("entityColor", new Vector4(1, 1, 0, 0.25))
+                entity.hoverObject.model.render(getEntityTransform(entity.hoverObject));
+            }
         }
         Renderer.popBlendMode()
     }
