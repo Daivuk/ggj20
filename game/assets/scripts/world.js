@@ -6,6 +6,7 @@ var updatables = []
 var editDrawables = []
 var postDrawables = []
 var map = []
+var emiters = []
 var entities = []
 var player = null
 var showGBuffer = false
@@ -121,6 +122,7 @@ function deleteEntity(entity)
     removeFromArray(collisionEntities, entity)
     removeFromArray(omnis, entity)
     removeFromArray(projectors, entity)
+    removeFromArray(emiters, entity)
     removeFromArray(map.entities, entity.mapObj)
 }
 
@@ -154,6 +156,9 @@ function createEntity(mapObj, pos)
             break
         case "controlPanel":
             createEntity_controlPanel(entity)
+            break
+        case "emiter":
+            createEntity_emiter(entity)
             break
     }
 
@@ -239,9 +244,6 @@ function updateWorld(cam, dt)
 
     var camFront = getEntityFront(cam)
     smokes_update(camFront, dt)
-
-    // Create a test particle each frame
-    // smoke_create(new Vector3(2.5, 2.5, 2), new Vector3(0, 0, -0.5), 1, 2, 5, Color.WHITE)
 }
 
 function renderWorld(cam)

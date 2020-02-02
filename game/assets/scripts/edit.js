@@ -40,11 +40,11 @@ function intersect(bmin, bmax, rayFrom, rayDir)
     if ((tmin > tzmax) || (tzmin > tmax))
         return false;
 
-    if (tzmin > tmin)
-        tmin = tzmin;
+    // if (tzmin > tmin)
+    //     tmin = tzmin;
 
-    if (tzmax < tmax)
-        tmax = tzmax;
+    // if (tzmax < tmax)
+    //     tmax = tzmax;
 
     return true;
 }
@@ -72,6 +72,8 @@ function map_rayPick(rayFrom, rayDir, maxDistance, extend)
             var dist = Vector3.distanceSquared(rayFrom, entity.pos)
             if (dist < prevDist)
             {
+                var toEnt = entity.pos.sub(rayFrom)
+                if (toEnt.dot(rayDir < 0)) continue
                 prevDist = dist;
                 ret = entity;
             }
@@ -146,6 +148,17 @@ function updateEdit(dt)
         if (Input.isDown(Key.LEFT_CONTROL) && Input.isJustDown(Key.S)) saveMap()
     }
 
+    {
+        for (var i = 0; i < emiters.length; ++i)
+        {
+            var entity = emiters[i]
+            entity.update(entity, dt)
+        }
+
+        var camFront = getEntityFront(editCam)
+        smokes_update(camFront, dt)
+    }
+
     // Mouse picking (View picking...)
     if (!GUI.wantCaptureMouse())
     {
@@ -186,7 +199,7 @@ function renderEdit()
     var camFront = getEntityFront(editCam)
     Renderer.setupFor3D(editCam.pos, editCam.pos.add(camFront), Vector3.UNIT_Z, editCam.fov)
     transform = Renderer.getView().mul(Renderer.getProjection())
-    Renderer.setDepthEnabled(false)
+    Renderer.setDepthEnabled(true)
 
     // Draw entities that don't have mesh
     Renderer.setVertexShader(shaders.entityVS)
@@ -239,12 +252,20 @@ function renderEditUI()
 
     if (GUI.begin("Inspector"))
     {
-        newType = GUI.inputText("new type", newType)
-        GUI.sameLine()
-        if (GUI.button("Create"))
-        {
-            selectedEntity = createEntity({type:newType}, editCam.pos.add(getEntityFront(editCam)))
-        }
+        if (GUI.button("Create spinner"))
+            selectedEntity = createEntity({type:"spinner"}, editCam.pos.add(getEntityFront(editCam)))
+        if (GUI.button("Create omni"))
+            selectedEntity = createEntity({type:"omni"}, editCam.pos.add(getEntityFront(editCam)))
+        if (GUI.button("Create projector"))
+            selectedEntity = createEntity({type:"projector"}, editCam.pos.add(getEntityFront(editCam)))
+        if (GUI.button("Create model"))
+            selectedEntity = createEntity({type:"model"}, editCam.pos.add(getEntityFront(editCam)))
+        if (GUI.button("Create door"))
+            selectedEntity = createEntity({type:"door"}, editCam.pos.add(getEntityFront(editCam)))
+        if (GUI.button("Create controlPanel"))
+            selectedEntity = createEntity({type:"controlPanel"}, editCam.pos.add(getEntityFront(editCam)))
+        if (GUI.button("Create emiter"))
+            selectedEntity = createEntity({type:"emiter"}, editCam.pos.add(getEntityFront(editCam)))
         GUI.separator()
         if (selectedEntity)
         {
@@ -301,6 +322,23 @@ function renderEditUI()
             {
                 selectedEntity.mapObj.target = GUI.inputText("Target", selectedEntity.mapObj.target)
             }
+
+            if (selectedEntity.mapObj.duration != undefined)
+                selectedEntity.mapObj.duration = GUI.dragNumber("Duration", selectedEntity.mapObj.duration, 0.1)
+            if (selectedEntity.mapObj.speedF != undefined)
+                selectedEntity.mapObj.speedF = GUI.dragNumber("Min Speed", selectedEntity.mapObj.speedF, 0.1)
+            if (selectedEntity.mapObj.speedT != undefined)
+                selectedEntity.mapObj.speedT = GUI.dragNumber("Max Speed", selectedEntity.mapObj.speedT, 0.1)
+            if (selectedEntity.mapObj.sizeF != undefined)
+                selectedEntity.mapObj.sizeF = GUI.dragNumber("Size Start", selectedEntity.mapObj.sizeF, 0.1)
+            if (selectedEntity.mapObj.sizeT != undefined)
+                selectedEntity.mapObj.sizeT = GUI.dragNumber("Size End", selectedEntity.mapObj.sizeT, 0.1)
+            if (selectedEntity.mapObj.spawnAreaSize != undefined)
+                selectedEntity.mapObj.spawnAreaSize = GUI.dragNumber("Spawn Area Size", selectedEntity.mapObj.spawnAreaSize, 0.1)
+            if (selectedEntity.mapObj.spread != undefined)
+                selectedEntity.mapObj.spread = GUI.dragNumber("Spread", selectedEntity.mapObj.radius, 0.1)
+            if (selectedEntity.mapObj.freq != undefined)
+                selectedEntity.mapObj.freq = GUI.dragNumber("Frequency", selectedEntity.mapObj.freq, 0.01)
         }
     }
     GUI.end()
