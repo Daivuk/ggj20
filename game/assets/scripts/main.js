@@ -80,10 +80,10 @@ function render()
             break
         case "pause":
             renderWorld(player)
-            SpriteBatch.begin()
-            SpriteBatch.drawRect(null, screenRect, new Color(0, 0, 0, .75))
-            SpriteBatch.drawText(font, "PAUSED", res.div(2), Vector2.CENTER)
-            SpriteBatch.end()
+            // SpriteBatch.begin()
+            // SpriteBatch.drawRect(null, screenRect, new Color(0, 0, 0, .75))
+            // SpriteBatch.drawText(font, "PAUSED", res.div(2), Vector2.CENTER)
+            // SpriteBatch.end()
             break
         case "edit":
             renderWorld(editCam)

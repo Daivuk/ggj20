@@ -29,7 +29,7 @@ appID = null
 appSecret = null
 
 # Display FPS in the upper left corner
-showFPS = true
+showFPS = false
 
 # Displays debug log on screen
-onScreenLog = true
+onScreenLog = false

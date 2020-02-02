@@ -265,9 +265,12 @@ function player_update(entity, dt)
             if (getItem(entity, entity.hoverObject.mapObj.type == "computer" ? "tablet" : "welder"))
             {
                 entity.mapObj.intensity = Random.randNumber(1, 10)
-                entity.weldSound = createSoundInstance("Welder.wav")
-                entity.weldSound.setLoop(true)
-                entity.weldSound.play()
+                if (!entity.weldSound)
+                {
+                    entity.weldSound = createSoundInstance(entity.hoverObject.mapObj.type == "computer" ? "RepairComputer.wav" : "Welder.wav")
+                    entity.weldSound.setLoop(true)
+                    entity.weldSound.play()
+                }
                 entity.hoverObject.damage = Math.max(0, entity.hoverObject.damage - dt / 4)
 
                 var front = getEntityFront(entity)
