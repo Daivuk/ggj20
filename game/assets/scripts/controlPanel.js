@@ -25,7 +25,7 @@ function controlPanel_interract(entity, player)
     if (entity.mapObj.target == "hangar")
     {
         entity.mapObj.target = ""
-        playSound("HangarDoor.wav")
+        playSound("HangarDoor.wav", 2.0, 0, 0.6)
         hangarMat.queue(Matrix.IDENTITY, 4, Tween.LINEAR, function()
         {
             hangarOpen = false
