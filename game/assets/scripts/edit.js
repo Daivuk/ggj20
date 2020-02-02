@@ -323,6 +323,8 @@ function renderEditUI()
             selectedEntity.mapObj.pos.x = selectedEntity.pos.x
             selectedEntity.mapObj.pos.y = selectedEntity.pos.y
             selectedEntity.mapObj.pos.z = selectedEntity.pos.z
+            selectedEntity.mapObj.damage = GUI.sliderNumber("Damage", selectedEntity.mapObj.damage, 0, 1)
+            selectedEntity.damage = GUI.sliderNumber("Damage", selectedEntity.damage, 0, 1)
             if (selectedEntity.angle != undefined)
             {
                 selectedEntity.angle = GUI.dragNumber("Angle", selectedEntity.angle, 1)
