@@ -41,6 +41,6 @@ function emiter_update(entity, dt)
         var pos = getEntityCamPos(entity)
         pos = Random.randVector3(pos.sub(entity.mapObj.spawnAreaSize), pos.add(entity.mapObj.spawnAreaSize))
 
-        smoke_create(pos, vel, entity.mapObj.duration, entity.mapObj.sizeF, entity.mapObj.sizeT, Color.WHITE)
+        smoke_create(pos, vel, entity.mapObj.duration, entity.mapObj.sizeF, entity.mapObj.sizeT, new Color(entity.mapObj.color.r, entity.mapObj.color.g, entity.mapObj.color.b, entity.mapObj.color.a))
     }
 }

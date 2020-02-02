@@ -73,9 +73,11 @@ function map_rayPick(rayFrom, rayDir, maxDistance, extend)
             if (dist < prevDist)
             {
                 var toEnt = entity.pos.sub(rayFrom)
-                if (toEnt.dot(rayDir < 0)) continue
-                prevDist = dist;
-                ret = entity;
+                if (toEnt.dot(rayDir) > 0)
+                {
+                    prevDist = dist;
+                    ret = entity;
+                }
             }
         }
     }
