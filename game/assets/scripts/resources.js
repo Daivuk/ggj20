@@ -3,6 +3,8 @@ var shaders = {
     outsideSolidPS: getShader("outsideSolid.ps"),
     windowsVS: getShader("windows.vs"),
     windowsPS: getShader("windows.ps"),
+    blowVS: getShader("blow.vs"),
+    blowPS: getShader("blow.ps"),
 
     // gbuffer
     diffuseVS: getShader("diffuse.vs"),
@@ -27,6 +29,7 @@ var shaders = {
 var models = {
     entity: getModel("entity.model"),
     windows: getModel("windows.model"),
+    blow: getModel("blow.model"),
 }
 
 function loadResources()

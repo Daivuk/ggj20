@@ -43,7 +43,7 @@
       "solid": false
     },
     "0.4.1": {
-      "solid": false
+      "solid": true
     },
     "0.2.1": {
       "solid": false
@@ -199,6 +199,90 @@
       "solid": false
     },
     "11.4.1": {
+      "solid": false
+    },
+    "7.9.1": {
+      "solid": false
+    },
+    "6.9.1": {
+      "solid": false
+    },
+    "5.9.1": {
+      "solid": false
+    },
+    "5.10.1": {
+      "solid": false
+    },
+    "5.11.1": {
+      "solid": false
+    },
+    "5.12.1": {
+      "solid": false
+    },
+    "5.13.1": {
+      "solid": false
+    },
+    "5.14.1": {
+      "solid": false
+    },
+    "8.9.1": {
+      "solid": false
+    },
+    "9.9.1": {
+      "solid": false
+    },
+    "9.10.1": {
+      "solid": false
+    },
+    "10.9.1": {
+      "solid": false
+    },
+    "11.9.1": {
+      "solid": false
+    },
+    "12.9.1": {
+      "solid": false
+    },
+    "13.9.1": {
+      "solid": false
+    },
+    "13.8.1": {
+      "solid": false
+    },
+    "13.7.1": {
+      "solid": false
+    },
+    "13.6.1": {
+      "solid": false
+    },
+    "12.6.1": {
+      "solid": false
+    },
+    "11.6.1": {
+      "solid": false
+    },
+    "10.6.1": {
+      "solid": false
+    },
+    "11.5.1": {
+      "solid": false
+    },
+    "10.7.1": {
+      "solid": false
+    },
+    "10.8.1": {
+      "solid": false
+    },
+    "11.8.1": {
+      "solid": false
+    },
+    "11.7.1": {
+      "solid": false
+    },
+    "12.7.1": {
+      "solid": false
+    },
+    "12.8.1": {
       "solid": false
     }
   },

@@ -16,6 +16,8 @@ var outsideStaticEntities = []
 var insideStaticEntities = []
 var interractables = []
 var collisionEntities = []
+var blowAnim = new NumberAnim()
+blowAnim.playSingle(0, 1, 1, Tween.LINEAR, Loop.LOOP)
 
 var cameraMenu = {
     pos: new Vector3(30.37, -18.681, 3.8761),
@@ -309,6 +311,17 @@ function renderWorld(cam)
             if (!entity.model) continue
             entity.model.render(getEntityTransform(entity))
         }
+    }
+
+    // Blow
+    {
+        Renderer.setDepthEnabled(false)
+        Renderer.setBlendMode(BlendMode.ALPHA)
+        Renderer.setVertexShader(shaders.blowVS)
+        Renderer.setPixelShader(shaders.blowPS)
+        shaders.blowVS.setNumber("offset", blowAnim.get())
+        models.blow.render();
+        Renderer.setDepthEnabled(true)
     }
 
     // Draw the interior meshes into buffer only
