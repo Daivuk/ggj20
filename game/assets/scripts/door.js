@@ -24,7 +24,6 @@ function door_trigger(entity, triggerer, player)
     if (entity.damage)
     {
         print("SHOW MSG: Door damaged")
-        print("MISSING HonHon.wav")
         playSound("HonHon.wav")
         return
     }
