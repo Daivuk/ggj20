@@ -21,6 +21,13 @@ function door_update(entity, dt)
 function door_trigger(entity, triggerer, player)
 {
     if (entity.openAnim.isPlaying()) return
+    if (entity.damage)
+    {
+        print("SHOW MSG: Door damaged")
+        print("MISSING HonHon.wav")
+        playSound("HonHon.wav")
+        return
+    }
     entity.isOpen = !entity.isOpen
     if (entity.isOpen)
     {

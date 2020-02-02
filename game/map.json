@@ -524,6 +524,15 @@
     },
     "13.15.0": {
       "solid": false
+    },
+    "14.4.4": {
+      "solid": true
+    },
+    "15.4.4": {
+      "solid": true
+    },
+    "15.3.4": {
+      "solid": true
     }
   },
   "entities": [
@@ -541,7 +550,8 @@
         "z": 0
       },
       "angle": 0,
-      "angleX": 0
+      "angleX": 0,
+      "damage": 0
     },
     {
       "name": "Spinner",
@@ -555,7 +565,8 @@
         "y": -32.14900207519531,
         "z": 12.971000671386719
       },
-      "angle": 229.5619659423828
+      "angle": 229.5619659423828,
+      "damage": 0
     },
     {
       "name": "Interrior Solid",
@@ -571,7 +582,8 @@
         "z": 0
       },
       "angle": 0,
-      "angleX": 0
+      "angleX": 0,
+      "damage": 0
     },
     {
       "name": "Omni",
@@ -590,7 +602,8 @@
         "a": 1
       },
       "flicker": 0,
-      "intensity": 1.1500000953674316
+      "intensity": 1.1500000953674316,
+      "damage": 0
     },
     {
       "name": "Omni",
@@ -609,7 +622,8 @@
         "a": 1
       },
       "flicker": 2,
-      "intensity": 2.140000104904175
+      "intensity": 2.140000104904175,
+      "damage": 0
     },
     {
       "name": "Omni",
@@ -628,7 +642,8 @@
         "a": 1
       },
       "flicker": 0,
-      "intensity": 1.149999976158142
+      "intensity": 1.149999976158142,
+      "damage": 0
     },
     {
       "type": "omni",
@@ -646,7 +661,8 @@
       "radius": 4,
       "flicker": 0,
       "name": "",
-      "intensity": 1.149999976158142
+      "intensity": 1.149999976158142,
+      "damage": 0
     },
     {
       "type": "model",
@@ -658,7 +674,8 @@
       "model": "doorFrame.model",
       "name": "",
       "angle": 90.00000762939453,
-      "angleX": 0
+      "angleX": 0,
+      "damage": 0
     },
     {
       "type": "omni",
@@ -676,7 +693,8 @@
       "radius": 1.9000000953674316,
       "flicker": 0,
       "name": "",
-      "intensity": 1.149999976158142
+      "intensity": 1.149999976158142,
+      "damage": 0
     },
     {
       "type": "door",
@@ -687,7 +705,8 @@
       },
       "angle": 90,
       "model": "door.model",
-      "name": "door1"
+      "name": "door1",
+      "damage": 0
     },
     {
       "type": "controlPanel",
@@ -708,7 +727,8 @@
       },
       "radius": 0.5,
       "intensity": 2,
-      "flicker": 0
+      "flicker": 0,
+      "damage": 0
     },
     {
       "type": "omni",
@@ -726,7 +746,8 @@
       "radius": 1.9000000953674316,
       "flicker": 0,
       "name": "",
-      "intensity": 1.15
+      "intensity": 1.15,
+      "damage": 0
     },
     {
       "type": "omni",
@@ -744,7 +765,8 @@
       "radius": 2.3000001907348633,
       "flicker": 0,
       "intensity": 0.940000057220459,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "omni",
@@ -762,7 +784,8 @@
       "radius": 1.9000000953674316,
       "flicker": 0,
       "name": "",
-      "intensity": 1.149999976158142
+      "intensity": 1.149999976158142,
+      "damage": 0
     },
     {
       "type": "omni",
@@ -780,7 +803,8 @@
       "radius": 4,
       "flicker": 0,
       "intensity": 1.290000081062317,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "omni",
@@ -798,7 +822,8 @@
       "radius": 1.9000000953674316,
       "flicker": 0,
       "name": "",
-      "intensity": 1.149999976158142
+      "intensity": 1.149999976158142,
+      "damage": 0
     },
     {
       "type": "model",
@@ -810,7 +835,8 @@
       "model": "doorFrame.model",
       "name": "",
       "angle": 90.00000762939453,
-      "angleX": 0
+      "angleX": 0,
+      "damage": 0
     },
     {
       "type": "controlPanel",
@@ -831,7 +857,8 @@
       },
       "radius": 0.5,
       "intensity": 2,
-      "flicker": 0
+      "flicker": 0,
+      "damage": 0
     },
     {
       "type": "omni",
@@ -849,7 +876,8 @@
       "radius": 4,
       "flicker": 0,
       "name": "",
-      "intensity": 1.149999976158142
+      "intensity": 1.149999976158142,
+      "damage": 0
     },
     {
       "type": "door",
@@ -860,7 +888,8 @@
       },
       "angle": 90,
       "model": "door.model",
-      "name": "door2"
+      "name": "door2",
+      "damage": 0
     },
     {
       "type": "controlPanel",
@@ -881,7 +910,8 @@
       },
       "radius": 0.5,
       "intensity": 2,
-      "flicker": 0
+      "flicker": 0,
+      "damage": 0
     },
     {
       "type": "controlPanel",
@@ -902,7 +932,8 @@
       },
       "radius": 0.5,
       "intensity": 2,
-      "flicker": 0
+      "flicker": 0,
+      "damage": 0
     },
     {
       "type": "omni",
@@ -920,7 +951,8 @@
       "radius": 2.3000001907348633,
       "flicker": 2,
       "intensity": 0.9100000262260437,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "omni",
@@ -938,7 +970,8 @@
       "radius": 2.5,
       "flicker": 0,
       "intensity": 0.7100000381469727,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "omni",
@@ -956,7 +989,8 @@
       "radius": 4,
       "flicker": 4,
       "intensity": 1.149999976158142,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "omni",
@@ -974,7 +1008,8 @@
       "radius": 0.800000011920929,
       "flicker": 0,
       "intensity": 1.25,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "omni",
@@ -992,7 +1027,8 @@
       "radius": 0.800000011920929,
       "flicker": 0,
       "intensity": 1.25,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "door",
@@ -1003,7 +1039,8 @@
       },
       "angle": 90,
       "model": "door.model",
-      "name": "door3"
+      "name": "door3",
+      "damage": 0
     },
     {
       "type": "controlPanel",
@@ -1024,7 +1061,8 @@
       },
       "radius": 0.5,
       "intensity": 2,
-      "flicker": 0
+      "flicker": 0,
+      "damage": 0
     },
     {
       "type": "controlPanel",
@@ -1045,7 +1083,8 @@
       },
       "radius": 0.5,
       "intensity": 2,
-      "flicker": 0
+      "flicker": 0,
+      "damage": 0
     },
     {
       "type": "emiter",
@@ -1070,7 +1109,8 @@
       "freq": 0.029999999329447746,
       "angle": 0,
       "angleX": -132,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "emiter",
@@ -1095,7 +1135,8 @@
       "freq": 0.10000000149011612,
       "angle": 0,
       "angleX": -90,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "emiter",
@@ -1120,7 +1161,8 @@
       "freq": 0.10000000149011612,
       "angle": 0,
       "angleX": 0,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "emiter",
@@ -1145,7 +1187,8 @@
       "freq": 0.25,
       "angle": 0,
       "angleX": -90,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "emiter",
@@ -1170,7 +1213,8 @@
       "freq": 0.5,
       "angle": 180,
       "angleX": 0,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "sound",
@@ -1183,7 +1227,8 @@
       "radius": 4,
       "volume": 1,
       "pitch": 1,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "sound",
@@ -1196,7 +1241,8 @@
       "radius": 2,
       "volume": 0.1860000044107437,
       "pitch": 1,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "sound",
@@ -1209,7 +1255,8 @@
       "radius": 2,
       "volume": 1,
       "pitch": 1,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "sound",
@@ -1222,7 +1269,8 @@
       "radius": 1.9000000953674316,
       "volume": 1,
       "pitch": 1,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "sound",
@@ -1235,7 +1283,8 @@
       "radius": 1.100000023841858,
       "volume": 1,
       "pitch": 0.8170000314712524,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "sound",
@@ -1248,7 +1297,8 @@
       "radius": 1,
       "volume": 1,
       "pitch": 0.8170000314712524,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "sound",
@@ -1261,7 +1311,8 @@
       "radius": 0.6000000238418579,
       "volume": 1,
       "pitch": 0.49400001764297485,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "omni",
@@ -1279,7 +1330,8 @@
       "radius": 4,
       "flicker": 0,
       "name": "",
-      "intensity": 1.149999976158142
+      "intensity": 1.149999976158142,
+      "damage": 0
     },
     {
       "name": "Omni",
@@ -1298,7 +1350,8 @@
         "a": 1
       },
       "flicker": 2,
-      "intensity": 1.149999976158142
+      "intensity": 1.149999976158142,
+      "damage": 0
     },
     {
       "name": "Omni",
@@ -1317,7 +1370,8 @@
         "a": 1
       },
       "flicker": 3,
-      "intensity": 1.149999976158142
+      "intensity": 1.149999976158142,
+      "damage": 0
     },
     {
       "name": "Omni",
@@ -1336,7 +1390,8 @@
         "a": 1
       },
       "flicker": 0,
-      "intensity": 1.149999976158142
+      "intensity": 1.149999976158142,
+      "damage": 0
     },
     {
       "type": "omni",
@@ -1354,7 +1409,8 @@
       "radius": 0.800000011920929,
       "flicker": 0,
       "intensity": 1.25,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "sound",
@@ -1367,7 +1423,8 @@
       "radius": 4,
       "volume": 1,
       "pitch": 1,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "sound",
@@ -1380,7 +1437,8 @@
       "radius": 4,
       "volume": 1,
       "pitch": 1,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "sound",
@@ -1393,7 +1451,8 @@
       "radius": 2.5,
       "volume": 1,
       "pitch": 1,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "sound",
@@ -1406,7 +1465,8 @@
       "radius": 1,
       "volume": 1,
       "pitch": 0.8170000314712524,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "sound",
@@ -1419,7 +1479,8 @@
       "radius": 1,
       "volume": 1,
       "pitch": 0.8170000314712524,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "sound",
@@ -1432,7 +1493,8 @@
       "radius": 2,
       "volume": 0.0430000014603138,
       "pitch": 1,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "emiter",
@@ -1457,7 +1519,8 @@
       "freq": 0.029999999329447746,
       "angle": 90,
       "angleX": 34,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "emiter",
@@ -1482,7 +1545,8 @@
       "freq": 0.20000000298023224,
       "angle": 180,
       "angleX": 71,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "emiter",
@@ -1507,7 +1571,8 @@
       "freq": 0.20000000298023224,
       "angle": -91.00000762939453,
       "angleX": -10,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "omni",
@@ -1525,7 +1590,8 @@
       "radius": 4,
       "flicker": 2,
       "intensity": 1.149999976158142,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "omni",
@@ -1543,7 +1609,8 @@
       "radius": 4,
       "flicker": 0,
       "intensity": 1.149999976158142,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "omni",
@@ -1559,9 +1626,10 @@
         "a": 1
       },
       "radius": 2.1000001430511475,
-      "flicker": 0,
+      "flicker": 2,
       "intensity": 1.149999976158142,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "omni",
@@ -1579,7 +1647,8 @@
       "radius": 2.1000001430511475,
       "flicker": 3,
       "intensity": 1.149999976158142,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "emiter",
@@ -1604,7 +1673,8 @@
       "freq": 0.10000000149011612,
       "angle": 0,
       "angleX": -90,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "emiter",
@@ -1629,7 +1699,8 @@
       "freq": 0.10000000149011612,
       "angle": 0,
       "angleX": -90,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "emiter",
@@ -1654,7 +1725,8 @@
       "freq": 0.10000000149011612,
       "angle": 0,
       "angleX": -90,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "emiter",
@@ -1679,7 +1751,8 @@
       "freq": 0.10000000149011612,
       "angle": 0,
       "angleX": -90,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "omni",
@@ -1697,7 +1770,8 @@
       "radius": 1.5000001192092896,
       "flicker": 0,
       "intensity": 1.3900001049041748,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "omni",
@@ -1715,7 +1789,8 @@
       "radius": 1.5000001192092896,
       "flicker": 0,
       "intensity": 1.5700000524520874,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "ladder",
@@ -1726,7 +1801,8 @@
       },
       "angle": 0,
       "model": "ladder.model",
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "sound",
@@ -1739,7 +1815,8 @@
       "radius": 3.5,
       "volume": 1,
       "pitch": 1,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "sound",
@@ -1752,20 +1829,344 @@
       "radius": 4,
       "volume": 1,
       "pitch": 1,
-      "name": ""
+      "name": "",
+      "damage": 0
     },
     {
       "type": "sound",
       "pos": {
-        "x": 10.98900032043457,
-        "y": 5.935000419616699,
-        "z": 3.5480167865753174
+        "x": 10.469000816345215,
+        "y": 5.375000476837158,
+        "z": 3.7380001544952393
       },
       "sound": "WindWindow.wav",
       "radius": 2,
       "volume": 1,
       "pitch": 1,
+      "name": "",
+      "damage": 0
+    },
+    {
+      "type": "omni",
+      "pos": {
+        "x": 10.474000930786133,
+        "y": 5.749000072479248,
+        "z": 3.7140002250671387
+      },
+      "damage": 0,
+      "color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      },
+      "radius": 1.100000023841858,
+      "flicker": 0,
+      "intensity": 2.320000171661377,
       "name": ""
+    },
+    {
+      "type": "omni",
+      "pos": {
+        "x": 11.117000579833984,
+        "y": 8.013999938964844,
+        "z": 3.619000196456909
+      },
+      "damage": 0,
+      "color": {
+        "r": 0.8774510025978088,
+        "g": 0.770374596118927,
+        "b": 0.5462563037872314,
+        "a": 1
+      },
+      "radius": 4.800000190734863,
+      "flicker": 0,
+      "intensity": 0.8200000524520874,
+      "name": ""
+    },
+    {
+      "type": "omni",
+      "pos": {
+        "x": 14.47900104522705,
+        "y": 9.00200080871582,
+        "z": 3.688000202178955
+      },
+      "color": {
+        "r": 0.9901960492134094,
+        "g": 0.6989618539810181,
+        "b": 0.8874075412750244,
+        "a": 1
+      },
+      "radius": 0.800000011920929,
+      "flicker": 0,
+      "intensity": 1.25,
+      "name": "",
+      "damage": 0
+    },
+    {
+      "type": "omni",
+      "pos": {
+        "x": 13.917000770568848,
+        "y": 7.964000225067139,
+        "z": 3.619000196456909
+      },
+      "damage": 0,
+      "color": {
+        "r": 0.8774510025978088,
+        "g": 0.770374596118927,
+        "b": 0.5462563037872314,
+        "a": 1
+      },
+      "radius": 2.1000001430511475,
+      "flicker": 4,
+      "intensity": 0.8200000524520874,
+      "name": ""
+    },
+    {
+      "type": "omni",
+      "pos": {
+        "x": 7.9770002365112305,
+        "y": 8.17400074005127,
+        "z": 3.619000196456909
+      },
+      "damage": 0,
+      "color": {
+        "r": 0.8774510025978088,
+        "g": 0.770374596118927,
+        "b": 0.5462563037872314,
+        "a": 1
+      },
+      "radius": 2.1000001430511475,
+      "flicker": 1,
+      "intensity": 1.540000081062317,
+      "name": ""
+    },
+    {
+      "type": "omni",
+      "pos": {
+        "x": 5.023000240325928,
+        "y": 9.229000091552734,
+        "z": 3.5420000553131104
+      },
+      "color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      },
+      "radius": 1.5000001192092896,
+      "flicker": 0,
+      "intensity": 1.5700000524520874,
+      "name": "",
+      "damage": 0
+    },
+    {
+      "type": "omni",
+      "pos": {
+        "x": 12.454000473022461,
+        "y": 7.554000377655029,
+        "z": 1.5951151847839355
+      },
+      "damage": 0,
+      "color": {
+        "r": 0.7732922434806824,
+        "g": 0.519800066947937,
+        "b": 0.8284313678741455,
+        "a": 1
+      },
+      "radius": 1.7000000476837158,
+      "flicker": 4,
+      "intensity": 2.2900002002716064,
+      "name": ""
+    },
+    {
+      "type": "omni",
+      "pos": {
+        "x": 10.454000473022461,
+        "y": 7.554000377655029,
+        "z": 1.5951151847839355
+      },
+      "damage": 0,
+      "color": {
+        "r": 0.7732922434806824,
+        "g": 0.519800066947937,
+        "b": 0.8284313678741455,
+        "a": 1
+      },
+      "radius": 1.7000000476837158,
+      "flicker": 1,
+      "intensity": 2.2900002002716064,
+      "name": ""
+    },
+    {
+      "type": "omni",
+      "pos": {
+        "x": 11.504000663757324,
+        "y": 9.434000015258789,
+        "z": 1.5951151847839355
+      },
+      "damage": 0,
+      "color": {
+        "r": 0.7732922434806824,
+        "g": 0.519800066947937,
+        "b": 0.8284313678741455,
+        "a": 1
+      },
+      "radius": 1.7000000476837158,
+      "flicker": 0,
+      "intensity": 2.2900002002716064,
+      "name": ""
+    },
+    {
+      "type": "omni",
+      "pos": {
+        "x": 13.394001007080078,
+        "y": 9.434000015258789,
+        "z": 1.5951151847839355
+      },
+      "damage": 0,
+      "color": {
+        "r": 0.7732922434806824,
+        "g": 0.519800066947937,
+        "b": 0.8284313678741455,
+        "a": 1
+      },
+      "radius": 1.7000000476837158,
+      "flicker": 1,
+      "intensity": 2.2900002002716064,
+      "name": ""
+    },
+    {
+      "type": "omni",
+      "pos": {
+        "x": 17.31300163269043,
+        "y": 13.730177879333496,
+        "z": 1.281000018119812
+      },
+      "damage": 0,
+      "color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      },
+      "radius": 10.100000381469727,
+      "flicker": 0,
+      "intensity": 3.4700002670288086,
+      "name": ""
+    },
+    {
+      "name": "Omni",
+      "type": "omni",
+      "pos": {
+        "x": 9.530000686645508,
+        "y": 13.230000495910645,
+        "z": 0.10000000149011612
+      },
+      "angle": 0,
+      "radius": 0.9000000357627869,
+      "color": {
+        "r": 0.5885884761810303,
+        "g": 0.8458438515663147,
+        "b": 0.8879402279853821,
+        "a": 1
+      },
+      "flicker": 2,
+      "intensity": 1.149999976158142,
+      "damage": 0
+    },
+    {
+      "name": "Omni",
+      "type": "omni",
+      "pos": {
+        "x": 9.530000686645508,
+        "y": 12.260000228881836,
+        "z": 0.5200000405311584
+      },
+      "angle": 0,
+      "radius": 0.9000000357627869,
+      "color": {
+        "r": 0.5885884761810303,
+        "g": 0.8458438515663147,
+        "b": 0.8879402279853821,
+        "a": 1
+      },
+      "flicker": 0,
+      "intensity": 1.149999976158142,
+      "damage": 0
+    },
+    {
+      "type": "omni",
+      "pos": {
+        "x": 9.422000885009766,
+        "y": 9.574000358581543,
+        "z": 1.9780000448226929
+      },
+      "color": {
+        "r": 0.9950980544090271,
+        "g": 0.9202074408531189,
+        "b": 0.7121779918670654,
+        "a": 1
+      },
+      "radius": 1.9000000953674316,
+      "flicker": 0,
+      "name": "",
+      "intensity": 1.149999976158142,
+      "damage": 0
+    },
+    {
+      "type": "emiter",
+      "pos": {
+        "x": 11.946000099182129,
+        "y": 10.246000289916992,
+        "z": 3.883000135421753
+      },
+      "color": {
+        "r": 1,
+        "g": 0.9999899864196777,
+        "b": 0.9999899864196777,
+        "a": 0.6627451181411743
+      },
+      "duration": 0.800000011920929,
+      "speedF": 0.800000011920929,
+      "speedT": 1,
+      "sizeF": 0,
+      "sizeT": 6.300000190734863,
+      "spawnAreaSize": 0.009999999776482582,
+      "spread": 0,
+      "freq": 0.029999999329447746,
+      "angle": 0,
+      "angleX": -132,
+      "name": "",
+      "damage": 0
+    },
+    {
+      "type": "sound",
+      "pos": {
+        "x": 11.913000106811523,
+        "y": 9.862000465393066,
+        "z": 3.5500001907348633
+      },
+      "sound": "GasLeak.wav",
+      "radius": 2,
+      "volume": 0.1860000044107437,
+      "pitch": 1,
+      "name": "",
+      "damage": 0
+    },
+    {
+      "type": "sound",
+      "pos": {
+        "x": 10.691000938415527,
+        "y": 5.966000080108643,
+        "z": 3.698000192642212
+      },
+      "sound": "WindDebris.wav",
+      "radius": 1,
+      "volume": 1,
+      "pitch": 0.8170000314712524,
+      "name": "",
+      "damage": 0
     }
   ]
 } 

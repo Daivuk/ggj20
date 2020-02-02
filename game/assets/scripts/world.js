@@ -138,6 +138,8 @@ function createEntity(mapObj, pos)
     mapObj.pos = {x: pos.x, y: pos.y, z: pos.z}
     if (mapObj.angle) entity.angle = mapObj.angle
     if (mapObj.angleX) entity.angleX = mapObj.angleX
+    if (!mapObj.damage) mapObj.damage = 0
+    entity.damage = mapObj.damage;
 
     switch (mapObj.type)
     {
