@@ -14,7 +14,7 @@ Left Mouse - Interract / Repair
 
 ## Build
 On Windows you need Visual Studio and CMake installed. Run `build_win32.bat`.
-On Mac you need a compiler and CMake installed and possibly other dependencies (OpenGL, Glew, etc). Install what ever cmake barfs about. Run `build_osx.sh`
+On Mac you need a compiler and CMake installed and possibly other dependencies (OpenGL, SDL2, etc). Install what ever cmake barfs about. Run `build_osx.sh`
 On Linux is should work just as on Mac, but hasn't been tested in a long time.
 
 ## Credits

@@ -150,6 +150,9 @@ function updateEdit(dt)
     {
         if (Input.isDown(Key.LEFT_CONTROL) && Input.isJustDown(Key.S)) saveMap()
     }
+    
+    var camFront = getEntityFront(editCam)
+    Audio.set3DListener(editCam.pos, camFront, Vector3.UNIT_Z);
 
     {
         for (var i = 0; i < emiters.length; ++i)
@@ -157,13 +160,7 @@ function updateEdit(dt)
             var entity = emiters[i]
             entity.update(entity, dt)
         }
-        for (var i = 0; i < sounds.length; ++i)
-        {
-            var entity = sounds[i]
-            entity.update(entity, dt)
-        }
 
-        var camFront = getEntityFront(editCam)
         smokes_update(camFront, dt)
     }
 
@@ -365,7 +362,7 @@ function renderEditUI()
                     selectedEntity.sound = createSoundInstance(selectedEntity.mapObj.sound)
                     if (selectedEntity.sound)
                     {
-                        selectedEntity.sound.setVolume(0)
+                        selectedEntity.sound.set3D(true, selectedEntity.pos, selectedEntity.mapObj.radius)
                         selectedEntity.sound.setLoop(true)
                         selectedEntity.sound.play();
                     }

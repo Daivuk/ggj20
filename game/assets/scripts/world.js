@@ -7,7 +7,6 @@ var editDrawables = []
 var postDrawables = []
 var map = []
 var emiters = []
-var sounds = []
 var entities = []
 var player = null
 var showGBuffer = false
@@ -150,7 +149,6 @@ function deleteEntity(entity)
     removeFromArray(omnis, entity)
     removeFromArray(projectors, entity)
     removeFromArray(emiters, entity)
-    removeFromArray(sounds, entity)
     removeFromArray(map.entities, entity.mapObj)
 }
 
@@ -363,6 +361,8 @@ function updateWorld(cam, dt)
         door.trigger(door, null, player)
     }
     prevCompOk = compOk
+
+    Audio.set3DListener(cam.pos, camFront, Vector3.UNIT_Z);
 }
 
 var flagAnim = new NumberAnim()
