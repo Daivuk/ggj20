@@ -1,4 +1,4 @@
-var DEBUG = false
+var DEBUG = true
 
 var state = "game"
 Input.setFpsMouse(true)
