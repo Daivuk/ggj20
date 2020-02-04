@@ -379,61 +379,6 @@ function renderWorld(cam)
     var camPos = getEntityCamPos(cam)
     Renderer.setupFor3D(camPos, camPos.add(camFront), Vector3.UNIT_Z, cam.fov)
 
-    // Draw deferred crap first
-
-
-    // Draw inside solids into the gbuffer
-    {
-        Renderer.pushRenderTarget(gbuffer.depth)
-        Renderer.clear(Color.BLACK)
-        Renderer.clearDepth()
-        Renderer.setVertexShader(shaders.depthVS)
-        Renderer.setPixelShader(shaders.depthPS)
-        staticInsideModel.render();
-        for (var i = 0; i < insideDrawables.length; ++i)
-        {
-            var entity = insideDrawables[i]
-            if (!entity.model) continue
-            entity.model.render(getEntityTransform(entity))
-        }
-        models.hangar.render(hangarMat.get())
-        player_drawItem(player)
-        Renderer.popRenderTarget()
-    }
-    {
-        Renderer.pushRenderTarget(gbuffer.diffuse)
-        Renderer.clear(Color.TRANSPARENT)
-        Renderer.clearDepth()
-        Renderer.setVertexShader(shaders.diffuseVS)
-        Renderer.setPixelShader(shaders.diffusePS)
-        staticInsideModel.render();
-        for (var i = 0; i < insideDrawables.length; ++i)
-        {
-            var entity = insideDrawables[i]
-            if (!entity.model) continue
-            entity.model.render(getEntityTransform(entity))
-        }
-        models.hangar.render(hangarMat.get())
-        player_drawItem(player)
-        Renderer.popRenderTarget()
-    }
-    {
-        Renderer.pushRenderTarget(gbuffer.normal)
-        Renderer.clearDepth()
-        Renderer.setVertexShader(shaders.normalVS)
-        Renderer.setPixelShader(shaders.normalPS)
-        staticInsideModel.render();
-        for (var i = 0; i < insideDrawables.length; ++i)
-        {
-            var entity = insideDrawables[i]
-            if (!entity.model) continue
-            entity.model.render(getEntityTransform(entity))
-        }
-        models.hangar.render(hangarMat.get())
-        player_drawItem(player)
-        Renderer.popRenderTarget()
-    }
-
     // Draw outside solids
     {
         Renderer.setBlendMode(BlendMode.OPAQUE)
@@ -469,11 +414,17 @@ function renderWorld(cam)
         Renderer.setDepthEnabled(true)
     }
 
-    // Draw the interior meshes into depth buffer only
+    // Draw G-Buffer
     {
-        Renderer.setVertexShader(shaders.depthOnlyVS)
-        Renderer.setPixelShader(shaders.depthOnlyPS)
-        Renderer.setBlendMode(BlendMode.ALPHA)
+        Renderer.pushRenderTarget(gbuffer.diffuse, 0)
+        Renderer.pushRenderTarget(gbuffer.normal, 1)
+        Renderer.pushRenderTarget(gbuffer.depth, 2)
+
+        Renderer.clear(Color.TRANSPARENT)
+        Renderer.clearDepth()
+        Renderer.setVertexShader(shaders.gbufferVS)
+        Renderer.setPixelShader(shaders.gbufferPS)
+
         staticInsideModel.render();
         for (var i = 0; i < insideDrawables.length; ++i)
         {
@@ -483,9 +434,13 @@ function renderWorld(cam)
         }
         models.hangar.render(hangarMat.get())
         player_drawItem(player)
+
+        Renderer.popRenderTarget(0)
+        Renderer.popRenderTarget(1)
+        Renderer.popRenderTarget(2)
     }
 
-    // First, draw the ambiant
+    // Draw the ambiant
     Renderer.setDepthWrite(false)
     {
         SpriteBatch.begin(Matrix.IDENTITY, shaders.ambiantPS)
