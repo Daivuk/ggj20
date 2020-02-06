@@ -1,0 +1,36 @@
+input float2 inUV;
+input float4 inColor;
+
+Texture0 texDiffuse
+{
+    filter = nearest;
+    repeat = clamp;
+}
+
+Texture1 texNormal
+{
+    filter = nearest;
+    repeatY = clamp;
+}
+
+Texture2 texDepth
+{
+    filter = nearest;
+    repeatY = clamp;
+}
+
+void main()
+{
+    float4 tdiffuse = texDiffuse(inUV);
+    float4 tnormal = texNormal(inUV);
+    float4 tdepth = texDepth(inUV);
+
+    float3 normal = tnormal.xyz * 2.0 - 1.0;
+    float3 pos = tdepth.xyz * 20.0;
+
+    float amount = 0.0;
+    amount *= tdiffuse.a;
+    amount = 1.0 - amount;
+
+    oColor = float4(amount, amount, amount, 1);
+}

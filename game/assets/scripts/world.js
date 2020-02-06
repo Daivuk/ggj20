@@ -378,6 +378,7 @@ function renderWorld(cam)
     var camFront = getEntityFront(cam)
     var camPos = getEntityCamPos(cam)
     Renderer.setupFor3D(camPos, camPos.add(camFront), Vector3.UNIT_Z, cam.fov)
+    var invProjMtx = Renderer.getView().mul(Renderer.getProjection()).invert().transpose()
 
     // Draw outside solids
     {
@@ -450,7 +451,10 @@ function renderWorld(cam)
     }
 
     // Draw omni lights (This is extremely ineficient, but if it runs for the jam, gg?)
+    Renderer.setTexture(gbuffer.normal, 1)
+    Renderer.setTexture(gbuffer.depth, 2)
     {
+        shaders.omniPS.setMatrix("invProjMtx", invProjMtx)
         for (var i = 0; i < omnis.length; ++i)
         {
             var entity = omnis[i]
@@ -460,8 +464,6 @@ function renderWorld(cam)
             if (fffade > 0)
             {
                 SpriteBatch.begin(Matrix.IDENTITY, shaders.omniPS)
-                Renderer.setTexture(gbuffer.normal, 1)
-                Renderer.setTexture(gbuffer.depth, 2)
                 Renderer.setBlendMode(BlendMode.ADD)
                 shaders.omniPS.setVector3("lPos", getEntityCamPos(entity))
                 shaders.omniPS.setVector4("lColor", new Vector4(
@@ -474,10 +476,6 @@ function renderWorld(cam)
                 SpriteBatch.end()
             }
         }
-        Renderer.setBlendMode(BlendMode.ALPHA)
-        Renderer.setTexture(null, 1)
-        Renderer.setTexture(null, 2)
-        Renderer.setTexture(null, 3)
     }
 
     // Projector lights
@@ -485,23 +483,19 @@ function renderWorld(cam)
     //     for (var i = 0; i < projectors.length; ++i)
     //     {
     //         var entity = projectors[i]
-    //         SpriteBatch.begin(Matrix.IDENTITY, shaders.projectorPS)
-    //         Renderer.setTexture(gbuffer.normal, 1)
-    //         Renderer.setTexture(gbuffer.depth, 2)
-    //         Renderer.setTexture(entity.texture, 3)
-    //         Renderer.setBlendMode(BlendMode.ADD)
-    //         shaders.projectorPS.setVector3("lPos", entity.pos)
-    //         shaders.projectorPS.setVector3("lColor", new Vector3(entity.mapObj.color.r, entity.mapObj.color.g, entity.mapObj.color.b).mul(flickers[entity.mapObj.flicker].get()))
-    //         shaders.projectorPS.setNumber("lRadius", entity.mapObj.radius)
-    //         shaders.projectorPS.setMatrix("transform", getEntityTransform(entity))
-    //         SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
-    //         SpriteBatch.end()
     //     }
-    //     Renderer.setTexture(null, 1)
-    //     Renderer.setTexture(null, 2)
-    //     Renderer.setTexture(null, 3)
-    //     Renderer.setBlendMode(BlendMode.ALPHA)
     // }
+
+    // Ambiant occlusion
+    {
+        SpriteBatch.begin(Matrix.IDENTITY, shaders.aoPS)
+        Renderer.setBlendMode(BlendMode.MULTIPLY)
+        SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
+        SpriteBatch.end()
+        Renderer.setBlendMode(BlendMode.ALPHA)
+    }
+    Renderer.setTexture(null, 1)
+    Renderer.setTexture(null, 2)
 
     // Post draw stuff
     {

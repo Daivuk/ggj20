@@ -19,6 +19,7 @@ Texture2 texDepth
     repeatY = clamp;
 }
 
+extern matrix invProjMtx;
 extern float3 lPos;
 extern float4 lColor;
 extern float lRadius;
@@ -43,7 +44,14 @@ void main()
     float4 tnormal = texNormal(inUV);
     float4 tdepth = texDepth(inUV);
 
-    oColor = tdiffuse;
+    // Position
+    float4 position = float4(float2(inUV.x, 1 - inUV.y) * 2.0 - 1.0, tdepth.r, 1.0);
+    position = mul(position, invProjMtx);
+    position /= position.w;
 
-    oColor.rgb *= LightPass(tdepth.xyz * 20.0, tnormal.xyz * 2.0 - 1.0, lPos, lRadius, lColor);
+    // normal
+    float3 normal = tnormal.xyz * 2.0 - 1.0;
+
+    oColor = tdiffuse;
+    oColor.rgb *= LightPass(position.xyz, normal, lPos, lRadius, lColor);
 }

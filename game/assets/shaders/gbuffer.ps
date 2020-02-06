@@ -3,7 +3,7 @@ Texture0 texDiffuse;
 input float3 inNormal;
 input float4 inColor;
 input float2 inTexCoord;
-input float3 inWorldPos;
+input float2 inDepth;
 
 void main()
 {
@@ -11,5 +11,5 @@ void main()
     if (diffuse.a < 0.8) discard;
     oColor0 = diffuse;
     oColor1 = float4(inNormal.rgb * 0.5 + 0.5, 1.0);
-    oColor2 = float4(inWorldPos / 20.0, 1.0);
+    oColor2 = float4(inDepth.x / inDepth.y, 0.0, 0.0, 1.0);
 }
