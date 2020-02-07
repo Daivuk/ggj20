@@ -21,6 +21,38 @@ var computers = []
 var blowAnim = new NumberAnim()
 blowAnim.playSingle(0, 1, 1, Tween.LINEAR, Loop.LOOP)
 var blackSmokeDelay = 0
+var aoNoiseTexture = null
+
+// Generate AO kernels
+function lerp(a, b, f)
+{
+    return a + f * (b - a)
+}
+{
+    // ssaoKernel = [];
+    // for (var i = 0; i < 64; ++i)
+    // {
+    //     var sample = new Vector3(
+    //         Random.randNumber(-1.0, 1.0), 
+    //         Random.randNumber(-1.0, 1.0), 
+    //         Random.randNumber(-1.0, 1.0)
+    //     )
+    //     sample = sample.normalize()
+    //     sample = sample.mul(Random.randNumber(0.0, 1.0))
+    //     var scale = i / 64.0
+    //     scale = lerp(0.1, 1.0, scale * scale)
+    //     sample = sample.mul(scale);
+    //     ssaoKernel.push(sample)
+    // }
+    // print(JSON.stringify(ssaoKernel))
+
+    var ssaoNoise = new Uint8Array(4 * 4 * 4);
+    for (var i = 0; i < 16 * 4; i++)
+    {
+        ssaoNoise[i] = Random.randInt(0, 255)
+    }
+    aoNoiseTexture = Texture.createFromData(ssaoNoise, new Vector2(4, 4))
+}
 
 var cameraMenu = {
     pos: new Vector3(30.37, -18.681, 3.8761),
@@ -378,7 +410,9 @@ function renderWorld(cam)
     var camFront = getEntityFront(cam)
     var camPos = getEntityCamPos(cam)
     Renderer.setupFor3D(camPos, camPos.add(camFront), Vector3.UNIT_Z, cam.fov)
-    var invProjMtx = Renderer.getView().mul(Renderer.getProjection()).invert().transpose()
+    var viewProj = Renderer.getView().mul(Renderer.getProjection())
+    var invProjMtx = viewProj.invert().transpose()
+    viewProj = viewProj.transpose();
 
     // Draw outside solids
     {
@@ -441,7 +475,39 @@ function renderWorld(cam)
         Renderer.popRenderTarget(2)
     }
 
+    // Ambiant occlusion
+    Renderer.setTexture(gbuffer.normal, 1)
+    Renderer.setTexture(gbuffer.depth, 2)
+    Renderer.setTexture(aoNoiseTexture, 3)
+    {
+        Renderer.pushRenderTarget(gbuffer.ao)
+        shaders.aoPS.setMatrix("viewProj", viewProj)
+        shaders.aoPS.setMatrix("invProjMtx", invProjMtx)
+        shaders.aoPS.setVector2("noiseScale", Renderer.getResolution().div(4))
+        SpriteBatch.begin(Matrix.IDENTITY, shaders.aoPS)
+        Renderer.setBlendMode(BlendMode.OPAQUE)
+        SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
+        SpriteBatch.end()
+        Renderer.setBlendMode(BlendMode.ALPHA)
+        Renderer.popRenderTarget()
+    }
+    Renderer.setTexture(null, 1)
+    Renderer.setTexture(null, 2)
+    Renderer.setTexture(null, 3)
+    // gbuffer.ao.blur(16)
+
+    {
+        Renderer.setBlendMode(BlendMode.ALPHA)
+        Renderer.pushRenderTarget(gbuffer.diffuse)
+        SpriteBatch.begin()
+        SpriteBatch.drawRect(gbuffer.ao, screenRect)
+        SpriteBatch.end()
+        Renderer.popRenderTarget()
+    }
+
     // Draw the ambiant
+    Renderer.setTexture(gbuffer.normal, 1)
+    Renderer.setTexture(gbuffer.depth, 2)
     Renderer.setDepthWrite(false)
     {
         SpriteBatch.begin(Matrix.IDENTITY, shaders.ambiantPS)
@@ -451,8 +517,6 @@ function renderWorld(cam)
     }
 
     // Draw omni lights (This is extremely ineficient, but if it runs for the jam, gg?)
-    Renderer.setTexture(gbuffer.normal, 1)
-    Renderer.setTexture(gbuffer.depth, 2)
     {
         shaders.omniPS.setMatrix("invProjMtx", invProjMtx)
         for (var i = 0; i < omnis.length; ++i)
@@ -486,14 +550,6 @@ function renderWorld(cam)
     //     }
     // }
 
-    // Ambiant occlusion
-    {
-        SpriteBatch.begin(Matrix.IDENTITY, shaders.aoPS)
-        Renderer.setBlendMode(BlendMode.MULTIPLY)
-        SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
-        SpriteBatch.end()
-        Renderer.setBlendMode(BlendMode.ALPHA)
-    }
     Renderer.setTexture(null, 1)
     Renderer.setTexture(null, 2)
 
@@ -523,9 +579,13 @@ function renderWorld(cam)
     if (showGBuffer)
     {
         SpriteBatch.begin()
-        SpriteBatch.drawRect(gbuffer.diffuse, new Rect(0, 0, res.x / 2, res.y / 2))
-        SpriteBatch.drawRect(gbuffer.normal, new Rect(res.x / 2, 0, res.x / 2, res.y / 2))
-        SpriteBatch.drawRect(gbuffer.depth, new Rect(0, res.y / 2, res.x / 2, res.y / 2))
+        Renderer.setBlendMode(BlendMode.ALPHA)
+        SpriteBatch.drawRect(null, new Rect(0, 0, res.x / 2, res.y / 2))
+        SpriteBatch.drawRect(gbuffer.diffuse, new Rect(0, 0, res.x / 4, res.y / 4))
+        SpriteBatch.drawRect(gbuffer.normal, new Rect(res.x / 4, 0, res.x / 4, res.y / 4))
+        SpriteBatch.drawRect(gbuffer.depth, new Rect(0, res.y / 4, res.x / 4, res.y / 4))
+        SpriteBatch.drawRect(gbuffer.ao, new Rect(res.x / 4, res.y / 4, res.x / 4, res.y / 4))
+        SpriteBatch.drawRect(aoNoiseTexture, new Rect(res.x / 2, 0, 128, 128))
         SpriteBatch.end()
     }
 }
