@@ -22,6 +22,7 @@ var blowAnim = new NumberAnim()
 blowAnim.playSingle(0, 1, 1, Tween.LINEAR, Loop.LOOP)
 var blackSmokeDelay = 0
 var aoNoiseTexture = null
+var aoEnabled = true
 
 // Generate AO kernels
 function lerp(a, b, f)
@@ -380,6 +381,7 @@ function updateWorld(cam, dt)
     }
 
     if (DEBUG && Input.isJustDown(Key.F1)) showGBuffer = !showGBuffer
+    if (DEBUG && Input.isJustDown(Key.F3)) aoEnabled = !aoEnabled
 
     var camFront = getEntityFront(cam)
     smokes_update(camFront, dt)
@@ -476,27 +478,24 @@ function renderWorld(cam)
     }
 
     // Ambiant occlusion
-    Renderer.setTexture(gbuffer.normal, 1)
-    Renderer.setTexture(gbuffer.depth, 2)
-    Renderer.setTexture(aoNoiseTexture, 3)
+    if (aoEnabled)
     {
-        Renderer.pushRenderTarget(gbuffer.ao)
-        shaders.aoPS.setMatrix("viewProj", viewProj)
-        shaders.aoPS.setMatrix("invProjMtx", invProjMtx)
-        shaders.aoPS.setVector2("noiseScale", Renderer.getResolution().div(4))
-        SpriteBatch.begin(Matrix.IDENTITY, shaders.aoPS)
-        Renderer.setBlendMode(BlendMode.OPAQUE)
-        SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
-        SpriteBatch.end()
-        Renderer.setBlendMode(BlendMode.ALPHA)
-        Renderer.popRenderTarget()
-    }
-    Renderer.setTexture(null, 1)
-    Renderer.setTexture(null, 2)
-    Renderer.setTexture(null, 3)
-    // gbuffer.ao.blur(16)
+        Renderer.setTexture(gbuffer.normal, 1)
+        Renderer.setTexture(gbuffer.depth, 2)
+        {
+            Renderer.pushRenderTarget(gbuffer.ao)
+            shaders.aoPS.setMatrix("invProjMtx", invProjMtx)
+            SpriteBatch.begin(Matrix.IDENTITY, shaders.aoPS)
+            Renderer.setBlendMode(BlendMode.OPAQUE)
+            SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
+            SpriteBatch.end()
+            Renderer.setBlendMode(BlendMode.ALPHA)
+            Renderer.popRenderTarget()
+        }
+        Renderer.setTexture(null, 1)
+        Renderer.setTexture(null, 2)
+        // gbuffer.ao.blur(2)
 
-    {
         Renderer.setBlendMode(BlendMode.ALPHA)
         Renderer.pushRenderTarget(gbuffer.diffuse)
         SpriteBatch.begin()
@@ -574,6 +573,18 @@ function renderWorld(cam)
             var entity = postDrawables[i]
             entity.postDraw(entity)
         }
+    }
+
+    // Full screen AO overlay (DEBUG)
+    {
+        // SpriteBatch.begin()
+        // Renderer.setBlendMode(BlendMode.OPAQUE)
+        // SpriteBatch.drawRect(null, screenRect)
+        // SpriteBatch.end()
+        // SpriteBatch.begin()
+        // Renderer.setBlendMode(BlendMode.ALPHA)
+        // SpriteBatch.drawRect(gbuffer.ao, screenRect)
+        // SpriteBatch.end()
     }
 
     if (showGBuffer)
