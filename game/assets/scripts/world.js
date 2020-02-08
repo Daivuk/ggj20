@@ -392,8 +392,7 @@ function renderWorld(cam)
     var camPos = getEntityCamPos(cam)
     Renderer.setupFor3D(camPos, camPos.add(camFront), Vector3.UNIT_Z, cam.fov)
     var viewProj = Renderer.getView().mul(Renderer.getProjection())
-    var invProjMtx = viewProj.invert().transpose()
-    viewProj = viewProj.transpose();
+    var invProjMtx = viewProj.invert()
 
     // Draw outside solids
     {
@@ -457,6 +456,8 @@ function renderWorld(cam)
     }
 
     // Ambiant occlusion
+    Renderer.setDepthEnabled(false)
+    Renderer.setDepthWrite(false)
     if (renderingSettings.aoEnabled)
     {
         Renderer.setTexture(gbuffer.normal, 1)
@@ -474,7 +475,6 @@ function renderWorld(cam)
             Renderer.setBlendMode(BlendMode.OPAQUE)
             SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
             SpriteBatch.end()
-            Renderer.setBlendMode(BlendMode.ALPHA)
             Renderer.popRenderTarget()
         }
         Renderer.setTexture(null, 1)
@@ -491,7 +491,6 @@ function renderWorld(cam)
     // Draw the ambiant
     Renderer.setTexture(gbuffer.normal, 1)
     Renderer.setTexture(gbuffer.depth, 2)
-    Renderer.setDepthWrite(false)
     {
         SpriteBatch.begin(Matrix.IDENTITY, shaders.ambiantPS)
         Renderer.setBlendMode(BlendMode.ALPHA)
@@ -500,6 +499,7 @@ function renderWorld(cam)
     }
 
     // Draw omni lights (This is extremely ineficient, but if it runs for the jam, gg?)
+    if (true)
     {
         shaders.omniPS.setMatrix("invProjMtx", invProjMtx)
         for (var i = 0; i < omnis.length; ++i)
@@ -540,6 +540,7 @@ function renderWorld(cam)
     {
         // Setup camera
         Renderer.setupFor3D(camPos, camPos.add(camFront), Vector3.UNIT_Z, cam.fov)
+        Renderer.setDepthEnabled(true)
         Renderer.setDepthWrite(false)
         Renderer.setVertexShader(shaders.windowsVS)
         Renderer.setPixelShader(shaders.windowsPS)
@@ -581,7 +582,6 @@ function renderWorld(cam)
         SpriteBatch.drawRect(gbuffer.normal, new Rect(res.x / 4, 0, res.x / 4, res.y / 4))
         SpriteBatch.drawRect(gbuffer.depth, new Rect(0, res.y / 4, res.x / 4, res.y / 4))
         SpriteBatch.drawRect(gbuffer.ao, new Rect(res.x / 4, res.y / 4, res.x / 4, res.y / 4))
-        SpriteBatch.drawRect(aoNoiseTexture, new Rect(res.x / 2, 0, 128, 128))
         SpriteBatch.end()
     }
 }

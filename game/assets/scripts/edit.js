@@ -244,6 +244,17 @@ function renderEditUI()
 
     Renderer.setBackFaceCull(false)
 
+    GUI.beginMainMenuBar()
+    if (GUI.beginMenu("File"))
+    {
+        GUI.spacing()
+        if (GUI.menuItem("Save", "Ctrl+S")) saveMap()
+        GUI.separator()
+        if (GUI.menuItem("Exit", "Alt+F4")) quit()
+        GUI.endMenu()
+    }
+    GUI.endMainMenuBar()
+
     if (GUI.begin("Voxel"))
     {
         var voxel = getVoxelAt(editCam.pos)
@@ -402,12 +413,12 @@ function renderEditUI()
     {
         if (GUI.collapsingHeader("Game Settings"))
         {
-            renderingSettings.aoEnabled = GUI.checkbox("Ambient Occlusion", renderingSettings.aoEnabled)
+            renderingSettings.aoEnabled = GUI.checkbox("Ambient Occlusion##game", renderingSettings.aoEnabled)
         }
         if (GUI.collapsingHeader("Debug Settings"))
         {
             debugSettings.gbuffer = GUI.checkbox("GBuffer", debugSettings.gbuffer)
-            debugSettings.ao = GUI.checkbox("Ambient Occlusion", debugSettings.ao)
+            debugSettings.ao = GUI.checkbox("Ambient Occlusion##debug", debugSettings.ao)
             GUI.indent()
                 debugSettings.aoSamples = GUI.sliderNumber("Samples", debugSettings.aoSamples, 1, 64)
                 debugSettings.aoScale = GUI.sliderNumber("Scale", debugSettings.aoScale, 0.01, 10)

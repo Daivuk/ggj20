@@ -28,6 +28,7 @@ extern float MAX_DISTANCE;
 extern float INTENSITY;
 
 const float3 MOD3 = float3(0.1031, 0.11369, 0.13787);
+const float GOLDEN_ANGLE = 2.4;
 
 float4 getPosition(float2 uv)
 {
@@ -58,7 +59,6 @@ float hash12(float2 p)
 
 float spiralAO(float2 uv, float3 p, float3 n, float rad)
 {
-    float goldenAngle = 2.4;
     float ao = 0.0;
     float inv = 1.0 / SAMPLES;
     float radius = 0.0;
@@ -73,7 +73,7 @@ float spiralAO(float2 uv, float3 p, float3 n, float rad)
         spiralUV.y = cos(rotatePhase);
         radius += rStep;
         ao += doAmbientOcclusion(uv, spiralUV * radius, p, n);
-        rotatePhase += goldenAngle;
+        rotatePhase += GOLDEN_ANGLE;
     }
     ao *= inv;
     return ao;
