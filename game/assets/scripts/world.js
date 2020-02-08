@@ -28,7 +28,9 @@ var renderingSettings = {
 
 var debugSettings = {
     gbuffer: false,
-    ao: false
+    ao: false,
+    aoRadius: 0.08,
+    aoIntensity: 1.8
 }
 
 var cameraMenu = {
@@ -443,11 +445,11 @@ function renderWorld(cam)
         {
             Deferred.addOmni(getEntityCamPos(entity), entity.mapObj.radius, 
                              new Color(entity.mapObj.color.r, entity.mapObj.color.g, entity.mapObj.color.b), 
-                             fade)
+                             entity.mapObj.intensity * fade * flickers[entity.mapObj.flicker].get())
         }
     }
     Deferred.end(new Color(0.06, 0.07, 0.15),
-                 debugSettings.aoEnabled, 0.08, 1.8, SSAOQuality.MEDIUM)
+                 renderingSettings.aoEnabled, 0.08, 1.8, SSAOQuality.MEDIUM)
 
     // // Projector lights
     // // {
@@ -482,27 +484,27 @@ function renderWorld(cam)
     }
 
     // Full screen AO overlay (DEBUG)
-    // if (debugSettings.ao)
-    // {
-    //     SpriteBatch.begin()
-    //     Renderer.setBlendMode(BlendMode.OPAQUE)
-    //     SpriteBatch.drawRect(null, screenRect)
-    //     SpriteBatch.end()
-    //     SpriteBatch.begin()
-    //     Renderer.setBlendMode(BlendMode.ALPHA)
-    //     SpriteBatch.drawRect(gbuffer.ao, screenRect)
-    //     SpriteBatch.end()
-    // }
+    if (debugSettings.ao)
+    {
+        SpriteBatch.begin()
+        Renderer.setBlendMode(BlendMode.OPAQUE)
+        SpriteBatch.drawRect(null, screenRect)
+        SpriteBatch.end()
+        SpriteBatch.begin()
+        Renderer.setBlendMode(BlendMode.MULTIPLY)
+        SpriteBatch.drawRect(Deferred.getAmbientOcclusion(), screenRect)
+        SpriteBatch.end()
+    }
 
-    // if (debugSettings.gbuffer)
-    // {
-    //     SpriteBatch.begin()
-    //     Renderer.setBlendMode(BlendMode.ALPHA)
-    //     SpriteBatch.drawRect(null, new Rect(0, 0, res.x / 2, res.y / 2))
-    //     SpriteBatch.drawRect(gbuffer.diffuse, new Rect(0, 0, res.x / 4, res.y / 4))
-    //     SpriteBatch.drawRect(gbuffer.normal, new Rect(res.x / 4, 0, res.x / 4, res.y / 4))
-    //     SpriteBatch.drawRect(gbuffer.depth, new Rect(0, res.y / 4, res.x / 4, res.y / 4))
-    //     SpriteBatch.drawRect(gbuffer.ao, new Rect(res.x / 4, res.y / 4, res.x / 4, res.y / 4))
-    //     SpriteBatch.end()
-    // }
+    if (debugSettings.gbuffer)
+    {
+        SpriteBatch.begin()
+        Renderer.setBlendMode(BlendMode.ALPHA)
+        SpriteBatch.drawRect(null, new Rect(0, 0, res.x / 2, res.y / 2))
+        SpriteBatch.drawRect(Deferred.getAlbedo(), new Rect(0, 0, res.x / 2, res.y / 2))
+        SpriteBatch.drawRect(Deferred.getNormal(), new Rect(res.x / 2, 0, res.x / 2, res.y / 2))
+        SpriteBatch.drawRect(Deferred.getDepth(), new Rect(0, res.y / 2, res.x / 2, res.y / 2))
+        SpriteBatch.drawRect(Deferred.getMaterial(), new Rect(res.x / 2, res.y / 2, res.x / 2, res.y / 2))
+        SpriteBatch.end()
+    }
 }
