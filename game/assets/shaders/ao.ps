@@ -20,14 +20,14 @@ Texture2 texDepth
 }
 
 extern matrix invProjMtx;
+extern float SAMPLES;
+extern float SCALE;
+extern float BIAS;
+extern float SAMPLE_RAD;
+extern float MAX_DISTANCE;
+extern float INTENSITY;
 
-const float SAMPLES = 16;
 const float3 MOD3 = float3(0.1031, 0.11369, 0.13787);
-const float SCALE = 2.5;
-const float BIAS = 0.01;
-const float SAMPLE_RAD = 0.08;
-const float MAX_DISTANCE = 0.35;
-const float INTENSITY = 1.8;
 
 float3 getPosition(float2 uv)
 {

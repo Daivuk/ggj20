@@ -397,4 +397,26 @@ function renderEditUI()
         }
     }
     GUI.end()
+
+    if (GUI.begin("Rendering"))
+    {
+        if (GUI.collapsingHeader("Game Settings"))
+        {
+            renderingSettings.aoEnabled = GUI.checkbox("Ambient Occlusion", renderingSettings.aoEnabled)
+        }
+        if (GUI.collapsingHeader("Debug Settings"))
+        {
+            debugSettings.gbuffer = GUI.checkbox("GBuffer", debugSettings.gbuffer)
+            debugSettings.ao = GUI.checkbox("Ambient Occlusion", debugSettings.ao)
+            GUI.indent()
+                debugSettings.aoSamples = GUI.sliderNumber("Samples", debugSettings.aoSamples, 1, 64)
+                debugSettings.aoScale = GUI.sliderNumber("Scale", debugSettings.aoScale, 0.01, 10)
+                debugSettings.aoBias = GUI.sliderNumber("Bias", debugSettings.aoBias, 0.001, 1.0)
+                debugSettings.aoRadius = GUI.sliderNumber("Radius", debugSettings.aoRadius, 0.001, 10.0)
+                debugSettings.aoMaxDistance = GUI.sliderNumber("Max Distance", debugSettings.aoMaxDistance, 0.01, 10.0)
+                debugSettings.aoIntensity = GUI.sliderNumber("Intensity", debugSettings.aoIntensity, 0.0, 10.0)
+            GUI.unindent()
+        }
+    }
+    GUI.end()
 }

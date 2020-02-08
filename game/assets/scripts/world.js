@@ -9,7 +9,6 @@ var map = []
 var emiters = []
 var entities = []
 var player = null
-var showGBuffer = false
 var omnis = []
 var projectors = []
 var saveOverlay = new ColorAnim(Color.TRANSPARENT)
@@ -22,37 +21,20 @@ var blowAnim = new NumberAnim()
 blowAnim.playSingle(0, 1, 1, Tween.LINEAR, Loop.LOOP)
 var blackSmokeDelay = 0
 var aoNoiseTexture = null
-var aoEnabled = true
 
-// Generate AO kernels
-function lerp(a, b, f)
-{
-    return a + f * (b - a)
+var renderingSettings = {
+    aoEnabled: true
 }
-{
-    // ssaoKernel = [];
-    // for (var i = 0; i < 64; ++i)
-    // {
-    //     var sample = new Vector3(
-    //         Random.randNumber(-1.0, 1.0), 
-    //         Random.randNumber(-1.0, 1.0), 
-    //         Random.randNumber(-1.0, 1.0)
-    //     )
-    //     sample = sample.normalize()
-    //     sample = sample.mul(Random.randNumber(0.0, 1.0))
-    //     var scale = i / 64.0
-    //     scale = lerp(0.1, 1.0, scale * scale)
-    //     sample = sample.mul(scale);
-    //     ssaoKernel.push(sample)
-    // }
-    // print(JSON.stringify(ssaoKernel))
 
-    var ssaoNoise = new Uint8Array(4 * 4 * 4);
-    for (var i = 0; i < 16 * 4; i++)
-    {
-        ssaoNoise[i] = Random.randInt(0, 255)
-    }
-    aoNoiseTexture = Texture.createFromData(ssaoNoise, new Vector2(4, 4))
+var debugSettings = {
+    gbuffer: false,
+    ao: false,
+    aoSamples: 16,
+    aoScale: 2.5,
+    aoBias: 0.01,
+    aoRadius: 0.08,
+    aoMaxDistance: 0.35,
+    aoIntensity: 1.8
 }
 
 var cameraMenu = {
@@ -380,9 +362,6 @@ function updateWorld(cam, dt)
         entity.update(entity, dt)
     }
 
-    if (DEBUG && Input.isJustDown(Key.F1)) showGBuffer = !showGBuffer
-    if (DEBUG && Input.isJustDown(Key.F3)) aoEnabled = !aoEnabled
-
     var camFront = getEntityFront(cam)
     smokes_update(camFront, dt)
 
@@ -478,13 +457,19 @@ function renderWorld(cam)
     }
 
     // Ambiant occlusion
-    if (aoEnabled)
+    if (renderingSettings.aoEnabled)
     {
         Renderer.setTexture(gbuffer.normal, 1)
         Renderer.setTexture(gbuffer.depth, 2)
         {
             Renderer.pushRenderTarget(gbuffer.ao)
             shaders.aoPS.setMatrix("invProjMtx", invProjMtx)
+            shaders.aoPS.setNumber("SAMPLES", debugSettings.aoSamples)
+            shaders.aoPS.setNumber("SCALE", debugSettings.aoScale)
+            shaders.aoPS.setNumber("BIAS", debugSettings.aoBias)
+            shaders.aoPS.setNumber("SAMPLE_RAD", debugSettings.aoRadius)
+            shaders.aoPS.setNumber("MAX_DISTANCE", debugSettings.aoMaxDistance)
+            shaders.aoPS.setNumber("INTENSITY", debugSettings.aoIntensity)
             SpriteBatch.begin(Matrix.IDENTITY, shaders.aoPS)
             Renderer.setBlendMode(BlendMode.OPAQUE)
             SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
@@ -494,7 +479,6 @@ function renderWorld(cam)
         }
         Renderer.setTexture(null, 1)
         Renderer.setTexture(null, 2)
-        // gbuffer.ao.blur(2)
 
         Renderer.setBlendMode(BlendMode.ALPHA)
         Renderer.pushRenderTarget(gbuffer.diffuse)
@@ -576,18 +560,19 @@ function renderWorld(cam)
     }
 
     // Full screen AO overlay (DEBUG)
+    if (debugSettings.ao)
     {
-        // SpriteBatch.begin()
-        // Renderer.setBlendMode(BlendMode.OPAQUE)
-        // SpriteBatch.drawRect(null, screenRect)
-        // SpriteBatch.end()
-        // SpriteBatch.begin()
-        // Renderer.setBlendMode(BlendMode.ALPHA)
-        // SpriteBatch.drawRect(gbuffer.ao, screenRect)
-        // SpriteBatch.end()
+        SpriteBatch.begin()
+        Renderer.setBlendMode(BlendMode.OPAQUE)
+        SpriteBatch.drawRect(null, screenRect)
+        SpriteBatch.end()
+        SpriteBatch.begin()
+        Renderer.setBlendMode(BlendMode.ALPHA)
+        SpriteBatch.drawRect(gbuffer.ao, screenRect)
+        SpriteBatch.end()
     }
 
-    if (showGBuffer)
+    if (debugSettings.gbuffer)
     {
         SpriteBatch.begin()
         Renderer.setBlendMode(BlendMode.ALPHA)
