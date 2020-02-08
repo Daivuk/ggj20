@@ -29,17 +29,18 @@ extern float INTENSITY;
 
 const float3 MOD3 = float3(0.1031, 0.11369, 0.13787);
 
-float3 getPosition(float2 uv)
+float4 getPosition(float2 uv)
 {
     float depth = texDepth(uv).r;
     float4 position = float4(float2(uv.x, 1 - uv.y) * 2.0 - 1.0, depth, 1.0);
     position = mul(position, invProjMtx);
-    return position.xyz / position.w;
+    return float4(position.xyz / position.w, depth / position.w);
 }
 
 float doAmbientOcclusion(float2 tcoord, float2 uv, float3 p, float3 cnorm)
 {
-    float3 diff = getPosition(tcoord + uv) - p;
+    float4 pos = getPosition(tcoord + uv);
+    float3 diff = pos.xyz - p;
     float l = length(diff);
     float3 v = diff / l;
     float d = l * SCALE;
@@ -84,12 +85,12 @@ void main()
     float4 tnormal = texNormal(inUV);
 
     // Position
-    float3 position = getPosition(inUV);
+    float4 position = getPosition(inUV);
 
     // normal
     float3 normal = tnormal.xyz * 2.0 - 1.0;
 
-    float rad = SAMPLE_RAD;
+    float rad = SAMPLE_RAD / position.w;
     float ao = spiralAO(inUV, position.xyz, normal, rad);
     ao *= INTENSITY;
 

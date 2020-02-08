@@ -33,7 +33,7 @@ var debugSettings = {
     aoScale: 2.5,
     aoBias: 0.01,
     aoRadius: 0.08,
-    aoMaxDistance: 0.35,
+    aoMaxDistance: 1.0,
     aoIntensity: 1.8
 }
 

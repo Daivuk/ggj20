@@ -412,9 +412,9 @@ function renderEditUI()
                 debugSettings.aoSamples = GUI.sliderNumber("Samples", debugSettings.aoSamples, 1, 64)
                 debugSettings.aoScale = GUI.sliderNumber("Scale", debugSettings.aoScale, 0.01, 10)
                 debugSettings.aoBias = GUI.sliderNumber("Bias", debugSettings.aoBias, 0.001, 1.0)
-                debugSettings.aoRadius = GUI.sliderNumber("Radius", debugSettings.aoRadius, 0.001, 10.0)
-                debugSettings.aoMaxDistance = GUI.sliderNumber("Max Distance", debugSettings.aoMaxDistance, 0.01, 10.0)
-                debugSettings.aoIntensity = GUI.sliderNumber("Intensity", debugSettings.aoIntensity, 0.0, 10.0)
+                debugSettings.aoRadius = GUI.sliderNumber("Radius", debugSettings.aoRadius, 0.001, 1)
+                debugSettings.aoMaxDistance = GUI.sliderNumber("Max Distance", debugSettings.aoMaxDistance, 0.01, 1)
+                debugSettings.aoIntensity = GUI.sliderNumber("Intensity", debugSettings.aoIntensity, 0.0, 10)
             GUI.unindent()
         }
     }
