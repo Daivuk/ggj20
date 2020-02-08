@@ -28,13 +28,7 @@ var renderingSettings = {
 
 var debugSettings = {
     gbuffer: false,
-    ao: false,
-    aoSamples: 16,
-    aoScale: 2.5,
-    aoBias: 0.01,
-    aoRadius: 0.08,
-    aoMaxDistance: 1.0,
-    aoIntensity: 1.8
+    ao: false
 }
 
 var cameraMenu = {
@@ -429,112 +423,39 @@ function renderWorld(cam)
         Renderer.setDepthEnabled(true)
     }
 
-    // Draw G-Buffer
+    Deferred.begin()
+    Deferred.addSolid(staticInsideModel)
+    for (var i = 0; i < insideDrawables.length; ++i)
     {
-        Renderer.pushRenderTarget(gbuffer.diffuse, 0)
-        Renderer.pushRenderTarget(gbuffer.normal, 1)
-        Renderer.pushRenderTarget(gbuffer.depth, 2)
-
-        Renderer.clear(Color.TRANSPARENT)
-        Renderer.clearDepth()
-        Renderer.setVertexShader(shaders.gbufferVS)
-        Renderer.setPixelShader(shaders.gbufferPS)
-
-        staticInsideModel.render();
-        for (var i = 0; i < insideDrawables.length; ++i)
-        {
-            var entity = insideDrawables[i]
-            if (!entity.model) continue
-            entity.model.render(getEntityTransform(entity))
-        }
-        models.hangar.render(hangarMat.get())
-        player_drawItem(player)
-
-        Renderer.popRenderTarget(0)
-        Renderer.popRenderTarget(1)
-        Renderer.popRenderTarget(2)
+        var entity = insideDrawables[i]
+        if (!entity.model) continue
+        Deferred.addSolid(entity.model, getEntityTransform(entity))
     }
-
-    // Ambiant occlusion
-    Renderer.setDepthEnabled(false)
-    Renderer.setDepthWrite(false)
-    if (renderingSettings.aoEnabled)
+    Deferred.addSolid(models.hangar, hangarMat.get())
+    player_drawItem(player)
+    for (var i = 0; i < omnis.length; ++i)
     {
-        Renderer.setTexture(gbuffer.normal, 1)
-        Renderer.setTexture(gbuffer.depth, 2)
+        var entity = omnis[i]
+        var dist = Vector3.distance(entity.pos, camPos)
+        var fadeDist = entity.mapObj.radius + 2
+        var fade = dist < fadeDist ? 1 : (1 - (dist - fadeDist))
+        if (fade > 0)
         {
-            Renderer.pushRenderTarget(gbuffer.ao)
-            shaders.aoPS.setMatrix("invProjMtx", invProjMtx)
-            shaders.aoPS.setNumber("SAMPLES", debugSettings.aoSamples)
-            shaders.aoPS.setNumber("SCALE", debugSettings.aoScale)
-            shaders.aoPS.setNumber("BIAS", debugSettings.aoBias)
-            shaders.aoPS.setNumber("SAMPLE_RAD", debugSettings.aoRadius)
-            shaders.aoPS.setNumber("MAX_DISTANCE", debugSettings.aoMaxDistance)
-            shaders.aoPS.setNumber("INTENSITY", debugSettings.aoIntensity)
-            SpriteBatch.begin(Matrix.IDENTITY, shaders.aoPS)
-            Renderer.setBlendMode(BlendMode.OPAQUE)
-            SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
-            SpriteBatch.end()
-            Renderer.popRenderTarget()
-        }
-        Renderer.setTexture(null, 1)
-        Renderer.setTexture(null, 2)
-
-        Renderer.setBlendMode(BlendMode.ALPHA)
-        Renderer.pushRenderTarget(gbuffer.diffuse)
-        SpriteBatch.begin()
-        SpriteBatch.drawRect(gbuffer.ao, screenRect)
-        SpriteBatch.end()
-        Renderer.popRenderTarget()
-    }
-
-    // Draw the ambiant
-    Renderer.setTexture(gbuffer.normal, 1)
-    Renderer.setTexture(gbuffer.depth, 2)
-    {
-        SpriteBatch.begin(Matrix.IDENTITY, shaders.ambiantPS)
-        Renderer.setBlendMode(BlendMode.ALPHA)
-        SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
-        SpriteBatch.end()
-    }
-
-    // Draw omni lights (This is extremely ineficient, but if it runs for the jam, gg?)
-    if (true)
-    {
-        shaders.omniPS.setMatrix("invProjMtx", invProjMtx)
-        for (var i = 0; i < omnis.length; ++i)
-        {
-            var entity = omnis[i]
-            var fffdist = Vector3.distance(entity.pos, camPos)
-            var fadeDist = entity.mapObj.radius + 2
-            var fffade = fffdist < fadeDist ? 1 : (1 - (fffdist - fadeDist))
-            if (fffade > 0)
-            {
-                SpriteBatch.begin(Matrix.IDENTITY, shaders.omniPS)
-                Renderer.setBlendMode(BlendMode.ADD)
-                shaders.omniPS.setVector3("lPos", getEntityCamPos(entity))
-                shaders.omniPS.setVector4("lColor", new Vector4(
-                    entity.mapObj.color.r * fffade, 
-                    entity.mapObj.color.g * fffade, 
-                    entity.mapObj.color.b * fffade,
-                    entity.mapObj.intensity * flickers[entity.mapObj.flicker].get()))
-                shaders.omniPS.setNumber("lRadius", entity.mapObj.radius)
-                SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
-                SpriteBatch.end()
-            }
+            Deferred.addOmni(getEntityCamPos(entity), entity.mapObj.radius, 
+                             new Color(entity.mapObj.color.r, entity.mapObj.color.g, entity.mapObj.color.b), 
+                             fade)
         }
     }
+    Deferred.end(new Color(0.06, 0.07, 0.15),
+                 debugSettings.aoEnabled, 0.08, 1.8, SSAOQuality.MEDIUM)
 
-    // Projector lights
-    // {
-    //     for (var i = 0; i < projectors.length; ++i)
-    //     {
-    //         var entity = projectors[i]
-    //     }
-    // }
-
-    Renderer.setTexture(null, 1)
-    Renderer.setTexture(null, 2)
+    // // Projector lights
+    // // {
+    // //     for (var i = 0; i < projectors.length; ++i)
+    // //     {
+    // //         var entity = projectors[i]
+    // //     }
+    // // }
 
     // Post draw stuff
     {
@@ -561,27 +482,27 @@ function renderWorld(cam)
     }
 
     // Full screen AO overlay (DEBUG)
-    if (debugSettings.ao)
-    {
-        SpriteBatch.begin()
-        Renderer.setBlendMode(BlendMode.OPAQUE)
-        SpriteBatch.drawRect(null, screenRect)
-        SpriteBatch.end()
-        SpriteBatch.begin()
-        Renderer.setBlendMode(BlendMode.ALPHA)
-        SpriteBatch.drawRect(gbuffer.ao, screenRect)
-        SpriteBatch.end()
-    }
+    // if (debugSettings.ao)
+    // {
+    //     SpriteBatch.begin()
+    //     Renderer.setBlendMode(BlendMode.OPAQUE)
+    //     SpriteBatch.drawRect(null, screenRect)
+    //     SpriteBatch.end()
+    //     SpriteBatch.begin()
+    //     Renderer.setBlendMode(BlendMode.ALPHA)
+    //     SpriteBatch.drawRect(gbuffer.ao, screenRect)
+    //     SpriteBatch.end()
+    // }
 
-    if (debugSettings.gbuffer)
-    {
-        SpriteBatch.begin()
-        Renderer.setBlendMode(BlendMode.ALPHA)
-        SpriteBatch.drawRect(null, new Rect(0, 0, res.x / 2, res.y / 2))
-        SpriteBatch.drawRect(gbuffer.diffuse, new Rect(0, 0, res.x / 4, res.y / 4))
-        SpriteBatch.drawRect(gbuffer.normal, new Rect(res.x / 4, 0, res.x / 4, res.y / 4))
-        SpriteBatch.drawRect(gbuffer.depth, new Rect(0, res.y / 4, res.x / 4, res.y / 4))
-        SpriteBatch.drawRect(gbuffer.ao, new Rect(res.x / 4, res.y / 4, res.x / 4, res.y / 4))
-        SpriteBatch.end()
-    }
+    // if (debugSettings.gbuffer)
+    // {
+    //     SpriteBatch.begin()
+    //     Renderer.setBlendMode(BlendMode.ALPHA)
+    //     SpriteBatch.drawRect(null, new Rect(0, 0, res.x / 2, res.y / 2))
+    //     SpriteBatch.drawRect(gbuffer.diffuse, new Rect(0, 0, res.x / 4, res.y / 4))
+    //     SpriteBatch.drawRect(gbuffer.normal, new Rect(res.x / 4, 0, res.x / 4, res.y / 4))
+    //     SpriteBatch.drawRect(gbuffer.depth, new Rect(0, res.y / 4, res.x / 4, res.y / 4))
+    //     SpriteBatch.drawRect(gbuffer.ao, new Rect(res.x / 4, res.y / 4, res.x / 4, res.y / 4))
+    //     SpriteBatch.end()
+    // }
 }
