@@ -586,6 +586,23 @@
       "damage": 0
     },
     {
+      "name": "Plants",
+      "model": "plants.model",
+      "type": "model",
+      "solid": false,
+      "outside": false,
+      "static": true,
+      "unpickable": true,
+      "pos": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "angle": 0,
+      "angleX": 0,
+      "damage": 0
+    },
+    {
       "name": "Omni",
       "type": "omni",
       "pos": {

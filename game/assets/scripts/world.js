@@ -1,5 +1,6 @@
 var staticOutsideModel = null
 var staticInsideModel = null
+var staticInsideAlphaTestModel = null
 var outsideDrawables = []
 var insideDrawables = []
 var updatables = []
@@ -14,6 +15,7 @@ var projectors = []
 var saveOverlay = new ColorAnim(Color.TRANSPARENT)
 var outsideStaticEntities = []
 var insideStaticEntities = []
+var insideStaticAlphaTestEntities = []
 var interractables = []
 var collisionEntities = []
 var computers = []
@@ -236,10 +238,16 @@ function createEntity(mapObj, pos)
         {
             if (mapObj.static)
             {
-                insideStaticEntities.push({
-                    model: entity.model,
-                    transform: getEntityTransform(entity)
-                })
+                if (mapObj.solid)
+                    insideStaticEntities.push({
+                        model: entity.model,
+                        transform: getEntityTransform(entity)
+                    })
+                else
+                    insideStaticAlphaTestEntities.push({
+                        model: entity.model,
+                        transform: getEntityTransform(entity)
+                    })
             }
             else insideDrawables.push(entity)
         }
@@ -269,6 +277,7 @@ function loadMap()
 
     staticOutsideModel = Model.createFromBatch(outsideStaticEntities)
     staticInsideModel = Model.createFromBatch(insideStaticEntities)
+    staticInsideAlphaTestModel = Model.createFromBatch(insideStaticAlphaTestEntities)
 
     // Add our character
     {
@@ -424,9 +433,11 @@ function renderWorld(cam)
         models.blow.render();
         Renderer.setDepthEnabled(true)
     }
+    Renderer.clearDepth()
 
     Deferred.begin()
     Deferred.addSolid(staticInsideModel)
+    Deferred.addAlphaTest(staticInsideAlphaTestModel)
     for (var i = 0; i < insideDrawables.length; ++i)
     {
         var entity = insideDrawables[i]
