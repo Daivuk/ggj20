@@ -417,9 +417,9 @@ function renderWorld(cam)
         // Flags
         Renderer.setVertexShader(shaders.flagsVS)
         Renderer.setPixelShader(shaders.flagsPS)
-        shaders.flagsPS.setVector3("skyColor", clearColor.toVector3())
-        shaders.flagsPS.setVector3("anim", flagAnim.get())  
+        shaders.flagsVS.setVector3("anim", flagAnim.get())  
         shaders.flagsVS.setVector3("camPos", camPos)
+        shaders.flagsPS.setVector3("skyColor", clearColor.toVector3())
         models.flags.render();
     }
 

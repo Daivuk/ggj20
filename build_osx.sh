@@ -4,7 +4,7 @@
 set -e 
 
 # Clone onut
-git submodule update --init --recursive
+# git submodule update --init --recursive
 
 # Create build dir
 mkdir -p build
