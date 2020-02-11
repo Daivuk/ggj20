@@ -14,7 +14,7 @@ gameName = Arctic Distress
 resizableWindow = true
 
 # Run the game in full screen. This is borderless fullscreen taking up your desktop resolution
-fullscreen = true
+fullscreen = false
 
 # Fixed step update. Games where simulation or physic is important should use that
 fixedStep = false
@@ -29,7 +29,7 @@ appID = null
 appSecret = null
 
 # Display FPS in the upper left corner
-showFPS = false
+showFPS = true
 
 # Displays debug log on screen
 onScreenLog = false

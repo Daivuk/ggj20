@@ -295,13 +295,12 @@ function player_drawItem(entity)
 {
     if (entity.item)
     {
-        // var mat = getEntityTransform(entity)
         var front = getEntityFront(entity)
         var right = front.cross(Vector3.UNIT_Z).normalize()
         var up = right.cross(front)
         var pos = getEntityCamPos(entity).add(front.mul(0.2)).add(right.mul(0.1)).add(up.mul(-0.15 + entity.itemHandOffset))
         var mat = Matrix.createWorld(pos, front, up)
-        entity.item.inHandModel.render(mat)
+        Deferred.addSolid(entity.item.inHandModel, mat)
     }
 }
 

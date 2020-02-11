@@ -9,19 +9,14 @@ var shaders = {
     blowPS: getShader("blow.ps"),
 
     // gbuffer
-    diffuseVS: getShader("diffuse.vs"),
-    diffusePS: getShader("diffuse.ps"),
-    normalVS: getShader("normal.vs"),
-    normalPS: getShader("normal.ps"),
-    depthVS: getShader("depth.vs"),
-    depthPS: getShader("depth.ps"),
-    depthOnlyVS: getShader("depthOnly.vs"),
-    depthOnlyPS: getShader("depthOnly.ps"),
+    gbufferVS: getShader("gbuffer.vs"),
+    gbufferPS: getShader("gbuffer.ps"),
 
     // Lighting pass
     ambiantPS: getShader("ambiant.ps"),
     omniPS: getShader("omni.ps"),
     projectorPS: getShader("projector.ps"),
+    aoPS: getShader("ao.ps"),
 
     // Edit
     entityVS: getShader("entity.vs"),

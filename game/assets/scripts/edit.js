@@ -150,6 +150,9 @@ function updateEdit(dt)
     {
         if (Input.isDown(Key.LEFT_CONTROL) && Input.isJustDown(Key.S)) saveMap()
     }
+    
+    var camFront = getEntityFront(editCam)
+    Audio.set3DListener(editCam.pos, camFront, Vector3.UNIT_Z);
 
     {
         for (var i = 0; i < emiters.length; ++i)
@@ -157,13 +160,7 @@ function updateEdit(dt)
             var entity = emiters[i]
             entity.update(entity, dt)
         }
-        for (var i = 0; i < sounds.length; ++i)
-        {
-            var entity = sounds[i]
-            entity.update(entity, dt)
-        }
 
-        var camFront = getEntityFront(editCam)
         smokes_update(camFront, dt)
     }
 
@@ -246,6 +243,17 @@ function renderEditUI()
     }
 
     Renderer.setBackFaceCull(false)
+
+    GUI.beginMainMenuBar()
+    if (GUI.beginMenu("File"))
+    {
+        GUI.spacing()
+        if (GUI.menuItem("Save", "Ctrl+S")) saveMap()
+        GUI.separator()
+        if (GUI.menuItem("Exit", "Alt+F4")) quit()
+        GUI.endMenu()
+    }
+    GUI.endMainMenuBar()
 
     if (GUI.begin("Voxel"))
     {
@@ -365,7 +373,7 @@ function renderEditUI()
                     selectedEntity.sound = createSoundInstance(selectedEntity.mapObj.sound)
                     if (selectedEntity.sound)
                     {
-                        selectedEntity.sound.setVolume(0)
+                        selectedEntity.sound.set3D(true, selectedEntity.pos, selectedEntity.mapObj.radius)
                         selectedEntity.sound.setLoop(true)
                         selectedEntity.sound.play();
                     }
@@ -397,6 +405,24 @@ function renderEditUI()
                 selectedEntity.mapObj.spread = GUI.dragNumber("Spread", selectedEntity.mapObj.radius, 0.1)
             if (selectedEntity.mapObj.freq != undefined)
                 selectedEntity.mapObj.freq = GUI.dragNumber("Frequency", selectedEntity.mapObj.freq, 0.01)
+        }
+    }
+    GUI.end()
+
+    if (GUI.begin("Rendering"))
+    {
+        if (GUI.collapsingHeader("Game Settings"))
+        {
+            renderingSettings.aoEnabled = GUI.checkbox("Ambient Occlusion##game", renderingSettings.aoEnabled)
+        }
+        if (GUI.collapsingHeader("Debug Settings"))
+        {
+            debugSettings.gbuffer = GUI.checkbox("GBuffer", debugSettings.gbuffer)
+            debugSettings.ao = GUI.checkbox("Ambient Occlusion##debug", debugSettings.ao)
+            GUI.indent()
+                debugSettings.aoRadius = GUI.sliderNumber("Radius", debugSettings.aoRadius, 0.001, 1)
+                debugSettings.aoIntensity = GUI.sliderNumber("Intensity", debugSettings.aoIntensity, 0.0, 10)
+            GUI.unindent()
         }
     }
     GUI.end()

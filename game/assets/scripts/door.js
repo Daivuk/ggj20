@@ -24,7 +24,10 @@ function door_trigger(entity, triggerer, player)
     if (entity.damage)
     {
         print("SHOW MSG: Door damaged")
-        playSound("HonHon.wav")
+        if (triggerer)
+            play3DSound("HonHon.wav", triggerer.pos, 2, 2)
+        else
+            playSound("HonHon.wav")
         return
     }
     entity.isOpen = !entity.isOpen
@@ -36,5 +39,5 @@ function door_trigger(entity, triggerer, player)
     {
         entity.openAnim.playSingle(entity.pos, entity.pos.add(new Vector3(0, 0, -0.8)), 1.5, Tween.LINEAR)
     }
-    playSound("ElectricDoorSlam.wav", 1.0, 0, 0.8)
+    play3DSound("ElectricDoorSlam.wav", entity.pos, 6, 2.0, 0, 0.8)
 }

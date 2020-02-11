@@ -1,4 +1,4 @@
-var DEBUG = false
+var DEBUG = true
 
 var state = "game"
 Input.setFpsMouse(true)
@@ -28,7 +28,7 @@ function update(dt)
                 state = "pause"
                 Input.setFpsMouse(false)
             }
-            if (DEBUG && Input.isJustDown(Key.F2))
+            if (DEBUG && Input.isJustDown(Key.F1))
             {
                 state = "edit"
                 Input.setFpsMouse(false)
@@ -46,7 +46,7 @@ function update(dt)
             break
         case "edit":
             updateEdit(dt)
-            if (Input.isJustDown(Key.ESCAPE))
+            if (Input.isJustDown(Key.ESCAPE) || Input.isJustDown(Key.F1))
             {
                 state = "game"
                 Input.setFpsMouse(true)
@@ -68,7 +68,7 @@ function render()
             {
                 SpriteBatch.begin()
                 SpriteBatch.drawRect(null, new Rect(0, 0, 300, 20), new Color(0, 0, 0, .75))
-                SpriteBatch.drawText(font, "Press F2 for edit mode", new Vector2(0, 10), Vector2.TOP_LEFT)
+                SpriteBatch.drawText(font, "Press F1 for edit mode", new Vector2(0, 10), Vector2.TOP_LEFT)
                 SpriteBatch.end()
             }
             SpriteBatch.begin()
@@ -94,11 +94,10 @@ function render()
             if (DEBUG)
             {
                 SpriteBatch.begin()
-                SpriteBatch.drawRect(null, new Rect(0, 0, 300, 50), new Color(0, 0, 0, .75))
-                SpriteBatch.drawText(font, "Middle mouse to move", new Vector2(0, 10), Vector2.TOP_LEFT)
-                SpriteBatch.drawText(font, "Q to add solid", new Vector2(0, 20), Vector2.TOP_LEFT)
-                SpriteBatch.drawText(font, "E to remove solid", new Vector2(0, 30), Vector2.TOP_LEFT)
-                SpriteBatch.drawText(font, "Ctrl+S to save", new Vector2(0, 40), Vector2.TOP_LEFT)
+                SpriteBatch.drawRect(null, new Rect(0, 0, 300, 90), new Color(0, 0, 0, .75))
+                SpriteBatch.drawText(font, "Middle mouse to move", new Vector2(0, 50), Vector2.TOP_LEFT)
+                SpriteBatch.drawText(font, "Q to add solid", new Vector2(0, 60), Vector2.TOP_LEFT)
+                SpriteBatch.drawText(font, "E to remove solid", new Vector2(0, 70), Vector2.TOP_LEFT)
                 if (saveOverlay.isPlaying())
                 {
                     SpriteBatch.drawRect(null, screenRect, saveOverlay.get())

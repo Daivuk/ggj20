@@ -1,5 +1,6 @@
 var staticOutsideModel = null
 var staticInsideModel = null
+var staticInsideAlphaTestModel = null
 var outsideDrawables = []
 var insideDrawables = []
 var updatables = []
@@ -7,21 +8,32 @@ var editDrawables = []
 var postDrawables = []
 var map = []
 var emiters = []
-var sounds = []
 var entities = []
 var player = null
-var showGBuffer = false
 var omnis = []
 var projectors = []
 var saveOverlay = new ColorAnim(Color.TRANSPARENT)
 var outsideStaticEntities = []
 var insideStaticEntities = []
+var insideStaticAlphaTestEntities = []
 var interractables = []
 var collisionEntities = []
 var computers = []
 var blowAnim = new NumberAnim()
 blowAnim.playSingle(0, 1, 1, Tween.LINEAR, Loop.LOOP)
 var blackSmokeDelay = 0
+var aoNoiseTexture = null
+
+var renderingSettings = {
+    aoEnabled: true
+}
+
+var debugSettings = {
+    gbuffer: false,
+    ao: false,
+    aoRadius: 0.08,
+    aoIntensity: 1.8
+}
 
 var cameraMenu = {
     pos: new Vector3(30.37, -18.681, 3.8761),
@@ -150,7 +162,6 @@ function deleteEntity(entity)
     removeFromArray(omnis, entity)
     removeFromArray(projectors, entity)
     removeFromArray(emiters, entity)
-    removeFromArray(sounds, entity)
     removeFromArray(map.entities, entity.mapObj)
 }
 
@@ -227,10 +238,16 @@ function createEntity(mapObj, pos)
         {
             if (mapObj.static)
             {
-                insideStaticEntities.push({
-                    model: entity.model,
-                    transform: getEntityTransform(entity)
-                })
+                if (mapObj.solid)
+                    insideStaticEntities.push({
+                        model: entity.model,
+                        transform: getEntityTransform(entity)
+                    })
+                else
+                    insideStaticAlphaTestEntities.push({
+                        model: entity.model,
+                        transform: getEntityTransform(entity)
+                    })
             }
             else insideDrawables.push(entity)
         }
@@ -260,6 +277,7 @@ function loadMap()
 
     staticOutsideModel = Model.createFromBatch(outsideStaticEntities)
     staticInsideModel = Model.createFromBatch(insideStaticEntities)
+    staticInsideAlphaTestModel = Model.createFromBatch(insideStaticAlphaTestEntities)
 
     // Add our character
     {
@@ -349,8 +367,6 @@ function updateWorld(cam, dt)
         entity.update(entity, dt)
     }
 
-    if (DEBUG && Input.isJustDown(Key.F1)) showGBuffer = !showGBuffer
-
     var camFront = getEntityFront(cam)
     smokes_update(camFront, dt)
 
@@ -363,6 +379,8 @@ function updateWorld(cam, dt)
         door.trigger(door, null, player)
     }
     prevCompOk = compOk
+
+    Audio.set3DListener(cam.pos, camFront, Vector3.UNIT_Z);
 }
 
 var flagAnim = new NumberAnim()
@@ -378,61 +396,8 @@ function renderWorld(cam)
     var camFront = getEntityFront(cam)
     var camPos = getEntityCamPos(cam)
     Renderer.setupFor3D(camPos, camPos.add(camFront), Vector3.UNIT_Z, cam.fov)
-
-    // Draw deferred crap first
-
-
-    // Draw inside solids into the gbuffer
-    {
-        Renderer.pushRenderTarget(gbuffer.depth)
-        Renderer.clear(Color.BLACK)
-        Renderer.clearDepth()
-        Renderer.setVertexShader(shaders.depthVS)
-        Renderer.setPixelShader(shaders.depthPS)
-        staticInsideModel.render();
-        for (var i = 0; i < insideDrawables.length; ++i)
-        {
-            var entity = insideDrawables[i]
-            if (!entity.model) continue
-            entity.model.render(getEntityTransform(entity))
-        }
-        models.hangar.render(hangarMat.get())
-        player_drawItem(player)
-        Renderer.popRenderTarget()
-    }
-    {
-        Renderer.pushRenderTarget(gbuffer.diffuse)
-        Renderer.clear(Color.TRANSPARENT)
-        Renderer.clearDepth()
-        Renderer.setVertexShader(shaders.diffuseVS)
-        Renderer.setPixelShader(shaders.diffusePS)
-        staticInsideModel.render();
-        for (var i = 0; i < insideDrawables.length; ++i)
-        {
-            var entity = insideDrawables[i]
-            if (!entity.model) continue
-            entity.model.render(getEntityTransform(entity))
-        }
-        models.hangar.render(hangarMat.get())
-        player_drawItem(player)
-        Renderer.popRenderTarget()
-    }
-    {
-        Renderer.pushRenderTarget(gbuffer.normal)
-        Renderer.clearDepth()
-        Renderer.setVertexShader(shaders.normalVS)
-        Renderer.setPixelShader(shaders.normalPS)
-        staticInsideModel.render();
-        for (var i = 0; i < insideDrawables.length; ++i)
-        {
-            var entity = insideDrawables[i]
-            if (!entity.model) continue
-            entity.model.render(getEntityTransform(entity))
-        }
-        models.hangar.render(hangarMat.get())
-        player_drawItem(player)
-        Renderer.popRenderTarget()
-    }
+    var viewProj = Renderer.getView().mul(Renderer.getProjection())
+    var invProjMtx = viewProj.invert()
 
     // Draw outside solids
     {
@@ -452,9 +417,9 @@ function renderWorld(cam)
         // Flags
         Renderer.setVertexShader(shaders.flagsVS)
         Renderer.setPixelShader(shaders.flagsPS)
-        shaders.flagsPS.setVector3("skyColor", clearColor.toVector3())
-        shaders.flagsPS.setVector3("anim", flagAnim.get())  
+        shaders.flagsVS.setVector3("anim", flagAnim.get())  
         shaders.flagsVS.setVector3("camPos", camPos)
+        shaders.flagsPS.setVector3("skyColor", clearColor.toVector3())
         models.flags.render();
     }
 
@@ -468,90 +433,48 @@ function renderWorld(cam)
         models.blow.render();
         Renderer.setDepthEnabled(true)
     }
+    Renderer.clearDepth()
 
-    // Draw the interior meshes into depth buffer only
+    Deferred.begin()
+    Deferred.addSolid(staticInsideModel)
+    Deferred.addAlphaTest(staticInsideAlphaTestModel)
+    for (var i = 0; i < insideDrawables.length; ++i)
     {
-        Renderer.setVertexShader(shaders.depthOnlyVS)
-        Renderer.setPixelShader(shaders.depthOnlyPS)
-        Renderer.setBlendMode(BlendMode.ALPHA)
-        staticInsideModel.render();
-        for (var i = 0; i < insideDrawables.length; ++i)
+        var entity = insideDrawables[i]
+        if (!entity.model) continue
+        Deferred.addSolid(entity.model, getEntityTransform(entity))
+    }
+    Deferred.addSolid(models.hangar, hangarMat.get())
+    player_drawItem(player)
+    for (var i = 0; i < omnis.length; ++i)
+    {
+        var entity = omnis[i]
+        var dist = Vector3.distance(entity.pos, camPos)
+        var fadeDist = entity.mapObj.radius + 2
+        var fade = dist < fadeDist ? 1 : (1 - (dist - fadeDist))
+        if (fade > 0)
         {
-            var entity = insideDrawables[i]
-            if (!entity.model) continue
-            entity.model.render(getEntityTransform(entity))
+            Deferred.addOmni(getEntityCamPos(entity), entity.mapObj.radius, 
+                             new Color(entity.mapObj.color.r, entity.mapObj.color.g, entity.mapObj.color.b), 
+                             entity.mapObj.intensity * fade * flickers[entity.mapObj.flicker].get())
         }
-        models.hangar.render(hangarMat.get())
-        player_drawItem(player)
     }
+    Deferred.end(new Color(0.06, 0.07, 0.15),
+                 renderingSettings.aoEnabled, 0.08, 1.8, SSAOQuality.MEDIUM)
 
-    // First, draw the ambiant
-    Renderer.setDepthWrite(false)
-    {
-        SpriteBatch.begin(Matrix.IDENTITY, shaders.ambiantPS)
-        Renderer.setBlendMode(BlendMode.ALPHA)
-        SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
-        SpriteBatch.end()
-    }
-
-    // Draw omni lights (This is extremely ineficient, but if it runs for the jam, gg?)
-    {
-        for (var i = 0; i < omnis.length; ++i)
-        {
-            var entity = omnis[i]
-            var fffdist = Vector3.distance(entity.pos, camPos)
-            var fadeDist = entity.mapObj.radius + 2
-            var fffade = fffdist < fadeDist ? 1 : (1 - (fffdist - fadeDist))
-            if (fffade > 0)
-            {
-                SpriteBatch.begin(Matrix.IDENTITY, shaders.omniPS)
-                Renderer.setTexture(gbuffer.normal, 1)
-                Renderer.setTexture(gbuffer.depth, 2)
-                Renderer.setBlendMode(BlendMode.ADD)
-                shaders.omniPS.setVector3("lPos", getEntityCamPos(entity))
-                shaders.omniPS.setVector4("lColor", new Vector4(
-                    entity.mapObj.color.r * fffade, 
-                    entity.mapObj.color.g * fffade, 
-                    entity.mapObj.color.b * fffade,
-                    entity.mapObj.intensity * flickers[entity.mapObj.flicker].get()))
-                shaders.omniPS.setNumber("lRadius", entity.mapObj.radius)
-                SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
-                SpriteBatch.end()
-            }
-        }
-        Renderer.setBlendMode(BlendMode.ALPHA)
-        Renderer.setTexture(null, 1)
-        Renderer.setTexture(null, 2)
-        Renderer.setTexture(null, 3)
-    }
-
-    // Projector lights
-    // {
-    //     for (var i = 0; i < projectors.length; ++i)
-    //     {
-    //         var entity = projectors[i]
-    //         SpriteBatch.begin(Matrix.IDENTITY, shaders.projectorPS)
-    //         Renderer.setTexture(gbuffer.normal, 1)
-    //         Renderer.setTexture(gbuffer.depth, 2)
-    //         Renderer.setTexture(entity.texture, 3)
-    //         Renderer.setBlendMode(BlendMode.ADD)
-    //         shaders.projectorPS.setVector3("lPos", entity.pos)
-    //         shaders.projectorPS.setVector3("lColor", new Vector3(entity.mapObj.color.r, entity.mapObj.color.g, entity.mapObj.color.b).mul(flickers[entity.mapObj.flicker].get()))
-    //         shaders.projectorPS.setNumber("lRadius", entity.mapObj.radius)
-    //         shaders.projectorPS.setMatrix("transform", getEntityTransform(entity))
-    //         SpriteBatch.drawRect(gbuffer.diffuse, screenRect)
-    //         SpriteBatch.end()
-    //     }
-    //     Renderer.setTexture(null, 1)
-    //     Renderer.setTexture(null, 2)
-    //     Renderer.setTexture(null, 3)
-    //     Renderer.setBlendMode(BlendMode.ALPHA)
-    // }
+    // // Projector lights
+    // // {
+    // //     for (var i = 0; i < projectors.length; ++i)
+    // //     {
+    // //         var entity = projectors[i]
+    // //     }
+    // // }
 
     // Post draw stuff
     {
         // Setup camera
         Renderer.setupFor3D(camPos, camPos.add(camFront), Vector3.UNIT_Z, cam.fov)
+        Renderer.setDepthEnabled(true)
         Renderer.setDepthWrite(false)
         Renderer.setVertexShader(shaders.windowsVS)
         Renderer.setPixelShader(shaders.windowsPS)
@@ -571,12 +494,28 @@ function renderWorld(cam)
         }
     }
 
-    if (showGBuffer)
+    // Full screen AO overlay (DEBUG)
+    if (debugSettings.ao)
     {
         SpriteBatch.begin()
-        SpriteBatch.drawRect(gbuffer.diffuse, new Rect(0, 0, res.x / 2, res.y / 2))
-        SpriteBatch.drawRect(gbuffer.normal, new Rect(res.x / 2, 0, res.x / 2, res.y / 2))
-        SpriteBatch.drawRect(gbuffer.depth, new Rect(0, res.y / 2, res.x / 2, res.y / 2))
+        Renderer.setBlendMode(BlendMode.OPAQUE)
+        SpriteBatch.drawRect(null, screenRect)
+        SpriteBatch.end()
+        SpriteBatch.begin()
+        Renderer.setBlendMode(BlendMode.MULTIPLY)
+        SpriteBatch.drawRect(Deferred.getAmbientOcclusion(), screenRect)
+        SpriteBatch.end()
+    }
+
+    if (debugSettings.gbuffer)
+    {
+        SpriteBatch.begin()
+        Renderer.setBlendMode(BlendMode.ALPHA)
+        SpriteBatch.drawRect(null, new Rect(0, 0, res.x / 2, res.y / 2))
+        SpriteBatch.drawRect(Deferred.getAlbedo(), new Rect(0, 0, res.x / 2, res.y / 2))
+        SpriteBatch.drawRect(Deferred.getNormal(), new Rect(res.x / 2, 0, res.x / 2, res.y / 2))
+        SpriteBatch.drawRect(Deferred.getDepth(), new Rect(0, res.y / 2, res.x / 2, res.y / 2))
+        SpriteBatch.drawRect(Deferred.getMaterial(), new Rect(res.x / 2, res.y / 2, res.x / 2, res.y / 2))
         SpriteBatch.end()
     }
 }
